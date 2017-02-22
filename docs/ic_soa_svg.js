@@ -66,9 +66,22 @@ function ic_soa_svg_System_conectorPointLocation(cord, typ) {
 	return cord; //default to center
 };
 
+//Following function used for both ints and EDFs
+function ic_soa_svg_drawOPERATION(obj_class, cord, operation_text, parent_width, parent_inner_margin, op_height) {
+	var ret = "";
+	
+	ret += '<rect class="' + obj_class + '" x="' + (cord.x - (parent_width/2) + parent_inner_margin) + '" y="' + (cord.y - (op_height/2)) + '" width="' + (parent_width - (parent_inner_margin * 2)) + '" height="' + op_height + '" />';
+	ret += '<text class="' + obj_class + '" x="' + cord.x + '" y="' + cord.y + '" >';
+	ret += operation_text;
+	ret += "</text>";
+	
+	return ret;
+};
+
+
 var edf_width=300;
-var edf_square_part_offset_x = 50;
-var edf_width_excluding_circles = edf_width - edf_square_part_offset_x;
+var edf_square_part_offset_x = 30;
+var edf_inner_width = edf_width - edf_square_part_offset_x;
 var edf_operation_inner_margin = 30;
 var edf_text_vert_offset = 20;
 //Return the HTML for an EDF
@@ -76,13 +89,11 @@ function ic_soa_svg_drawEDF(name, cord, link, inbound_operation_text, outbound_o
 	var ret = "";
 	var ay = 40;
 	
-	
-	
-	ret += '<ellipse class="edf" cx="' + (cord.x - (edf_width_excluding_circles/2)) + '" cy="' + cord.y + '" rx="' + (edf_square_part_offset_x/2) + '" ry="' + (ay) + '" />';
-	ret += '<ellipse class="edf" cx="' + (cord.x + (edf_width_excluding_circles/2)) + '" cy="' + cord.y + '" rx="' + (edf_square_part_offset_x/2) + '" ry="' + (ay) + '" />';
-	ret += '<rect class="edf" x="' + (cord.x - (edf_width_excluding_circles/2)) + '" y="' + (cord.y - (ay)) + '" width="' + edf_width_excluding_circles + '" height="' + (ay*2) + '" />';
-	ret += '<line class="edf" x1="' + (cord.x - (edf_width_excluding_circles/2)) + '" y1="' + (cord.y - (ay)) + '" x2="' + (cord.x + (edf_width_excluding_circles/2)) + '" y2="' + (cord.y - (ay)) + '"/>';
-	ret += '<line class="edf" x1="' + (cord.x - (edf_width_excluding_circles/2)) + '" y1="' + (cord.y + (ay)) + '" x2="' + (cord.x + (edf_width_excluding_circles/2)) + '" y2="' + (cord.y + (ay)) + '"/>';
+	ret += '<ellipse class="edf" cx="' + (cord.x - (edf_inner_width/2)) + '" cy="' + cord.y + '" rx="' + (edf_square_part_offset_x/2) + '" ry="' + (ay) + '" />';
+	ret += '<ellipse class="edf" cx="' + (cord.x + (edf_inner_width/2)) + '" cy="' + cord.y + '" rx="' + (edf_square_part_offset_x/2) + '" ry="' + (ay) + '" />';
+	ret += '<rect class="edf" x="' + (cord.x - (edf_inner_width/2)) + '" y="' + (cord.y - (ay)) + '" width="' + edf_inner_width + '" height="' + (ay*2) + '" />';
+	ret += '<line class="edf" x1="' + (cord.x - (edf_inner_width/2)) + '" y1="' + (cord.y - (ay)) + '" x2="' + (cord.x + (edf_inner_width/2)) + '" y2="' + (cord.y - (ay)) + '"/>';
+	ret += '<line class="edf" x1="' + (cord.x - (edf_inner_width/2)) + '" y1="' + (cord.y + (ay)) + '" x2="' + (cord.x + (edf_inner_width/2)) + '" y2="' + (cord.y + (ay)) + '"/>';
 	
 	var text_top_pos_y = cord.y - ((edf_text_vert_offset*2) / 2);
 	
@@ -98,20 +109,13 @@ function ic_soa_svg_drawEDF(name, cord, link, inbound_operation_text, outbound_o
 	};
 	
 	//Inbound Operation Text Box
-	var op_center_y = (text_top_pos_y + edf_text_vert_offset);
 	if (typeof(inbound_operation_text)=="undefined") inbound_operation_text="Sync";
-	ret += '<rect class="edf_operation" x="' + (cord.x - (edf_width/2) + edf_operation_inner_margin) + '" y="' + (op_center_y - (edf_text_vert_offset/2)) + '" width="' + (edf_width - (edf_operation_inner_margin * 2)) + '" height="' + edf_text_vert_offset + '" />';
-	ret += '<text class="edf_operation" x="' + cord.x + '" y="' + op_center_y + '" >';
-	ret += inbound_operation_text;
-	ret += "</text>";
-	
+	ret += ic_soa_svg_drawOPERATION("edf_operation",{x:cord.x,y:cord.y},inbound_operation_text,edf_width,edf_operation_inner_margin,edf_text_vert_offset);
 	
 	//Outbound Operation Text Box
 	var op_center_y = (text_top_pos_y + (edf_text_vert_offset * 2));
 	if (typeof(outbound_operation_text)!="undefined") {
-		ret += '<rect class="edf_operation" x="' + (cord.x - (edf_width/2) + edf_operation_inner_margin) + '" y="' + (op_center_y - (edf_text_vert_offset/2)) + '" width="' + (edf_width - (edf_operation_inner_margin * 2)) + '" height="' + edf_text_vert_offset + '" />';		ret += '<text class="edf_operation" x="' + cord.x + '" y="' + op_center_y + '" >';
-		ret += outbound_operation_text;
-		ret += "</text>";
+		ret += ic_soa_svg_drawOPERATION("edf_operation",{x:cord.x,y:cord.y + edf_text_vert_offset},outbound_operation_text,edf_width,edf_operation_inner_margin,edf_text_vert_offset);
 	}
 	
 	return ret;
@@ -119,16 +123,16 @@ function ic_soa_svg_drawEDF(name, cord, link, inbound_operation_text, outbound_o
 //Types for outbound (sync) are left and right. Types for inbound are left_inbound and right_inbound
 function ic_soa_svg_EDF_conectorPointLocation(cord, typ) {
 	if (typ=="left") {
-		return {x:(cord.x-((edf_width_excluding_circles/2) + conectorPointSpacing)), y:cord.y }
+		return {x:(cord.x-(((edf_inner_width - edf_operation_inner_margin)/2) + conectorPointSpacing)), y:cord.y }
 	};
 	if (typ=="right") {
-		return {x:(cord.x+((edf_width_excluding_circles/2) + conectorPointSpacing)), y:cord.y }
+		return {x:(cord.x+(((edf_inner_width - edf_operation_inner_margin)/2) + conectorPointSpacing)), y:cord.y }
 	};
 	if (typ=="left_inbound") {
-		return {x:(cord.x-((edf_width_excluding_circles/2) + conectorPointSpacing)), y:cord.y + edf_text_vert_offset }
+		return {x:(cord.x-(((edf_inner_width - edf_operation_inner_margin)/2) + conectorPointSpacing)), y:cord.y + edf_text_vert_offset }
 	};
 	if (typ=="right_inbound") {
-		return {x:(cord.x+((edf_width_excluding_circles/2) + conectorPointSpacing)), y:cord.y + edf_text_vert_offset }
+		return {x:(cord.x+(((edf_inner_width - edf_operation_inner_margin)/2) + conectorPointSpacing)), y:cord.y + edf_text_vert_offset }
 	};
 	return cord; //default to center
 };
@@ -142,41 +146,64 @@ function ic_soa_svg_getpointsstring(points) {
 };
 
 //Return the HTML for an Integration
-function ic_soa_svg_drawIntegration(name, cord, link) {
+var int_width=400;
+var int_text_vert_offset = 20;
+var int_operation_inner_margin = 40;
+var int_square_part_offset_x = 40;
+var int_inner_width = int_width - int_operation_inner_margin;
+function ic_soa_svg_drawIntegration(name, cord, link, inbound_operation_text, outbound_operation_text) {
 	var ret = "";
-	var int_width=400;
-	var ay = 15;
+	var ay = 40;
 	
-	var ax = 50;
 	
 	var left_x = (cord.x - (int_width/2));
 	var right_x = (cord.x + (int_width/2));
 	
 	var points = [];
 	points.push({x:left_x, y:cord.y});
-	points.push({x:left_x+ax, y:(cord.y-ay)});
-	points.push({x:right_x-ax, y:(cord.y-ay)});
+	points.push({x:left_x+int_square_part_offset_x, y:(cord.y-ay)});
+	points.push({x:right_x-int_square_part_offset_x, y:(cord.y-ay)});
 	points.push({x:right_x, y:(cord.y)});
-	points.push({x:right_x-ax, y:(cord.y+ay)});
-	points.push({x:left_x+ax, y:(cord.y+ay)});
+	points.push({x:right_x-int_square_part_offset_x, y:(cord.y+ay)});
+	points.push({x:left_x+int_square_part_offset_x, y:(cord.y+ay)});
 	//points.push({x:left_x, y:cord.y}); //Don't need to connect back to start
 	
 	ret += '<polygon class="int" points="' + ic_soa_svg_getpointsstring(points) + '" />';
 	
+	var text_top_pos_y = cord.y - ((int_text_vert_offset*2) / 2);
+	
+	//Title Text Box
 	if (typeof(link)=="undefined") {	
-		ret += '<text class="int" x="' + cord.x + '" y="' + cord.y + '" >' + name + '</text>';
+		ret += '<text class="int" x="' + cord.x + '" y="' + text_top_pos_y + '" >' + name + '</text>';
 	} else {
-		ret += '<text class="int link" x="' + cord.x + '" y="' + cord.y + '" onclick="' + link + '">' + name + '</text>';
+		ret += '<text class="int link" x="' + cord.x + '" y="' + text_top_pos_y + '" onclick="' + link + '">' + name + '</text>';
+	}
+	
+	
+	//Inbound Operation Text Box
+	if (typeof(inbound_operation_text)=="undefined") inbound_operation_text="Sync";
+	ret += ic_soa_svg_drawOPERATION("int_operation",{x:cord.x,y:cord.y},inbound_operation_text,int_width,int_operation_inner_margin,int_text_vert_offset);
+	
+	//Outbound Operation Text Box
+	var op_center_y = (text_top_pos_y + (edf_text_vert_offset * 2));
+	if (typeof(outbound_operation_text)!="undefined") {
+		ret += ic_soa_svg_drawOPERATION("int_operation",{x:cord.x,y:cord.y + int_text_vert_offset},outbound_operation_text,int_width,int_operation_inner_margin,int_text_vert_offset);
 	}
 	
 	return ret;
 };
 function ic_soa_svg_Integration_conectorPointLocation(cord, typ) {
-	if (typ=="right") {
-		return {x:(cord.x+(200 + conectorPointSpacing)), y:cord.y }
-	};
 	if (typ=="left") {
-		return {x:(cord.x-(200 + conectorPointSpacing)), y:cord.y }
+		return {x:(cord.x-(((int_inner_width - int_operation_inner_margin)/2) + conectorPointSpacing)), y:cord.y }
+	};
+	if (typ=="right") {
+		return {x:(cord.x+(((int_inner_width - int_operation_inner_margin)/2) + conectorPointSpacing)), y:cord.y }
+	};
+	if (typ=="left_inbound") {
+		return {x:(cord.x-(((int_inner_width - int_operation_inner_margin)/2) + conectorPointSpacing)), y:cord.y + int_text_vert_offset }
+	};
+	if (typ=="right_inbound") {
+		return {x:(cord.x+(((int_inner_width - int_operation_inner_margin)/2) + conectorPointSpacing)), y:cord.y + int_text_vert_offset }
 	};
 	return cord; //default to center
 };
