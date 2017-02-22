@@ -24,6 +24,22 @@ svg.ic_soa_svg ellipse.edf {
 	stroke-width: 1;
 	stroke: black;
 }
+svg.ic_soa_svg rect.edf {
+	fill: red;
+	stroke-width: 1;
+	stroke: none;
+}
+svg.ic_soa_svg line.edf {
+	stroke-width: 1;
+	stroke: black;
+}
+
+svg.ic_soa_svg rect.edf_operation {
+	fill: white;
+	stroke-width: 1;
+	stroke: black;
+}
+
 
 svg.ic_soa_svg polygon.int {
 	fill: lightgreen;

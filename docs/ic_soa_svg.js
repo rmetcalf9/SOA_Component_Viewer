@@ -66,31 +66,69 @@ function ic_soa_svg_System_conectorPointLocation(cord, typ) {
 	return cord; //default to center
 };
 
+var edf_width=300;
+var edf_square_part_offset_x = 50;
+var edf_width_excluding_circles = edf_width - edf_square_part_offset_x;
+var edf_operation_inner_margin = 30;
+var edf_text_vert_offset = 20;
 //Return the HTML for an EDF
-function ic_soa_svg_drawEDF(name, cord, link) {
+function ic_soa_svg_drawEDF(name, cord, link, inbound_operation_text, outbound_operation_text) {
 	var ret = "";
-	var edf_width=300;
-	var ay = 20;
+	var ay = 40;
 	
-	ret += '<ellipse class="edf" cx="' + (cord.x) + '" cy="' + cord.y + '" rx="' + (edf_width/2) + '" ry="' + (ay) + '" />';
+	
+	
+	ret += '<ellipse class="edf" cx="' + (cord.x - (edf_width_excluding_circles/2)) + '" cy="' + cord.y + '" rx="' + (edf_square_part_offset_x/2) + '" ry="' + (ay) + '" />';
+	ret += '<ellipse class="edf" cx="' + (cord.x + (edf_width_excluding_circles/2)) + '" cy="' + cord.y + '" rx="' + (edf_square_part_offset_x/2) + '" ry="' + (ay) + '" />';
+	ret += '<rect class="edf" x="' + (cord.x - (edf_width_excluding_circles/2)) + '" y="' + (cord.y - (ay)) + '" width="' + edf_width_excluding_circles + '" height="' + (ay*2) + '" />';
+	ret += '<line class="edf" x1="' + (cord.x - (edf_width_excluding_circles/2)) + '" y1="' + (cord.y - (ay)) + '" x2="' + (cord.x + (edf_width_excluding_circles/2)) + '" y2="' + (cord.y - (ay)) + '"/>';
+	ret += '<line class="edf" x1="' + (cord.x - (edf_width_excluding_circles/2)) + '" y1="' + (cord.y + (ay)) + '" x2="' + (cord.x + (edf_width_excluding_circles/2)) + '" y2="' + (cord.y + (ay)) + '"/>';
+	
+	var text_top_pos_y = cord.y - ((edf_text_vert_offset*2) / 2);
+	
+	//Title Text Box
 	if (typeof(link)=="undefined") {
-		ret += '<text class="edf" x="' + cord.x + '" y="' + cord.y + '" >';
+		ret += '<text class="edf" x="' + cord.x + '" y="' + text_top_pos_y + '" >';
 		ret += name;
 		ret += "</text>";
 	} else {
-		ret += '<text class="edf link" x="' + cord.x + '" y="' + cord.y + '" onclick="' + link + '">';
+		ret += '<text class="edf link" x="' + cord.x + '" y="' + text_top_pos_y + '" onclick="' + link + '">';
 		ret += name;
 		ret += "</text>";
 	};
 	
+	//Inbound Operation Text Box
+	var op_center_y = (text_top_pos_y + edf_text_vert_offset);
+	if (typeof(inbound_operation_text)=="undefined") inbound_operation_text="Sync";
+	ret += '<rect class="edf_operation" x="' + (cord.x - (edf_width/2) + edf_operation_inner_margin) + '" y="' + (op_center_y - (edf_text_vert_offset/2)) + '" width="' + (edf_width - (edf_operation_inner_margin * 2)) + '" height="' + edf_text_vert_offset + '" />';
+	ret += '<text class="edf_operation" x="' + cord.x + '" y="' + op_center_y + '" >';
+	ret += inbound_operation_text;
+	ret += "</text>";
+	
+	
+	//Outbound Operation Text Box
+	var op_center_y = (text_top_pos_y + (edf_text_vert_offset * 2));
+	if (typeof(outbound_operation_text)!="undefined") {
+		ret += '<rect class="edf_operation" x="' + (cord.x - (edf_width/2) + edf_operation_inner_margin) + '" y="' + (op_center_y - (edf_text_vert_offset/2)) + '" width="' + (edf_width - (edf_operation_inner_margin * 2)) + '" height="' + edf_text_vert_offset + '" />';		ret += '<text class="edf_operation" x="' + cord.x + '" y="' + op_center_y + '" >';
+		ret += outbound_operation_text;
+		ret += "</text>";
+	}
+	
 	return ret;
 }
+//Types for outbound (sync) are left and right. Types for inbound are left_inbound and right_inbound
 function ic_soa_svg_EDF_conectorPointLocation(cord, typ) {
 	if (typ=="left") {
-		return {x:(cord.x-(150 + conectorPointSpacing)), y:cord.y }
+		return {x:(cord.x-((edf_width_excluding_circles/2) + conectorPointSpacing)), y:cord.y }
 	};
 	if (typ=="right") {
-		return {x:(cord.x+(150 + conectorPointSpacing)), y:cord.y }
+		return {x:(cord.x+((edf_width_excluding_circles/2) + conectorPointSpacing)), y:cord.y }
+	};
+	if (typ=="left_inbound") {
+		return {x:(cord.x-((edf_width_excluding_circles/2) + conectorPointSpacing)), y:cord.y + edf_text_vert_offset }
+	};
+	if (typ=="right_inbound") {
+		return {x:(cord.x+((edf_width_excluding_circles/2) + conectorPointSpacing)), y:cord.y + edf_text_vert_offset }
 	};
 	return cord; //default to center
 };

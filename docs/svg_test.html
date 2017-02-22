@@ -101,17 +101,115 @@ function demoPoint(y) {
 
 	return ret;
 };
+function demoEDFWithOutboundOperationText(y) {
+	var ret = "";
+
+	var edf1_pos = {x:200, y:y};
+	var sys_pos = {x:450, y:y};
+	var edf2_pos = {x:750, y:y};
+	var int_pos = {x:1200, y:y};
+	ret += ic_soa_svg_drawEDF("EDF Name", edf1_pos, undefined, "Sync", undefined);
+	ret += ic_soa_svg_drawSystem("System Name", sys_pos, undefined);
+	ret += ic_soa_svg_drawEDF("EDF Name3", edf2_pos, "javascript:alert('Clicked EDF3');", "Sync", undefined);
+	ret += ic_soa_svg_drawIntegration("Integration Name", int_pos, undefined);
+
+	ret += ic_soa_svg_drawArrow( ic_soa_svg_System_conectorPointLocation(sys_pos,"right"),ic_soa_svg_EDF_conectorPointLocation(edf2_pos,"left"));
+	ret += ic_soa_svg_drawArrow( ic_soa_svg_EDF_conectorPointLocation(edf2_pos,"right"),ic_soa_svg_Integration_conectorPointLocation(int_pos,"left"));
+
+	return ret;
+};
+function demoEDFWithBothOperationText(y) {
+	var ret = "";
+
+	var edf1_pos = {x:200, y:y};
+	var sys_pos = {x:450, y:y};
+	var edf2_pos = {x:750, y:y};
+	var int_pos = {x:1200, y:y};
+	ret += ic_soa_svg_drawEDF("EDF Name", edf1_pos, undefined, "Sync", "Upsert");
+	ret += ic_soa_svg_drawSystem("System Name", sys_pos, undefined);
+	ret += ic_soa_svg_drawEDF("EDF Name4", edf2_pos, "javascript:alert('Clicked EDF4');", "Sync", "Upsert");
+	ret += ic_soa_svg_drawIntegration("Integration Name", int_pos, undefined);
+
+	ret += ic_soa_svg_drawArrow( 
+		ic_soa_svg_System_conectorPointLocation(sys_pos,"right"),
+		ic_soa_svg_EDF_conectorPointLocation(edf2_pos,"left")
+	);
+	ret += ic_soa_svg_drawArrow( 
+		ic_soa_svg_EDF_conectorPointLocation(edf2_pos,"left_inbound"),
+		ic_soa_svg_System_conectorPointLocation(sys_pos,"right")
+	);
+	
+	
+	ret += ic_soa_svg_drawArrow( 
+		ic_soa_svg_EDF_conectorPointLocation(edf2_pos,"right"),
+		ic_soa_svg_Integration_conectorPointLocation(int_pos,"left")
+	);
+	ret += ic_soa_svg_drawArrow( 
+		ic_soa_svg_Integration_conectorPointLocation(int_pos,"left"),
+		ic_soa_svg_EDF_conectorPointLocation(edf2_pos,"right_inbound")
+	);
+
+	return ret;
+};
+function demoIntegrationWithOutboundOperationText(y) {
+	var ret = "";
+
+	var int1_pos = {x:210, y:y};
+	var edf_pos = {x:600, y:y};
+	var int2_pos = {x:1050, y:y};
+	var sys_pos = {x:1400, y:y};
+	ret += ic_soa_svg_drawIntegration("Integration Name",int1_pos, undefined);
+	ret += ic_soa_svg_drawEDF("EDF Name", edf_pos, undefined, "Sync", undefined);
+	ret += ic_soa_svg_drawIntegration("Integration Name2",int2_pos, "javascript:alert('Clicked INT2');");
+	ret += ic_soa_svg_drawSystem("System Name", sys_pos, undefined);
+
+	ret += ic_soa_svg_drawArrow( ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),ic_soa_svg_Integration_conectorPointLocation(int2_pos,"left"));
+	ret += ic_soa_svg_drawArrow( ic_soa_svg_Integration_conectorPointLocation(int2_pos,"right"),ic_soa_svg_System_conectorPointLocation(sys_pos,"left"));
+
+	return ret;
+};
+function demoIntegrationWithBothOperationText(y) {
+	var ret = "";
+
+	var int1_pos = {x:210, y:y};
+	var edf_pos = {x:600, y:y};
+	var int2_pos = {x:1050, y:y};
+	var sys_pos = {x:1400, y:y};
+	ret += ic_soa_svg_drawIntegration("Integration Name",int1_pos, undefined);
+	ret += ic_soa_svg_drawEDF("EDF Name", edf_pos, undefined, "Sync", "Upsert");
+	ret += ic_soa_svg_drawIntegration("Integration Name2",int2_pos, "javascript:alert('Clicked INT2');");
+	ret += ic_soa_svg_drawSystem("System Name", sys_pos, undefined);
+
+	ret += ic_soa_svg_drawArrow( ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),ic_soa_svg_Integration_conectorPointLocation(int2_pos,"left"));
+	ret += ic_soa_svg_drawArrow( ic_soa_svg_Integration_conectorPointLocation(int2_pos,"right"),ic_soa_svg_System_conectorPointLocation(sys_pos,"left"));
+
+	return ret;
+};
 
 function getHTML() {
 	var ret = "";
 
 
-	var svg_height = 700;
+	var svg_height = 1000;
 
-	var cur_height = 100;
+	var cur_height = 0;
 
 	ret += "<svg class=\"ic_soa_svg\" style=\"width: 1500; height: " + svg_height + ";\">";
 	ret += ic_soa_svg_getMarkers();
+
+	cur_height += 100;
+	ret += demoEDFWithOutboundOperationText(cur_height);
+
+	cur_height += 100;
+	ret += demoEDFWithBothOperationText(cur_height);
+	
+	cur_height += 100;
+	ret += demoIntegrationWithOutboundOperationText(cur_height);
+
+	cur_height += 100;
+	ret += demoIntegrationWithBothOperationText(cur_height);
+	
+	cur_height += 100;
 	ret += demoSystem(cur_height);
 
 	cur_height += 100;
@@ -129,6 +227,7 @@ function getHTML() {
 	ret += "</svg>";
 	return ret;
 }
+
 
 function mainOnLoad() {
 	document.getElementById('MAIN').innerHTML = getHTML();
