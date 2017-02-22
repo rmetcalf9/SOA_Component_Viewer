@@ -30,7 +30,9 @@ function ic_soa_data_getSheetMetrics() {
 		tagscol: 5,
 		uidcol: 0,
 		source_sys_col: 4,
-		ebocol: 6
+		ebocol: 6,
+		inbound_operation_text_col: 7,
+		outbound_operation_text_col: 8
 	};
 	ret["INT"] = {
 		datarange: 'Integration!A2:G',
@@ -43,7 +45,9 @@ function ic_soa_data_getSheetMetrics() {
 		tagscol: 6,
 		uidcol: 0,
 		target_sys_col: 3,
-		source_edf_col: 2
+		source_edf_col: 2,
+		inbound_operation_text_col: 7,
+		outbound_operation_text_col: 8
 	};
 	ret["PRES"] = {
 		datarange: 'Presentation!A2:H',
@@ -176,6 +180,8 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 				order: row[cur_sheet_metrics.indexcol],
 				source_system: source_system,
 				ebo: row[cur_sheet_metrics.ebocol],
+				inbound_operation_text: row[cur_sheet_metrics.inbound_operation_text_col],
+				outbound_operation_text: row[cur_sheet_metrics.outbound_operation_text_col],
 			}
 			if (typeof(SYSTEMs[source_system])=="undefined") {
 				SYSTEMkeys.push(source_system);
@@ -208,6 +214,8 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 				order: row[cur_sheet_metrics.indexcol],
 				target_system: target_system,
 				source_edf: row[cur_sheet_metrics.source_edf_col],
+				inbound_operation_text: row[cur_sheet_metrics.inbound_operation_text_col],
+				outbound_operation_text: row[cur_sheet_metrics.outbound_operation_text_col],
 			}
 			if (typeof(SYSTEMs[target_system])=="undefined") {
 				SYSTEMkeys.push(target_system);

@@ -24,7 +24,7 @@ function getEDFHtml(uid) {
 	var edf_pos = {x:350, y:(svg_height/2)};
 
 	var source_system_object = ic_soa_data_getSystemFromName(curEDF.source_system,dataObjects);
-	
+
 	ret += '<table>';
 	ret += '<tr><td colspan=2>'
 	ret += GetMenu();
@@ -32,8 +32,11 @@ function getEDFHtml(uid) {
 	ret += "<svg class=\"ic_soa_svg\" style=\"width: 1300px; height: " + svg_height + "px;\">";
 	ret += ic_soa_svg_getMarkers();
 	ret += ic_soa_svg_drawSystem(curEDF.source_system,source_sys_pos,"javascript:displaySYSTEM('" + source_system_object.uid + "')");
-	ret += ic_soa_svg_drawEDF(curEDF.name,edf_pos);
-	ret += ic_soa_svg_drawArrow(ic_soa_svg_System_conectorPointLocation(source_sys_pos,"right"), ic_soa_svg_EDF_conectorPointLocation(edf_pos,"left"));
+	ret += ic_soa_svg_drawEDF(curEDF.name,edf_pos,curEDF.inbound_operation_text,curEDF.outbound_operation_text);
+	ret += ic_soa_svg_drawArrow(
+		ic_soa_svg_System_conectorPointLocation(source_sys_pos,"right"), 
+		ic_soa_svg_EDF_conectorPointLocation(edf_pos,"left")
+	);
 
 	var int_pos = {x:800, y:50};
 	for (cur_do = 0; cur_do < ints_to_draw.length; cur_do++) {
@@ -43,9 +46,15 @@ function getEDFHtml(uid) {
 					ints_to_draw[cur_do].target_system,
 					int_pos,
 					"javascript:displayINT('" + ints_to_draw[cur_do].uid + "')",
-					"javascript:displaySYSTEM('" + target_system_object.uid + "')"
+					"javascript:displaySYSTEM('" + target_system_object.uid + "')",
+					ints_to_draw[cur_do].inbound_operation_text,
+					ints_to_draw[cur_do].outbound_operation_text
 		);
-		ret += ic_soa_svg_drawArrow( ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),ic_soa_svg_Integration_conectorPointLocation(int_pos,"left"));
+		ret += ic_soa_svg_drawArrow( 
+			ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),
+			ic_soa_svg_Integration_conectorPointLocation(int_pos,"left")
+		);
+		//TODO SECOND ARROW
 		int_pos.y = int_pos.y + 100;
 	}
 	

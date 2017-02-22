@@ -209,13 +209,14 @@ function ic_soa_svg_Integration_conectorPointLocation(cord, typ) {
 };
 
 
-function ic_soa_svg_drawIntegrationWithTarget(name, targ_sys_name, cord, int_link, sys_link) {
+function ic_soa_svg_drawIntegrationWithTarget(name, targ_sys_name, cord, int_link, sys_link, inbound_operation_text, outbound_operation_text) {
 	var ret = "";
 	var int_pos = {x:(cord.x),y:(cord.y)};
 	var sys_pos = {x:(cord.x+350),y:(cord.y)};
-	ret += ic_soa_svg_drawIntegration(name,int_pos, int_link);
+	ret += ic_soa_svg_drawIntegration(name,int_pos, int_link, inbound_operation_text, outbound_operation_text);
 	ret += ic_soa_svg_drawSystem(targ_sys_name,sys_pos,sys_link);
 	ret += ic_soa_svg_drawArrow(ic_soa_svg_Integration_conectorPointLocation(int_pos,"right"), ic_soa_svg_System_conectorPointLocation(sys_pos,"left"));
+	//TODO SECOND ARROW
 	return ret;
 }
 
