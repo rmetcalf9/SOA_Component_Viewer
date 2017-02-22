@@ -78,7 +78,7 @@ function ic_soa_svg_drawOPERATION(obj_class, cord, operation_text, parent_width,
 	return ret;
 };
 
-
+ 
 var edf_width=300;
 var edf_square_part_offset_x = 30;
 var edf_inner_width = edf_width - edf_square_part_offset_x;
