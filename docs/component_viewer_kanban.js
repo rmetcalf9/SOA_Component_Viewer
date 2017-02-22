@@ -126,7 +126,10 @@ function displayKANBAN() {
 
 //Callback from kanban
 function CB_item_dbl_click(item_array_pos, data) {
-	data[item_array_pos].view_fn(data[item_array_pos].uid)
+	console.log("CB_item_dbl_click");
+	console.log(data[item_array_pos]);
+	console.log(item_array_pos);
+	data[item_array_pos].view_fn(data[item_array_pos].obj.uid)
 };
 
 //Save all the changeable fields from an object
