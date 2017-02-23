@@ -73,13 +73,7 @@ function getEDFHtml(uid) {
 	ret += '</svg>';
 	ret += '</td></tr>';
 	
-	var w = $( document ).width() - 400;
-	
 	ret += '<tr class="main">';
-	ret += '<td width="' + w + 'px">';
-	ret += '<iframe src="' + getConfluenceURL(curEDF) + '" scrolling="yes" height="100%" width="' + w + 'px" >';
-	ret += '</iframe>';
-	ret += '</td>';
 	ret += '<td valign="top" align="left">';
 	
 	ret += '<table border=1>';

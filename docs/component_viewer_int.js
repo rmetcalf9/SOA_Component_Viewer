@@ -56,13 +56,7 @@ function getINTHtml(uid) {
 	ret += '</td>';
 	ret += '</tr>';
 	
-	var w = $( document ).width() - 400;
-	
 	ret += '<tr class="main">';
-	ret += '<td valign="top" width="' + w + 'px">';
-	ret += '<iframe src="' + getConfluenceURL(curINT) + '" scrolling="yes" height="100%" width="' + w + 'px" >';
-	ret += '</iframe>';
-	ret += '</td>';
 	ret += '<td valign="top" align="left">';
 
 
