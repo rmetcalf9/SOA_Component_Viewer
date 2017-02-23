@@ -20,7 +20,7 @@ function ic_soa_data_getSheetMetrics() {
 	var ret = {};
 	
 	ret["EDF"] = {
-		datarange: 'EDFList!A2:G',
+		datarange: 'EDFList!A2:I',
 		sheet_name: 'EDFList',
 		css_tag: 'red',
 		indexcol: 1,
@@ -35,7 +35,7 @@ function ic_soa_data_getSheetMetrics() {
 		outbound_operation_text_col: 8
 	};
 	ret["INT"] = {
-		datarange: 'Integration!A2:G',
+		datarange: 'Integration!A2:I',
 		sheet_name: 'Integration',
 		css_tag: 'green',
 		indexcol: 1,
