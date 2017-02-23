@@ -26,7 +26,7 @@ function getINTHtml(uid) {
 	var src_edf_obj = ic_soa_data_getEDFFromName(curINT.source_edf, dataObjects);
 	//console.log(src_edf_obj);
 	
-	ret += ic_soa_svg_drawEDF(curINT.source_edf,edf_pos,"javascript:displayEDF('" + src_edf_obj.uid + "')");
+	ret += ic_soa_svg_drawEDF(curINT.source_edf,edf_pos,"javascript:displayEDF('" + src_edf_obj.uid + "')",src_edf_obj.inbound_operation_text,src_edf_obj.outbound_operation_text);
 
 	var target_system_object = ic_soa_data_getSystemFromName(curINT.target_system,dataObjects);
 	
@@ -35,9 +35,21 @@ function getINTHtml(uid) {
 		curINT.target_system,
 		int_pos,
 		undefined,
-		"javascript:displaySYSTEM('" + target_system_object.uid + "')"
+		"javascript:displaySYSTEM('" + target_system_object.uid + "')",
+		curINT.inbound_operation_text,
+		curINT.outbound_operation_text
 	);
-	ret += ic_soa_svg_drawArrow( ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),ic_soa_svg_Integration_conectorPointLocation(int_pos,"left"));
+	ret += ic_soa_svg_drawArrow( 
+		ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),
+		ic_soa_svg_Integration_conectorPointLocation(int_pos,"left")
+	);
+	if (typeof(curINT.outbound_operation_text)!="undefined") {
+		ret += ic_soa_svg_drawArrow( 
+			ic_soa_svg_Integration_conectorPointLocation(int_pos,"left_inbound"),
+			ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right_inbound")
+		);
+	}
+	
 	
 	ret += "</svg>";
 
