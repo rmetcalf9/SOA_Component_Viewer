@@ -90,9 +90,21 @@ function getSYSTEMHtml(uid) {
 		ret += ic_soa_svg_drawIntegration(
 					ints_to_draw[cur_do].name,
 					pos,
-					"javascript:displayINT('" + ints_to_draw[cur_do].uid + "')"
+					"javascript:displayINT('" + ints_to_draw[cur_do].uid + "')",
+					ints_to_draw[cur_do].inbound_operation_text,
+					ints_to_draw[cur_do].outbound_operation_text
 		);
-		ret += ic_soa_svg_drawArrow(ic_soa_svg_Integration_conectorPointLocation(pos,"right"),ic_soa_svg_System_conectorPointLocation(system_pos,"left"));
+		ret += ic_soa_svg_drawArrow(
+			ic_soa_svg_Integration_conectorPointLocation(pos,"right"),
+			ic_soa_svg_System_conectorPointLocation(system_pos,"left")
+		);
+		if (typeof(ints_to_draw[cur_do].outbound_operation_text)!="undefined") {
+		ret += ic_soa_svg_drawArrow(
+			ic_soa_svg_System_conectorPointLocation(system_pos,"left"),
+			ic_soa_svg_Integration_conectorPointLocation(pos,"right_inbound")
+		);
+		}
+		
 		pos.y = pos.y + vert_pitch;
 	}
 	//Draw SOURCE Presentation Services below the INTS (on left)
@@ -127,9 +139,21 @@ function getSYSTEMHtml(uid) {
 		ret += ic_soa_svg_drawEDF(
 					edfs_to_draw[cur_do].name,
 					pos,
-					"javascript:displayEDF('" + edfs_to_draw[cur_do].uid + "')"
+					"javascript:displayEDF('" + edfs_to_draw[cur_do].uid + "')",
+					edfs_to_draw[cur_do].inbound_operation_text,
+					edfs_to_draw[cur_do].outbound_operation_text
 		);
-		ret += ic_soa_svg_drawArrow(ic_soa_svg_System_conectorPointLocation(system_pos,"right"),ic_soa_svg_EDF_conectorPointLocation(pos,"left"));
+		ret += ic_soa_svg_drawArrow(
+			ic_soa_svg_System_conectorPointLocation(system_pos,"right"),
+			ic_soa_svg_EDF_conectorPointLocation(pos,"left")
+		);
+		if (typeof(edfs_to_draw[cur_do].outbound_operation_text)!="undefined") {
+			ret += ic_soa_svg_drawArrow(
+				ic_soa_svg_EDF_conectorPointLocation(pos,"left_inbound"),
+				ic_soa_svg_System_conectorPointLocation(system_pos,"right")
+			);
+		}
+		
 		pos.y = pos.y + vert_pitch;
 	}
 	//Draw TARGET Presentation Services below the EDFS (on right)
