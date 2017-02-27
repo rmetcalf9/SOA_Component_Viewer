@@ -444,4 +444,12 @@ function ic_soa_data_getSystemFromName(systemName, dataObjects) {
 	return undefined;
 };
 
+function ic_soa_data_getComponentFromUID(uid) {
+	if (typeof(dataObjects.EDFs[uid])!="undefined") return dataObjects.EDFs[uid];
+	if (typeof(dataObjects.INTs[uid])!="undefined") return dataObjects.INTs[uid];
+	if (typeof(dataObjects.POINTs[uid])!="undefined") return dataObjects.POINTs[uid];
+	if (typeof(dataObjects.PRESs[uid])!="undefined") return dataObjects.PRESs[uid];
+	
+	return undefined;
+};
 

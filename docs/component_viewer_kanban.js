@@ -93,6 +93,10 @@ function loadDataIntoKanbanComponent() {
 					}
 				);
 			};			
+		} else if ("RESOURCELANES"==sm[cur_sheet]) {
+			//Not a component sheet
+		} else if ("RESOURCEALLOCATION"==sm[cur_sheet]) {
+			//Not a component sheet
 		} else {
 			console.log("Unknown sheet - " + sm[cur_sheet] + " kanban cards not loaded for this sheet");
 		};
@@ -161,6 +165,9 @@ function saveObj(sheet_data_item,sheet_row,obj) {
 
 function CB_onAfterDrop(new_status,item_dropped_array_pos,data) {
 	//Save the entire list - required as orders will be changed
+	//console.log("onAfterDrop");
+	//console.log(data[item_dropped_array_pos].obj.uid);
+	
 	board_prepare_saveBatch();
 	for (var c=0;c<data.length;c++) {
 		var row = data[c];
@@ -180,6 +187,9 @@ function CB_onAfterDrop(new_status,item_dropped_array_pos,data) {
 	
 	board_execute_saveBatch(spreadsheetId);
 	
+	//Update unestimated work menu number
+	component_viewer_res_data_notify_component_state_change(data[item_dropped_array_pos].obj.uid);
+	component_viewer_res_updateMenuText();
 };
 
 //Call back to update after tags have changed

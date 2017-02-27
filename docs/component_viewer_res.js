@@ -7,10 +7,18 @@ function component_viewer_res_getMenuHtml() {
 	ret += "<table><tr>";
 	//ret += "<th>Resourse Management</th>"
 	//ret += "</tr><tr>";
-	ret +=  '<td><a href="javascript:component_viewer_res_displayRES(\'Unestimated\')">Unestimated Work (X)</a></td> '
+	ret +=  '<td><a href="javascript:component_viewer_res_displayRES(\'Unestimated\')">Unestimated Work (<span id="component_viewer_res_componentsMissingEstimate">';
+	ret += component_viewer_res_data_glob.componentsMissingEstimate.length;
+	ret += '</span>)</a></td> '
 	ret += "</tr></table>";
 
 	return ret;
+}
+function component_viewer_res_updateMenuText() {
+	var comp = $("#component_viewer_res_componentsMissingEstimate");
+	if (typeof(comp)!="undefined") {
+		comp.text(component_viewer_res_data_glob.componentsMissingEstimate.length);
+	};
 }
 
 function component_viewer_res_getRESUnestimatedHtml() {

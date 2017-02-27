@@ -28,6 +28,7 @@
 <script src="component_viewer_system.js" type="text/javascript"></script>
 <script src="component_viewer_res.js" type="text/javascript"></script>
 <script src="component_viewer_res_unestimated.js" type="text/javascript"></script>
+<script src="component_viewer_res_data.js" type="text/javascript"></script>
 
 <!-- kanbancompnent -->
 <script src="kanbancomponent/kanbancomponent.js"></script>
@@ -155,6 +156,8 @@
 				};
 				LoadStatusList(result);
 
+				postLoadDataObjectsInit();
+
 				//console.log(dataObjects);
 				if (QueryString.mode=="EDF") {
 					if (typeof(QueryString.name)=="undefined") {
@@ -184,9 +187,11 @@
 			
 			});
 		}; //accessLevel IF
-	
 	};
 	
+	function postLoadDataObjectsInit() {
+		component_viewer_res_data_computeRequiredEstimates();
+	};
 	
 	function getConfluenceURL(obj) {
 		//https://wiki.imperial.ac.uk/display/IED/Person
