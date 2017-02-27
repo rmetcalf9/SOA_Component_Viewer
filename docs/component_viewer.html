@@ -26,6 +26,8 @@
 <script src="component_viewer_point.js" type="text/javascript"></script>
 <script src="component_viewer_pres.js" type="text/javascript"></script>
 <script src="component_viewer_system.js" type="text/javascript"></script>
+<script src="component_viewer_res.js" type="text/javascript"></script>
+<script src="component_viewer_res_unestimated.js" type="text/javascript"></script>
 
 <!-- kanbancompnent -->
 <script src="kanbancomponent/kanbancomponent.js"></script>
@@ -73,13 +75,19 @@
 
 	function GetMenu() {
 		var ret = "";
-		ret += '<p><a href="index.html">Index</a> <a href="javascript:displayNOPARAM()">Menu</a> <a href="javascript:displayKANBAN()">Board</a>';
+		ret += "<table><tr>";
+		ret += '<td><a href="index.html">Index</a></td><td><a href="javascript:displayNOPARAM()">Menu</a></td><td><a href="javascript:displayKANBAN()">Board</a></td>';
+		
+		ret += "<td>" + component_viewer_res_getMenuHtml() + "</td>";
+		
+		ret += "<td>";
 		if (accessLevel=="READWRITE") {
 			ret += " (can write)";
 		} else {
 			//ret += " Read only";
 		};
-		ret += '</p>';
+		ret += "</td>";
+		ret += '</tr></table>';
 		ret += '<div id="MAIN" style="display: none">';
 		ret += '<h1>Viewing MAIN</h1>';
 		ret += '</div>';
