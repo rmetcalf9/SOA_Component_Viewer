@@ -26,13 +26,31 @@ function component_viewer_res_data_getResoueseEstimate(uid) {
 	return dataObjects.RESOURCEALLOCATIONs[uid];
 };
 
+//Returns an active estimate for a component if it has one
+function component_viewer_res_data_get_active_estimate_for_component(component_uid) {
+	for (var cur_do = 0; cur_do < dataObjects.RESOURCEALLOCATIONkeys.length; cur_do++) {
+		res_alloc_obj = dataObjects.RESOURCEALLOCATIONkeys[cur_do];
+		if (res_alloc_obj.itemuid==component_uid) {
+			if (res_alloc_obj.status!="Completed") return res_alloc_obj;
+		};
+	}
+	return undefined;
+};
+
+//Return true if this component has an active estimate. (Ignore completed estimates)
+function component_viewer_res_data_component_has_active_estimate
+(component_uid) {
+	return component_viewer_res_data_get_active_estimate_for_component(component_uid)!=undefined;
+};
+
 function component_viewer_res_data_computeRequiredEstimates() {
 	component_viewer_res_data_glob.componentsMissingEstimate = [];
 	
 	//EDFs
 	for (var cur_do = 0; cur_do < dataObjects.EDFkeys.length; cur_do++) {
 		if (component_viewer_res_data_componentRequiresEstimate(dataObjects.EDFs[dataObjects.EDFkeys[cur_do]])) {
-			if (typeof(component_viewer_res_data_getResoueseEstimate(dataObjects.EDFkeys[cur_do]))=="undefined") {
+			if (!component_viewer_res_data_component_has_active_estimate
+(dataObjects.EDFkeys[cur_do])) {
 				component_viewer_res_data_glob.componentsMissingEstimate.push(dataObjects.EDFkeys[cur_do]);
 			}
 		};
@@ -41,7 +59,8 @@ function component_viewer_res_data_computeRequiredEstimates() {
 	//INTs
 	for (var cur_do = 0; cur_do < dataObjects.INTkeys.length; cur_do++) {
 		if (component_viewer_res_data_componentRequiresEstimate(dataObjects.INTs[dataObjects.INTkeys[cur_do]])) {
-			if (typeof(component_viewer_res_data_getResoueseEstimate(dataObjects.INTkeys[cur_do]))=="undefined") {
+			if (!component_viewer_res_data_component_has_active_estimate
+(dataObjects.INTkeys[cur_do])) {
 				component_viewer_res_data_glob.componentsMissingEstimate.push(dataObjects.INTkeys[cur_do]);
 			}
 		};
@@ -50,7 +69,8 @@ function component_viewer_res_data_computeRequiredEstimates() {
 	//PRESs
 	for (var cur_do = 0; cur_do < dataObjects.PRESkeys.length; cur_do++) {
 		if (component_viewer_res_data_componentRequiresEstimate(dataObjects.PRESs[dataObjects.PRESkeys[cur_do]])) {
-			if (typeof(component_viewer_res_data_getResoueseEstimate(dataObjects.PRESkeys[cur_do]))=="undefined") {
+			if (!component_viewer_res_data_component_has_active_estimate
+(dataObjects.PRESkeys[cur_do])) {
 				component_viewer_res_data_glob.componentsMissingEstimate.push(dataObjects.PRESkeys[cur_do]);
 			}
 		};
@@ -59,7 +79,8 @@ function component_viewer_res_data_computeRequiredEstimates() {
 	//POINTs
 	for (var cur_do = 0; cur_do < dataObjects.POINTkeys.length; cur_do++) {
 		if (component_viewer_res_data_componentRequiresEstimate(dataObjects.POINTs[dataObjects.POINTkeys[cur_do]])) {
-			if (typeof(component_viewer_res_data_getResoueseEstimate(dataObjects.POINTkeys[cur_do]))=="undefined") {
+			if (!component_viewer_res_data_component_has_active_estimate
+(dataObjects.POINTkeys[cur_do])) {
 				component_viewer_res_data_glob.componentsMissingEstimate.push(dataObjects.POINTkeys[cur_do]);
 			}
 		};
