@@ -13,6 +13,8 @@ function ic_soa_data_getSheetList() {
 	ret.push("INT");
 	ret.push("PRES");
 	ret.push("POINT");
+	ret.push("RESOURCELANES");
+	ret.push("RESOURCEALLOCATION");
 	return ret;
 };
 
@@ -76,7 +78,31 @@ function ic_soa_data_getSheetMetrics() {
 		provider_sys_list_col: 6,
 		client_list_col: 7,
 		rawnamecol: 2
+	};
+	ret["RESOURCELANES"] = {
+		datarange: 'ResourceLanes!A2:B',
+		sheet_name: 'ResourceLanes',
+		toprow: 2,
+		uidcol: 0,
+		ratecol: 1
+	};
+	ret["RESOURCEALLOCATION"] = {
+		datarange: 'ResourceAllocation!A2:K',
+		sheet_name: 'ResourceAllocation',
+		toprow: 2,
+		uidcol: 0,
+		itemuidcol: 1,
+		textcol: 2,
+		resourcelaneassignmentcol: 3,
+		assignmentratecol: 4,
+		originaldayscol: 5,
+		remainingdayscol: 6,
+		lastupdatecol: 7,
+		statuscol: 8,
+		binpackprioritycol: 9,
+		tagscol: 10
 	};	
+	
 	return ret;
 };
 
@@ -148,6 +174,12 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 	var POINTkeys = [];
 	var POINTs = {};
+
+	var RESOURCELANESkeys = [];
+	var RESOURCELANESs = {};
+
+	var RESOURCEALLOCATIONkeys = [];
+	var RESOURCEALLOCATIONs = {};
 
 	var SYSTEMkeys = [];
 	var SYSTEMs = {};
@@ -296,6 +328,53 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		report_error("Bad Data in " + cur_sheet + " range");
 		return;
 	}
+	
+	range = googleAPIResult[4 + numPre]; //0 = RESOURCELANES
+	cur_sheet_metrics = sheetMetrics[sheetList[4]];
+	if (range.values.length > 0) {
+		for (var cur_range = 0; cur_range < range.values.length; cur_range++) {
+			var row = range.values[cur_range];
+
+			RESOURCELANESkeys.push(row[cur_sheet_metrics.uidcol]);
+			RESOURCELANESs[row[cur_sheet_metrics.uidcol]] = {
+				uid: row[cur_sheet_metrics.uidcol],
+				rate: row[cur_sheet_metrics.ratecol],
+			}
+		}
+	} else {
+		console.log(response);
+		report_error("Bad Data in " + cur_sheet + " range");
+		return;
+	}	
+	
+	range = googleAPIResult[5 + numPre]; //0 = RESOURCEALLOCATION
+	cur_sheet_metrics = sheetMetrics[sheetList[5]];
+	if (typeof(range.values)!="undefined") {
+		if (range.values.length > 0) {
+			for (var cur_range = 0; cur_range < range.values.length; cur_range++) {
+				var row = range.values[cur_range];
+
+				RESOURCEALLOCATIONkeys.push(row[cur_sheet_metrics.uidcol]);
+				RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]] = {
+					uid: row[cur_sheet_metrics.uidcol],
+					itemuid: row[cur_sheet_metrics.itemuidcol],
+					text: row[cur_sheet_metrics.textcol],
+					resourcelaneassignment: row[cur_sheet_metrics.resourcelaneassignmentcol],
+					assignmentrate: row[cur_sheet_metrics.assignmentratecol],
+					originaldays: row[cur_sheet_metrics.originaldayscol],
+					remainingdays: row[cur_sheet_metrics.remainingdayscol],
+					lastupdate: row[cur_sheet_metrics.lastupdatecol],
+					status: row[cur_sheet_metrics.statuscol],
+					binpackpriority: row[cur_sheet_metrics.binpackprioritycol],
+					tags: row[cur_sheet_metrics.tagscol],
+				}
+			}
+		} else {
+			console.log(response);
+			report_error("Bad Data in " + cur_sheet + " range");
+			return;
+		}	
+	}
 
 	SYSTEMkeys = SYSTEMkeys.sort();
 	EDFkeys = EDFkeys.sort(function (ak,bk) {
@@ -330,7 +409,11 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		PRESs: PRESs,
 		POINTkeys: POINTkeys,
 		POINTs: POINTs,
-		TAGs: TAGs
+		TAGs: TAGs,
+		RESOURCELANESkeys: RESOURCELANESkeys,
+		RESOURCELANESs: RESOURCELANESs,
+		RESOURCEALLOCATIONkeys: RESOURCEALLOCATIONkeys,
+		RESOURCEALLOCATIONs: RESOURCEALLOCATIONs,
 	};
 };
 
