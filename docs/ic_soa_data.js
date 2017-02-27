@@ -337,6 +337,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 			RESOURCELANESkeys.push(row[cur_sheet_metrics.uidcol]);
 			RESOURCELANESs[row[cur_sheet_metrics.uidcol]] = {
+				sheet_row: (cur_range+cur_sheet_metrics.toprow),
 				uid: row[cur_sheet_metrics.uidcol],
 				rate: row[cur_sheet_metrics.ratecol],
 			}
@@ -356,6 +357,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 				RESOURCEALLOCATIONkeys.push(row[cur_sheet_metrics.uidcol]);
 				RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]] = {
+					sheet_row: (cur_range+cur_sheet_metrics.toprow),
 					uid: row[cur_sheet_metrics.uidcol],
 					itemuid: row[cur_sheet_metrics.itemuidcol],
 					text: row[cur_sheet_metrics.textcol],
