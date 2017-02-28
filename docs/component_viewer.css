@@ -23,3 +23,30 @@ div#MAIN > table > tbody > tr.main {
 div#MAIN > table > tbody > tr.main > td {
 	height: 100%;
 }
+
+table#component_viewer_res_unestimated_main {
+	border: 2px solid;
+	border-collapse: collapse;
+}
+
+table#component_viewer_res_unestimated_main > tbody > tr > th {
+	border: 2px solid;
+	padding-top: 10px;
+}
+
+table#component_viewer_res_unestimated_main > tbody > tr > td {
+	border: 0.5px solid;
+}
+
+table#component_viewer_res_unestimated_main > tbody > tr.red {
+	background-color: pink;
+}
+table#component_viewer_res_unestimated_main > tbody > tr.green {
+	background-color: lightgreen;
+}
+table#component_viewer_res_unestimated_main > tbody > tr.blue {
+	background-color: lightblue;
+}
+table#component_viewer_res_unestimated_main > tbody > tr.yellow {
+	background-color: yellow;
+}

@@ -159,6 +159,14 @@ function ic_soa_data_istaginlist(tag, comma_seperated_tag_list) {
 	return typeof(TAGlis[tag])!="undefined";
 };
 
+//Function number of tags in taglist
+function ic_soa_data_num_of_tags(comma_seperated_tag_list) {
+	if (typeof(comma_seperated_tag_list)=="undefined") return 0;
+	var tmp = comma_seperated_tag_list.trim();
+	if (tmp.length==0) return 0;
+	return ((tmp.match(/,/g) || []).length) + 1;
+};
+
 function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, numPre) {
 	//numPre - number of ranges in the result before the sheets
 	//   sheets must be at the end
@@ -195,8 +203,11 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		return;
 	};
 
-	var range = googleAPIResult[0 + numPre]; //0 = EDF
-	var cur_sheet_metrics = sheetMetrics[sheetList[0]];
+	var sheetListIdx = 0;
+	
+	sheetListIdx = 0;  //0 = EDF
+	var range = googleAPIResult[sheetListIdx + numPre];
+	var cur_sheet_metrics = sheetMetrics[sheetList[sheetListIdx]];
 	if (range.values.length > 0) {
 		for (var i = 0; i < range.values.length; i++) {
 			var row = range.values[i];
@@ -204,6 +215,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 			ic_soa_data_buildtaglist_tag(row[cur_sheet_metrics.tagscol],TAGs);
 			EDFkeys.push(row[cur_sheet_metrics.uidcol]);
 			EDFs[row[cur_sheet_metrics.uidcol]] = {
+				source_sheet: sheetList[sheetListIdx],
 				uid: row[cur_sheet_metrics.uidcol],
 				name: row[cur_sheet_metrics.namecol],
 				status: row[cur_sheet_metrics.listcol],
@@ -229,8 +241,9 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		return;
 	}
 
-	range = googleAPIResult[1 + numPre]; //0 = EDF
-	cur_sheet_metrics = sheetMetrics[sheetList[1]];
+	sheetListIdx = 1;  //0 = INT
+	range = googleAPIResult[sheetListIdx + numPre]; //1 = INT
+	cur_sheet_metrics = sheetMetrics[sheetList[sheetListIdx]];
 	if (range.values.length > 0) {
 		for (var i = 0; i < range.values.length; i++) {
 			var row = range.values[i];
@@ -238,6 +251,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 			ic_soa_data_buildtaglist_tag(row[cur_sheet_metrics.tagscol],TAGs);
 			INTkeys.push(row[cur_sheet_metrics.uidcol]);
 			INTs[row[cur_sheet_metrics.uidcol]] = {
+				source_sheet: sheetList[sheetListIdx],
 				uid: row[cur_sheet_metrics.uidcol],
 				name: row[cur_sheet_metrics.namecol],
 				status: row[cur_sheet_metrics.listcol],
@@ -263,8 +277,9 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		return;
 	}
 
-	range = googleAPIResult[2 + numPre]; //0 = PRES
-	cur_sheet_metrics = sheetMetrics[sheetList[2]];
+	sheetListIdx = 2;  //2 = PRES
+	range = googleAPIResult[sheetListIdx + numPre]; //
+	cur_sheet_metrics = sheetMetrics[sheetList[sheetListIdx]];
 	if (range.values.length > 0) {
 		for (var cur_range = 0; cur_range < range.values.length; cur_range++) {
 			var row = range.values[cur_range];
@@ -276,6 +291,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 			PRESkeys.push(row[cur_sheet_metrics.uidcol]);
 			PRESs[row[cur_sheet_metrics.uidcol]] = {
+				source_sheet: sheetList[sheetListIdx],
 				uid: row[cur_sheet_metrics.uidcol],
 				name: row[cur_sheet_metrics.namecol],
 				status: row[cur_sheet_metrics.listcol],
@@ -300,8 +316,9 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		return;
 	}
 
-	range = googleAPIResult[3 + numPre]; //0 = POINT
-	cur_sheet_metrics = sheetMetrics[sheetList[3]];
+	sheetListIdx = 3;  //3 = POINT
+	range = googleAPIResult[sheetListIdx + numPre]; //
+	cur_sheet_metrics = sheetMetrics[sheetList[sheetListIdx]];
 	if (range.values.length > 0) {
 		for (var cur_range = 0; cur_range < range.values.length; cur_range++) {
 			var row = range.values[cur_range];
@@ -312,6 +329,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 			POINTkeys.push(row[cur_sheet_metrics.uidcol]);
 			POINTs[row[cur_sheet_metrics.uidcol]] = {
+				source_sheet: sheetList[sheetListIdx],
 				uid: row[cur_sheet_metrics.uidcol],
 				name: row[cur_sheet_metrics.namecol],
 				status: row[cur_sheet_metrics.listcol],
@@ -329,14 +347,16 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		return;
 	}
 	
-	range = googleAPIResult[4 + numPre]; //0 = RESOURCELANES
-	cur_sheet_metrics = sheetMetrics[sheetList[4]];
+	sheetListIdx = 4;  //4 = RESOURCELANES
+	range = googleAPIResult[sheetListIdx + numPre]; //
+	cur_sheet_metrics = sheetMetrics[sheetList[sheetListIdx]];
 	if (range.values.length > 0) {
 		for (var cur_range = 0; cur_range < range.values.length; cur_range++) {
 			var row = range.values[cur_range];
 
 			RESOURCELANESkeys.push(row[cur_sheet_metrics.uidcol]);
 			RESOURCELANESs[row[cur_sheet_metrics.uidcol]] = {
+				source_sheet: sheetList[sheetListIdx],
 				sheet_row: (cur_range+cur_sheet_metrics.toprow),
 				uid: row[cur_sheet_metrics.uidcol],
 				rate: row[cur_sheet_metrics.ratecol],
@@ -348,8 +368,9 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		return;
 	}	
 	
-	range = googleAPIResult[5 + numPre]; //0 = RESOURCEALLOCATION
-	cur_sheet_metrics = sheetMetrics[sheetList[5]];
+	sheetListIdx = 5;  //5 = RESOURCEALLOCATION
+	range = googleAPIResult[sheetListIdx + numPre]; //
+	cur_sheet_metrics = sheetMetrics[sheetList[sheetListIdx]];
 	if (typeof(range.values)!="undefined") {
 		if (range.values.length > 0) {
 			for (var cur_range = 0; cur_range < range.values.length; cur_range++) {
@@ -357,6 +378,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 				RESOURCEALLOCATIONkeys.push(row[cur_sheet_metrics.uidcol]);
 				RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]] = {
+					source_sheet: sheetList[sheetListIdx],
 					sheet_row: (cur_range+cur_sheet_metrics.toprow),
 					uid: row[cur_sheet_metrics.uidcol],
 					itemuid: row[cur_sheet_metrics.itemuidcol],

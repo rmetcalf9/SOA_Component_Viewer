@@ -21,12 +21,6 @@ function component_viewer_res_updateMenuText() {
 	};
 }
 
-function component_viewer_res_getRESUnestimatedHtml() {
-	var ret = "";
-	ret += "<h1>TODO</h1>";
-	return ret;
-};
-
 function component_viewer_res_getRESHtml(page) {
 	var ret = "";
 	ret += '<table>';
@@ -39,7 +33,7 @@ function component_viewer_res_getRESHtml(page) {
 	ret += '<td valign="top">';
 	
 	ret += GetMenu();
-	ret += component_viewer_res_unestimaged_getHtml();
+	ret += component_viewer_res_unestimated_getHtml();
 	ret += '</td>';
 	ret += '</tr>';
 	ret += '</table>';	
