@@ -44,6 +44,7 @@ function component_viewer_res_displayRES(page) {
 	if (page=="Unestimated") {
 		$("#MAIN").html(component_viewer_res_getRESHtml(page));
 		$("#MAIN").css("display","inline");
+		component_viewer_res_unestimated_INIT();
 	} else {
 		alert("Error - unknown page " + page);
 	}

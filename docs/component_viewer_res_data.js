@@ -116,9 +116,26 @@ function component_viewer_res_data_notify_component_state_change(uid) {
 		component_viewer_res_data_glob.componentsMissingEstimate.push(uid);		
 	} else {
 		//console.log("Remove entry from missing elements list");
-		component_viewer_res_data_glob.componentsMissingEstimate = jQuery.grep(component_viewer_res_data_glob.componentsMissingEstimate, function(value) {
-			return value != uid;
-		});
+		component_viewer_res_data_ensure_component_not_in_missing_estimate_list(uid);
 	};
+	
+};
+
+function component_viewer_res_data_ensure_component_not_in_missing_estimate_list(uid) {
+	component_viewer_res_data_glob.componentsMissingEstimate = jQuery.grep(component_viewer_res_data_glob.componentsMissingEstimate, function(value) {
+		return value != uid;
+	});
+};
+
+//Create an estimate for an unestimated component
+function component_viewer_res_data_create_estimate(component_uid, work_text, days) {
+	//Write data to spreadsheet
+	console.log("TODO Write data to spreadsheet");
+
+	//REMOVE FROM estimate missing list
+	component_viewer_res_data_ensure_component_not_in_missing_estimate_list(component_uid);
+	
+	//Refresh Number in menu
+	component_viewer_res_updateMenuText();
 	
 };
