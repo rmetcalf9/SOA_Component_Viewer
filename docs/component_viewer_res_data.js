@@ -129,6 +129,11 @@ function component_viewer_res_data_ensure_component_not_in_missing_estimate_list
 
 //Create an estimate for an unestimated component
 function component_viewer_res_data_create_estimate(component_uid, work_text, days) {
+	console.log("Add row to spreadsheet for:");
+	console.log("  uid=:" + component_uid);
+	console.log("  txt=:" + work_text);
+	console.log(" days=:" + days);
+	
 	//Write data to spreadsheet
 	console.log("TODO Write data to spreadsheet");
 

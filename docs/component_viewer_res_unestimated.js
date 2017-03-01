@@ -73,16 +73,45 @@ function component_viewer_res_unestimated_INIT() {
 
 function component_viewer_res_unestimated_click_table_row(link_clicked) {
 	var component_uid = link_clicked.data("uid");
-	console.log("TODO Prompt for work item text");
-	console.log("TODO Prompt for days");
-	console.log("TODO Prompt for days");
-	console.log("TODO component_viewer_res_unestimated_create_estimate for " + component_uid);
+	var component_obj = ic_soa_data_getComponentFromUID(component_uid);
+	
+	var days = ic_soa_data_getSheetMetrics()[component_obj.source_sheet].default_estimate;
+	
+	rjmlib_ui_textareainputbox(
+		"How many days will development twak with 1 person assigned 100% of time", 
+		"Create estimate for " + component_obj.name, 
+		days, 
+		[
+			{
+				id: "submit",
+				text: "Submit",
+				fn: function (retVal,butID,component_obj) {
+					if (isNaN(retVal)) {
+						rjmlib_ui_questionbox("You must enter a number");
+					} else {
+						days = retVal;
+						component_viewer_res_unestimated_create_estimate(component_obj, days);
+					};
+				}
+			},
+			{
+				id: "cancel",
+				text: "Cancel",
+				fn: function (retVal,butID,component_obj) {
+					//Cancel - do nothing
+				}
+			}
+		], //buts, 
+		component_obj, 
+		40, 
+		1
+	);
 };
 
-function component_viewer_res_unestimated_create_estimate(component_uid, work_text, days) {
-	component_viewer_res_data_create_estimate(component_uid, work_text, days);
+function component_viewer_res_unestimated_create_estimate(component_obj, days) {
+	component_viewer_res_data_create_estimate(component_obj.uid, component_obj.name, days);
 	
 	//REMOVE FROM unestimated table
-	$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_uid + "']").remove()
+	$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_obj.uid + "']").remove()
 	
 };
