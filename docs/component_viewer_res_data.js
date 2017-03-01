@@ -144,52 +144,59 @@ function component_viewer_res_data_save_resourse_allocation_into_batch(resourseA
 	var rec = dataObjects.RESOURCEALLOCATIONs[resourseAllocaiton_uid]
 	var sheet_data_item = ic_soa_data_getSheetMetrics()["RESOURCEALLOCATION"]
 	board_append_saveBatch({
-		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.uidcol) + component_viewer_res_data_glob.next_avail.next_row,
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.uidcol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
 			[rec.uid]
 		],
 	});
 	board_append_saveBatch({
-		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.itemuidcol) + component_viewer_res_data_glob.next_avail.next_row,
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.itemuidcol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
 			[rec.itemuid]
 		],
 	});
 	board_append_saveBatch({
-		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.textcol) + component_viewer_res_data_glob.next_avail.next_row,
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.textcol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
 			[rec.text]
 		],
 	});
 	board_append_saveBatch({
-		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.originaldayscol) + component_viewer_res_data_glob.next_avail.next_row,
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.originaldayscol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
 			[rec.originaldays]
 		],
 	});
 	board_append_saveBatch({
-		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.remainingdayscol) + component_viewer_res_data_glob.next_avail.next_row,
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.remainingdayscol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
 			[rec.remainingdays]
 		],
 	});
 	board_append_saveBatch({
-		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.lastupdatecol) + component_viewer_res_data_glob.next_avail.next_row,
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.lastupdatecol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
 			[rec.lastupdate]
 		],
 	});
 	board_append_saveBatch({
-		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.statuscol) + component_viewer_res_data_glob.next_avail.next_row,
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.statuscol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
 			[rec.status]
+		],
+	});	
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.binpackprioritycol) + rec.sheet_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[rec.binpackpriority]
 		],
 	});	
 };
