@@ -127,12 +127,32 @@ function component_viewer_res_data_ensure_component_not_in_missing_estimate_list
 	});
 };
 
+//Caculate the next availiable row we should be adding data to
+function component_viewer_res_data_calc_next_avail() {
+	var next_row = ic_soa_data_getSheetMetrics()["RESOURCEALLOCATION"].toprow;
+	for (var cur_do = 0; cur_do < dataObjects.RESOURCEALLOCATIONkeys.length; cur_do++) {
+		if (dataObjects.RESOURCEALLOCATIONs[cur_do].sheet_row >= next_row) next_row = x+1;
+	};
+	component_viewer_res_data_glob.next_avail = {
+		next_row: next_row
+	};
+	//console.log("Next row is " + next_row);
+};
+
 //Create an estimate for an unestimated component
 function component_viewer_res_data_create_estimate(component_uid, work_text, days) {
+	if (typeof(component_viewer_res_data_glob.next_avail)=="undefined") {
+		component_viewer_res_data_calc_next_avail();
+	};
+	
+	var new_row_uid = rjmlib_createGuid();
+	
 	console.log("Add row to spreadsheet for:");
-	console.log("  uid=:" + component_uid);
+	console.log("  uid=:" + new_row_uid);
+	console.log(" Cuid=:" + component_uid);
 	console.log("  txt=:" + work_text);
 	console.log(" days=:" + days);
+	console.log("  row=:" + component_viewer_res_data_glob.next_avail.next_row);
 	
 	//Write data to spreadsheet
 	console.log("TODO Write data to spreadsheet");
