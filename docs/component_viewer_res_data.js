@@ -29,7 +29,7 @@ function component_viewer_res_data_getResoueseEstimate(uid) {
 //Returns an active estimate for a component if it has one
 function component_viewer_res_data_get_active_estimate_for_component(component_uid) {
 	for (var cur_do = 0; cur_do < dataObjects.RESOURCEALLOCATIONkeys.length; cur_do++) {
-		res_alloc_obj = dataObjects.RESOURCEALLOCATIONkeys[cur_do];
+		var res_alloc_obj = dataObjects.RESOURCEALLOCATIONs[dataObjects.RESOURCEALLOCATIONkeys[cur_do]];
 		if (res_alloc_obj.itemuid==component_uid) {
 			if (res_alloc_obj.status!="Completed") return res_alloc_obj;
 		};
@@ -131,7 +131,8 @@ function component_viewer_res_data_ensure_component_not_in_missing_estimate_list
 function component_viewer_res_data_calc_next_avail() {
 	var next_row = ic_soa_data_getSheetMetrics()["RESOURCEALLOCATION"].toprow;
 	for (var cur_do = 0; cur_do < dataObjects.RESOURCEALLOCATIONkeys.length; cur_do++) {
-		if (dataObjects.RESOURCEALLOCATIONs[cur_do].sheet_row >= next_row) next_row = x+1;
+		var res_alloc_obj = dataObjects.RESOURCEALLOCATIONs[dataObjects.RESOURCEALLOCATIONkeys[cur_do]];
+		if (res_alloc_obj.sheet_row >= next_row) next_row = res_alloc_obj.sheet_row+1;
 	};
 	component_viewer_res_data_glob.next_avail = {
 		next_row: next_row
@@ -155,7 +156,59 @@ function component_viewer_res_data_create_estimate(component_uid, work_text, day
 	console.log("  row=:" + component_viewer_res_data_glob.next_avail.next_row);
 	
 	//Write data to spreadsheet
-	console.log("TODO Write data to spreadsheet");
+	board_prepare_saveBatch();
+	var sheet_data_item = ic_soa_data_getSheetMetrics()["RESOURCEALLOCATION"]
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.uidcol) + component_viewer_res_data_glob.next_avail.next_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[new_row_uid]
+		],
+	});
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.itemuidcol) + component_viewer_res_data_glob.next_avail.next_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[component_uid]
+		],
+	});
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.textcol) + component_viewer_res_data_glob.next_avail.next_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[work_text]
+		],
+	});
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.originaldayscol) + component_viewer_res_data_glob.next_avail.next_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[days]
+		],
+	});
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.remainingdayscol) + component_viewer_res_data_glob.next_avail.next_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[days]
+		],
+	});
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.lastupdatecol) + component_viewer_res_data_glob.next_avail.next_row,
+		"majorDimension": "ROWS",
+		"values": [
+			["TODO_DATE"]
+		],
+	});
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.statuscol) + component_viewer_res_data_glob.next_avail.next_row,
+		"majorDimension": "ROWS",
+		"values": [
+			["Allocated"]
+		],
+	});
+	board_execute_saveBatch(spreadsheetId);
+	component_viewer_res_data_glob.next_avail.next_row = component_viewer_res_data_glob.next_avail.next_row + 1;
 
 	//REMOVE FROM estimate missing list
 	component_viewer_res_data_ensure_component_not_in_missing_estimate_list(component_uid);

@@ -18,96 +18,98 @@ function ic_soa_data_getSheetList() {
 	return ret;
 };
 
+var ic_soa_data_SheetMetrics = undefined;
 function ic_soa_data_getSheetMetrics() {
-	var ret = {};
-	
-	ret["EDF"] = {
-		datarange: 'EDFList!A2:I',
-		sheet_name: 'EDFList',
-		css_tag: 'red',
-		default_estimate: 12,
-		indexcol: 1,
-		toprow: 2,
-		namecol: 2,
-		listcol: 3,
-		tagscol: 5,
-		uidcol: 0,
-		source_sys_col: 4,
-		ebocol: 6,
-		inbound_operation_text_col: 7,
-		outbound_operation_text_col: 8
-	};
-	ret["INT"] = {
-		datarange: 'Integration!A2:I',
-		sheet_name: 'Integration',
-		css_tag: 'green',
-		default_estimate: 7,
-		indexcol: 1,
-		toprow: 2,
-		namecol: 4,
-		listcol: 5,
-		tagscol: 6,
-		uidcol: 0,
-		target_sys_col: 3,
-		source_edf_col: 2,
-		inbound_operation_text_col: 7,
-		outbound_operation_text_col: 8
-	};
-	ret["PRES"] = {
-		datarange: 'Presentation!A2:H',
-		sheet_name: 'Presentation',
-		css_tag: 'blue',
-		default_estimate: 5,
-		toprow: 2,
-		uidcol: 0,
-		indexcol: 1,
-		namecol: 3,
-		listcol: 4,
-		tagscol: 5,
-		provider_sys_col: 6,
-		known_client_col: 7,
-		rawnamecol: 2
-	};
-	ret["POINT"] = {
-		datarange: 'Point2Point!A2:H',
-		sheet_name: 'Point2Point',
-		css_tag: 'yellow',
-		default_estimate: 10,
-		toprow: 2,
-		uidcol: 0,
-		indexcol: 1,
-		namecol: 3,
-		listcol: 4,
-		tagscol: 5,
-		provider_sys_list_col: 6,
-		client_list_col: 7,
-		rawnamecol: 2
-	};
-	ret["RESOURCELANES"] = {
-		datarange: 'ResourceLanes!A2:B',
-		sheet_name: 'ResourceLanes',
-		toprow: 2,
-		uidcol: 0,
-		ratecol: 1
-	};
-	ret["RESOURCEALLOCATION"] = {
-		datarange: 'ResourceAllocation!A2:K',
-		sheet_name: 'ResourceAllocation',
-		toprow: 2,
-		uidcol: 0,
-		itemuidcol: 1,
-		textcol: 2,
-		resourcelaneassignmentcol: 3,
-		assignmentratecol: 4,
-		originaldayscol: 5,
-		remainingdayscol: 6,
-		lastupdatecol: 7,
-		statuscol: 8,
-		binpackprioritycol: 9,
-		tagscol: 10
-	};	
-	
-	return ret;
+	if (typeof(ic_soa_data_SheetMetrics)=="undefined") {
+		ic_soa_data_SheetMetrics = {};
+		
+		ic_soa_data_SheetMetrics["EDF"] = {
+			datarange: 'EDFList!A2:I',
+			sheet_name: 'EDFList',
+			css_tag: 'red',
+			default_estimate: 12,
+			indexcol: 1,
+			toprow: 2,
+			namecol: 2,
+			listcol: 3,
+			tagscol: 5,
+			uidcol: 0,
+			source_sys_col: 4,
+			ebocol: 6,
+			inbound_operation_text_col: 7,
+			outbound_operation_text_col: 8
+		};
+		ic_soa_data_SheetMetrics["INT"] = {
+			datarange: 'Integration!A2:I',
+			sheet_name: 'Integration',
+			css_tag: 'green',
+			default_estimate: 7,
+			indexcol: 1,
+			toprow: 2,
+			namecol: 4,
+			listcol: 5,
+			tagscol: 6,
+			uidcol: 0,
+			target_sys_col: 3,
+			source_edf_col: 2,
+			inbound_operation_text_col: 7,
+			outbound_operation_text_col: 8
+		};
+		ic_soa_data_SheetMetrics["PRES"] = {
+			datarange: 'Presentation!A2:H',
+			sheet_name: 'Presentation',
+			css_tag: 'blue',
+			default_estimate: 5,
+			toprow: 2,
+			uidcol: 0,
+			indexcol: 1,
+			namecol: 3,
+			listcol: 4,
+			tagscol: 5,
+			provider_sys_col: 6,
+			known_client_col: 7,
+			rawnamecol: 2
+		};
+		ic_soa_data_SheetMetrics["POINT"] = {
+			datarange: 'Point2Point!A2:H',
+			sheet_name: 'Point2Point',
+			css_tag: 'yellow',
+			default_estimate: 10,
+			toprow: 2,
+			uidcol: 0,
+			indexcol: 1,
+			namecol: 3,
+			listcol: 4,
+			tagscol: 5,
+			provider_sys_list_col: 6,
+			client_list_col: 7,
+			rawnamecol: 2
+		};
+		ic_soa_data_SheetMetrics["RESOURCELANES"] = {
+			datarange: 'ResourceLanes!A2:B',
+			sheet_name: 'ResourceLanes',
+			toprow: 2,
+			uidcol: 0,
+			ratecol: 1
+		};
+		ic_soa_data_SheetMetrics["RESOURCEALLOCATION"] = {
+			datarange: 'ResourceAllocation!A2:K',
+			sheet_name: 'ResourceAllocation',
+			toprow: 2,
+			uidcol: 0,
+			itemuidcol: 1,
+			textcol: 2,
+			resourcelaneassignmentcol: 3,
+			assignmentratecol: 4,
+			originaldayscol: 5,
+			remainingdayscol: 6,
+			lastupdatecol: 7,
+			statuscol: 8,
+			binpackprioritycol: 9,
+			tagscol: 10
+		};	
+	}; //if undefined
+	return ic_soa_data_SheetMetrics;
 };
 
 /*
