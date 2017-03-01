@@ -147,14 +147,14 @@ function component_viewer_res_data_create_estimate(component_uid, work_text, day
 	};
 	
 	var new_row_uid = rjmlib_createGuid();
-	
+	/*
 	console.log("Add row to spreadsheet for:");
 	console.log("  uid=:" + new_row_uid);
 	console.log(" Cuid=:" + component_uid);
 	console.log("  txt=:" + work_text);
 	console.log(" days=:" + days);
 	console.log("  row=:" + component_viewer_res_data_glob.next_avail.next_row);
-	
+	*/
 	//Write data to spreadsheet
 	board_prepare_saveBatch();
 	var sheet_data_item = ic_soa_data_getSheetMetrics()["RESOURCEALLOCATION"]
@@ -193,11 +193,12 @@ function component_viewer_res_data_create_estimate(component_uid, work_text, day
 			[days]
 		],
 	});
+	var d = new Date();
 	board_append_saveBatch({
 		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.lastupdatecol) + component_viewer_res_data_glob.next_avail.next_row,
 		"majorDimension": "ROWS",
 		"values": [
-			["TODO_DATE"]
+			[d.toString()]
 		],
 	});
 	board_append_saveBatch({
