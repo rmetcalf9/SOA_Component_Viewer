@@ -69,7 +69,7 @@ table#component_viewer_res_schedule_main > tbody > tr > td > table > tbody > tr 
 	background-color: pink;
 }
 table#component_viewer_res_schedule_main > tbody > tr > td > table > tbody > tr > td > table.task_table.green {
-	background-color: lightblue;
+	background-color: lightgreen;
 }
 table#component_viewer_res_schedule_main > tbody > tr > td > table > tbody > tr > td > table.task_table.blue {
 	background-color: lightblue;

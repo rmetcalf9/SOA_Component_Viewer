@@ -20,7 +20,8 @@ function component_viewer_res_process_ScheduleResourses() {
 	for (var cur_do = 0; cur_do < dataObjects.RESOURCEALLOCATIONkeys.length; cur_do++) {
 		var res_alloc_obj = dataObjects.RESOURCEALLOCATIONs[dataObjects.RESOURCEALLOCATIONkeys[cur_do]];
 		console.log(res_alloc_obj.text + " " + res_alloc_obj.binpackpriority);
-	};*/
+	};
+	*/
 	
 	//console.log("If sort order results in changes write new order to googlesheet");
 	//This step will fill any any items with missing orders and spread out where mutiple items have same order
@@ -43,6 +44,7 @@ function component_viewer_res_process_ScheduleResourses() {
 	//console.log("TODO Clear all current scheduled allocations");
 	component_viewer_res_process_resourse_schedules = {
 		Lanes: [],
+		Failed_To_Schedule: []
 	};
 	
 	//Init the Lanes
@@ -65,6 +67,7 @@ function component_viewer_res_process_ScheduleResourses() {
 		//Step 2 allocate resourse to this lane
 		if (typeof(schedule_proposal_obj)=="undefined") {
 			console.log("WARNING - Failed to schedule " + res_alloc_obj.text + " (Try lowering it's rate)");
+			Failed_To_Schedule.push(res_alloc_obj);
 		} else {
 			component_viewer_res_process_lane_allocate_proposal(schedule_proposal_obj);
 		};
@@ -143,9 +146,13 @@ function component_viewer_res_process_find_best_lane_for_object(res_alloc_obj) {
 
 	//Get proposals from all lanes
 	for (var lane_schedule in component_viewer_res_process_resourse_schedules.Lanes) {
-		proposals.push(
-			component_viewer_res_process_lane_make_proposal(component_viewer_res_process_resourse_schedules.Lanes[lane_schedule], res_alloc_obj)
-		);
+		var prop = component_viewer_res_process_lane_make_proposal(component_viewer_res_process_resourse_schedules.Lanes[lane_schedule], res_alloc_obj);
+		//There may not be any valid proposal for this lane. If there isn't then don't add it to list to be considered
+		if (typeof(prop)!="undefined") {
+			proposals.push(
+				prop
+			);
+		};
 	};
 	
 	//Find proposal with lowest end day

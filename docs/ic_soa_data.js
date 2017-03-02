@@ -365,7 +365,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 				source_sheet: sheetList[sheetListIdx],
 				sheet_row: (cur_range+cur_sheet_metrics.toprow),
 				uid: row[cur_sheet_metrics.uidcol],
-				rate: row[cur_sheet_metrics.ratecol],
+				rate: parseInt(row[cur_sheet_metrics.ratecol]),
 			}
 		}
 	} else {
@@ -391,11 +391,11 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 					text: row[cur_sheet_metrics.textcol],
 					resourcelaneassignment: row[cur_sheet_metrics.resourcelaneassignmentcol],
 					assignmentrate: row[cur_sheet_metrics.assignmentratecol],
-					originaldays: row[cur_sheet_metrics.originaldayscol],
-					remainingdays: row[cur_sheet_metrics.remainingdayscol],
+					originaldays: parseInt(row[cur_sheet_metrics.originaldayscol]),
+					remainingdays: parseInt(row[cur_sheet_metrics.remainingdayscol]),
 					lastupdate: row[cur_sheet_metrics.lastupdatecol],
 					status: row[cur_sheet_metrics.statuscol],
-					binpackpriority: row[cur_sheet_metrics.binpackprioritycol],
+					binpackpriority: parseInt(row[cur_sheet_metrics.binpackprioritycol]),
 					tags: row[cur_sheet_metrics.tagscol],
 				}
 			}

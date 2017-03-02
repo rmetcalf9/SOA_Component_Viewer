@@ -90,7 +90,7 @@ function component_viewer_res_unestimated_click_table_row(link_clicked) {
 						rjmlib_ui_questionbox("You must enter a number");
 					} else {
 						days = retVal;
-						component_viewer_res_unestimated_create_estimate(component_obj, days);
+						component_viewer_res_unestimated_create_estimate(component_obj, parseInt(days));
 					};
 				}
 			},
