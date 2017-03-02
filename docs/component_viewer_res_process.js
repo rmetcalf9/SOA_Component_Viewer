@@ -67,7 +67,7 @@ function component_viewer_res_process_ScheduleResourses() {
 		//Step 2 allocate resourse to this lane
 		if (typeof(schedule_proposal_obj)=="undefined") {
 			console.log("WARNING - Failed to schedule " + res_alloc_obj.text + " (Try lowering it's rate)");
-			Failed_To_Schedule.push(res_alloc_obj);
+			component_viewer_res_process_resourse_schedules.Failed_To_Schedule.push(res_alloc_obj);
 		} else {
 			component_viewer_res_process_lane_allocate_proposal(schedule_proposal_obj);
 		};
@@ -77,7 +77,6 @@ function component_viewer_res_process_ScheduleResourses() {
 	//Sort allocated resourses in each lane
 	for (var lane_schedule in component_viewer_res_process_resourse_schedules.Lanes) {
 		var obj = component_viewer_res_process_resourse_schedules.Lanes[lane_schedule];
-		console.log(obj.allocated_resourses);
 		
 		//TODO Extend so that they are also sorted by end day asc
 		obj.allocated_resourses.sort(function (ak,bk) {
@@ -102,7 +101,7 @@ function component_viewer_res_process_get_scheduled_lane(lane_uid) {
 	return undefined;
 }
 
-
+//inatalise an empty lane data structure ready for allocation of tasks
 function component_viewer_res_process_init_lane(res_lane_obj) {
 	var max_rate = parseInt(res_lane_obj.rate);
 	component_viewer_res_process_resourse_schedules.Lanes[res_lane_obj.uid] = {
@@ -174,14 +173,16 @@ function component_viewer_res_process_lane_make_proposal(lane_schedule_obj, res_
 	
 	//Freeslots are indexed by day
 	var c = 0;
-	var first_nonzero_free_slot = lane_schedule_obj.free_slots[lane_schedule_obj.free_slots_idx[c]];
-	while (first_nonzero_free_slot.amount_free==0) {
+	var first_acceptable_slot = lane_schedule_obj.free_slots[lane_schedule_obj.free_slots_idx[c]];
+
+	var rate = component_viewer_res_process_lane_make_proposal_maxratehere(lane_schedule_obj, res_alloc_obj,first_acceptable_slot);
+	while (rate==0) {
 		c = c + 1;
-		first_nonzero_free_slot = lane_schedule_obj.free_slots[lane_schedule_obj.free_slots_idx[c]];
+		first_acceptable_slot = lane_schedule_obj.free_slots[lane_schedule_obj.free_slots_idx[c]];
+		rate = component_viewer_res_process_lane_make_proposal_maxratehere(lane_schedule_obj, res_alloc_obj,first_acceptable_slot);
 	};
 	
-	var rate = first_nonzero_free_slot.amount_free;
-	var start_day = first_nonzero_free_slot.day;
+	var start_day = first_acceptable_slot.day;
 	var duration = Math.ceil(res_alloc_obj.remainingdays * (100 / rate));
 	var end_day = (start_day + duration) - 1;
 
@@ -195,6 +196,32 @@ function component_viewer_res_process_lane_make_proposal(lane_schedule_obj, res_
 		lane: lane_schedule_obj,
 		res_alloc_obj: res_alloc_obj,
 	};
+};
+
+//Return the max rate that is possible in this slot
+// will return 0 if it is not possible to be here a all
+function component_viewer_res_process_lane_make_proposal_maxratehere(lane_schedule_obj, res_alloc_obj, slot) {
+	if (slot.amount_free==0) return 0;
+	var rate = slot.amount_free;
+	var start_day = slot.day;
+	var duration = Math.ceil(res_alloc_obj.remainingdays * (100 / rate));
+	var end_day = (start_day + duration) - 1;
+	
+	//Go through every day in the duration and make sure any new slots encountered have more amount_free values
+	// if the amount_free value is less check for 0 and return or reduce the rate and extend the end date
+	for (var cur_day = start_day; cur_day <= end_day; cur_day++) {
+		//console.log("Checking day " + cur_day);
+		if (typeof(lane_schedule_obj.free_slots[cur_day])!="undefined") {
+			if (lane_schedule_obj.free_slots[cur_day].amount_free==0) return;
+			if (lane_schedule_obj.free_slots[cur_day].amount_free<rate) {
+				rate = lane_schedule_obj.free_slots[cur_day].amount_free;
+				duration = Math.ceil(res_alloc_obj.remainingdays * (100 / rate));
+				end_day = (start_day + duration) - 1;
+			};
+		}
+	}
+	//console.log("Returning rate of " + rate);
+	return rate;
 };
 
 function component_viewer_res_process_lane_allocate_proposal(proposal_obj) {
