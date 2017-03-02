@@ -191,9 +191,12 @@ function component_viewer_res_process_lane_allocate_proposal(proposal_obj) {
 		};
 	};
 	//Add new freeslot after end day if there was none there (must be value of previously free)
-	component_viewer_res_process_init_lane_upsert_free_slot(proposal_obj.lane,proposal_obj.end_day + 1,prev_day_amount_free);
+	if (typeof(proposal_obj.lane.free_slots[proposal_obj.end_day + 1])!="undefined") {
+		//There is already a record - There was no change to this day so no new record is needed
+	} else {
+		//There is no record for the end date so we can just set the amount free to the value of the previous day free.
+		component_viewer_res_process_init_lane_upsert_free_slot(proposal_obj.lane,proposal_obj.end_day + 1,prev_day_amount_free);
+	}
 	
-	//Sort free slots in order of day
-	console.log("TODO Sort Free Slots");
-	
+	//Sort free slots in order of day not needed as we have used only upsert operation to insert
 };
