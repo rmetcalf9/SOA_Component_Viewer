@@ -4,6 +4,10 @@
 
 var component_viewer_res_process_resourse_schedules = {};
 
+function component_viewer_res_process_ScheduleProcessDone() {
+	return (typeof(component_viewer_res_process_resourse_schedules.Lanes)!="undefined")
+};
+
 function component_viewer_res_process_ScheduleResourses() {
 
 	//console.log("TODO Sort resourse allocaitons by priority asc");
@@ -67,10 +71,34 @@ function component_viewer_res_process_ScheduleResourses() {
 		
 	};
 	
+	//Sort allocated resourses in each lane
+	for (var lane_schedule in component_viewer_res_process_resourse_schedules.Lanes) {
+		var obj = component_viewer_res_process_resourse_schedules.Lanes[lane_schedule];
+		console.log(obj.allocated_resourses);
+		
+		//TODO Extend so that they are also sorted by end day asc
+		obj.allocated_resourses.sort(function (ak,bk) {
+			if (ak.start_day==bk.start_day) return 0;
+			if (ak.start_day<bk.start_day) return -1;
+			return 1;
+		});
+	};
+	
 	
 	//DEBUG output the results so I can inspect
-	console.log(component_viewer_res_process_resourse_schedules);
+	//console.log(component_viewer_res_process_resourse_schedules);
 };
+
+//Returns the scheduled lane object for a given lane
+function component_viewer_res_process_get_scheduled_lane(lane_uid) {
+	for (var lane_schedule in component_viewer_res_process_resourse_schedules.Lanes) {
+		var obj = component_viewer_res_process_resourse_schedules.Lanes[lane_schedule];
+		if (obj.obj.uid==lane_uid) return obj;
+	}
+	
+	return undefined;
+}
+
 
 function component_viewer_res_process_init_lane(res_lane_obj) {
 	var max_rate = parseInt(res_lane_obj.rate);
@@ -155,6 +183,7 @@ function component_viewer_res_process_lane_make_proposal(lane_schedule_obj, res_
 	return {
 		start_day: start_day,
 		rate: rate, //allocate full resuorse
+		duration: duration,
 		end_day: end_day,
 		lane: lane_schedule_obj,
 		res_alloc_obj: res_alloc_obj,
@@ -162,7 +191,7 @@ function component_viewer_res_process_lane_make_proposal(lane_schedule_obj, res_
 };
 
 function component_viewer_res_process_lane_allocate_proposal(proposal_obj) {
-	console.log("Allocate resourse (" + proposal_obj.res_alloc_obj.text + ") to lane " + proposal_obj.lane.obj.uid);
+	//console.log("Allocate resourse (" + proposal_obj.res_alloc_obj.text + ") to lane " + proposal_obj.lane.obj.uid);
 	
 	//Assumption - there is always a free slot starting on the start day
 	
@@ -170,6 +199,7 @@ function component_viewer_res_process_lane_allocate_proposal(proposal_obj) {
 	proposal_obj.lane.allocated_resourses.push({
 		start_day: proposal_obj.start_day,
 		rate: proposal_obj.rate, //allocate full resuorse
+		duration: proposal_obj.duration,
 		end_day: proposal_obj.end_day,
 		res_alloc_obj: proposal_obj.res_alloc_obj,
 	});

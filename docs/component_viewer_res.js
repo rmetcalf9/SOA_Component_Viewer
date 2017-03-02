@@ -10,6 +10,9 @@ function component_viewer_res_getMenuHtml() {
 	ret +=  '<td><a href="javascript:component_viewer_res_displayRES(\'Unestimated\')">Unestimated Work (<span id="component_viewer_res_componentsMissingEstimate">';
 	ret += component_viewer_res_data_glob.componentsMissingEstimate.length;
 	ret += '</span>)</a></td> '
+	ret += "<td>";
+	ret += "<a href=\"javascript:component_viewer_res_displayRES(\'ScheduleDetail\')\">Schedule Detail</a>";
+	ret += "</td>";
 	ret += "</tr></table>";
 
 	return ret;
@@ -33,7 +36,16 @@ function component_viewer_res_getRESHtml(page) {
 	ret += '<td valign="top">';
 	
 	ret += GetMenu();
-	ret += component_viewer_res_unestimated_getHtml();
+
+	if (page=="Unestimated") {
+		ret += component_viewer_res_unestimated_getHtml();
+		component_viewer_res_unestimated_INIT();
+	} else if (page=="ScheduleDetail") {
+		ret += component_viewer_res_schedule_detail_getHtml();
+	} else {
+		ret += "<h1>ERROR - Unknown Page</H1>";
+		//alert("Error - unknown page " + page);
+	}
 	ret += '</td>';
 	ret += '</tr>';
 	ret += '</table>';	
@@ -41,11 +53,6 @@ function component_viewer_res_getRESHtml(page) {
 };
 
 function component_viewer_res_displayRES(page) {
-	if (page=="Unestimated") {
-		$("#MAIN").html(component_viewer_res_getRESHtml(page));
-		$("#MAIN").css("display","inline");
-		component_viewer_res_unestimated_INIT();
-	} else {
-		alert("Error - unknown page " + page);
-	}
+	$("#MAIN").html(component_viewer_res_getRESHtml(page));
+	$("#MAIN").css("display","inline");
 };
