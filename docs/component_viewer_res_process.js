@@ -184,11 +184,11 @@ function component_viewer_res_process_lane_make_proposal(lane_schedule_obj, res_
 	var c = 0;
 	var first_acceptable_slot = lane_schedule_obj.free_slots[lane_schedule_obj.free_slots_idx[c]];
 
-	var rate = component_viewer_res_process_lane_make_proposal_maxratehere(lane_schedule_obj, res_alloc_obj,first_acceptable_slot);
+	var rate = component_viewer_res_process_lane_make_proposal_slot(lane_schedule_obj, res_alloc_obj,first_acceptable_slot);
 	while (rate==0) {
 		c = c + 1;
 		first_acceptable_slot = lane_schedule_obj.free_slots[lane_schedule_obj.free_slots_idx[c]];
-		rate = component_viewer_res_process_lane_make_proposal_maxratehere(lane_schedule_obj, res_alloc_obj,first_acceptable_slot);
+		rate = component_viewer_res_process_lane_make_proposal_slot(lane_schedule_obj, res_alloc_obj,first_acceptable_slot);
 	};
 	
 	var start_day = first_acceptable_slot.day;
@@ -207,11 +207,19 @@ function component_viewer_res_process_lane_make_proposal(lane_schedule_obj, res_
 	};
 };
 
-//Return the max rate that is possible in this slot
-// will return 0 if it is not possible to be here a all
-function component_viewer_res_process_lane_make_proposal_maxratehere(lane_schedule_obj, res_alloc_obj, slot) {
+//Return proposal for a particular slot
+// will return undefined if it is not possible to be here a all
+function component_viewer_res_process_lane_make_proposal_slot(lane_schedule_obj, res_alloc_obj, slot) {
 	if (slot.amount_free==0) return 0;
 	var rate = slot.amount_free;
+
+	var isRateAdjustable = true;
+	if (res_alloc_obj.assignmentrate != 0) {
+		if (res_alloc_obj.assignmentrate > lane_schedule_obj.max_rate) return undefined;
+		isRateAdjustable = false;
+		rate = res_alloc_obj.assignmentrate;
+	};
+	
 	var start_day = slot.day;
 	var duration = Math.ceil(res_alloc_obj.remainingdays * (100 / rate));
 	var end_day = (start_day + duration) - 1;
@@ -223,6 +231,7 @@ function component_viewer_res_process_lane_make_proposal_maxratehere(lane_schedu
 		if (typeof(lane_schedule_obj.free_slots[cur_day])!="undefined") {
 			if (lane_schedule_obj.free_slots[cur_day].amount_free==0) return;
 			if (lane_schedule_obj.free_slots[cur_day].amount_free<rate) {
+				if (!isRateAdjustable) return undefined;
 				rate = lane_schedule_obj.free_slots[cur_day].amount_free;
 				duration = Math.ceil(res_alloc_obj.remainingdays * (100 / rate));
 				end_day = (start_day + duration) - 1;
