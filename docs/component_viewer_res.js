@@ -42,6 +42,7 @@ function component_viewer_res_getRESHtml(page) {
 		component_viewer_res_unestimated_INIT();
 	} else if (page=="ScheduleDetail") {
 		ret += component_viewer_res_schedule_detail_getHtml();
+		component_viewer_res_schedule_detail_INIT();
 	} else {
 		ret += "<h1>ERROR - Unknown Page</H1>";
 		//alert("Error - unknown page " + page);

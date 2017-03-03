@@ -6,6 +6,8 @@ function component_viewer_res_schedule_detail_getHtml() {
 
 	if (!component_viewer_res_process_ScheduleProcessDone()) component_viewer_res_process_ScheduleResourses();
 	
+	ret += "<a href=\"#component_viewer_res_schedule_detail_recalc\">Re-Run schedule process</a>";
+	
 	if (component_viewer_res_process_resourse_schedules.Failed_To_Schedule.length>0) {
 		ret += "<h2>Warning - failed to schedule the following</h2>";
 		ret += "<ul>";
@@ -94,3 +96,11 @@ function component_viewer_res_schedule_detail_getTaskHtml(task_obj) {
 
 	return ret;
 }
+
+function component_viewer_res_schedule_detail_INIT() {
+	$(document).on('click.component_viewer_res_unestimated', "a[href$='#component_viewer_res_schedule_detail_recalc']", function (event) {
+		component_viewer_res_process_ScheduleResourses();
+		component_viewer_res_displayRES("ScheduleDetail");
+		event.preventDefault();
+	});
+};
