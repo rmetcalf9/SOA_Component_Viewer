@@ -173,6 +173,13 @@ function component_viewer_res_process_lane_make_proposal(lane_schedule_obj, res_
 	//We will use the rule that we will start this task as soon as possible and use the maximum
 	// rate availiable at the time it is started
 	
+	if (typeof(res_alloc_obj.resourcelaneassignment)!="undefined") {
+		if (res_alloc_obj.resourcelaneassignment != "") {
+			//There is a resourse lane set in the spreadsheet. Only return a proposal if it is this lane
+			if (res_alloc_obj.resourcelaneassignment!=lane_schedule_obj.obj.uid) return undefined;
+		};
+	};
+	
 	//Freeslots are indexed by day
 	var c = 0;
 	var first_acceptable_slot = lane_schedule_obj.free_slots[lane_schedule_obj.free_slots_idx[c]];
