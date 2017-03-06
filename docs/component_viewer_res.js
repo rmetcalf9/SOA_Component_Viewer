@@ -13,6 +13,9 @@ function component_viewer_res_getMenuHtml() {
 	ret += "<td>";
 	ret += "<a href=\"javascript:component_viewer_res_displayRES(\'ScheduleDetail\')\">Schedule Detail</a>";
 	ret += "</td>";
+	ret += "<td>";
+	ret += "<a href=\"javascript:component_viewer_res_displayRES(\'ScheduleBoard\')\">Schedule Board</a>";
+	ret += "</td>";
 	ret += "</tr></table>";
 
 	return ret;
@@ -43,6 +46,9 @@ function component_viewer_res_getRESHtml(page) {
 	} else if (page=="ScheduleDetail") {
 		ret += component_viewer_res_schedule_detail_getHtml();
 		component_viewer_res_schedule_detail_INIT();
+	} else if (page=="ScheduleBoard") {
+		ret += component_viewer_res_schedule_board_getHtml();
+		component_viewer_res_schedule_board_INIT();
 	} else {
 		ret += "<h1>ERROR - Unknown Page</H1>";
 		//alert("Error - unknown page " + page);
@@ -56,4 +62,18 @@ function component_viewer_res_getRESHtml(page) {
 function component_viewer_res_displayRES(page) {
 	$("#MAIN").html(component_viewer_res_getRESHtml(page));
 	$("#MAIN").css("display","inline");
+};
+
+function component_viewer_res_getFailedToScheduleHTML() {
+	var ret = "";
+	if (component_viewer_res_process_resourse_schedules.Failed_To_Schedule.length>0) {
+		ret += "<h2>Warning - failed to schedule the following</h2>";
+		ret += "<ul>";
+		for (var cur in component_viewer_res_process_resourse_schedules.Failed_To_Schedule) {
+			var obj = component_viewer_res_process_resourse_schedules.Failed_To_Schedule[cur];
+			ret += "<li>" + obj.text + "</li>";
+		};
+		ret += "</ul>";
+	};
+	return ret;
 };

@@ -77,3 +77,12 @@ table#component_viewer_res_schedule_main > tbody > tr > td > table > tbody > tr 
 table#component_viewer_res_schedule_main > tbody > tr > td > table > tbody > tr > td > table.task_table.yellow {
 	background-color: yellow;
 }
+
+svg.component_viewer_res_schedule_board {
+	transform-origin: 0px 0px 0px;
+}
+
+svg.component_viewer_res_schedule_board > line.grid {
+	stroke-width: 3;
+	stroke: black;	
+}

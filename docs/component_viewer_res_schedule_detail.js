@@ -7,16 +7,7 @@ function component_viewer_res_schedule_detail_getHtml() {
 	if (!component_viewer_res_process_ScheduleProcessDone()) component_viewer_res_process_ScheduleResourses();
 	
 	ret += "<a href=\"#component_viewer_res_schedule_detail_recalc\">Re-Run schedule process</a>";
-	
-	if (component_viewer_res_process_resourse_schedules.Failed_To_Schedule.length>0) {
-		ret += "<h2>Warning - failed to schedule the following</h2>";
-		ret += "<ul>";
-		for (var cur in component_viewer_res_process_resourse_schedules.Failed_To_Schedule) {
-			var obj = component_viewer_res_process_resourse_schedules.Failed_To_Schedule[cur];
-			ret += "<li>" + obj.text + "</li>";
-		};
-		ret += "</ul>";
-	};
+	ret += component_viewer_res_getFailedToScheduleHTML();
 	
 	ret += "<table id=\"component_viewer_res_schedule_main\">";
 	
