@@ -20,14 +20,16 @@ transform: scale(1.9);
 
 var component_viewer_res_schedule_board_globs = {
 	x_title_width: 200,
-	y_title_height: 50,
+	y_title_height: 25,
 	day_width: 50,
-	lane_height: 1000,
+	lane_height_scale_factor: 1,
+	lane_day_number_y_offset: 3,
 	
 	
 	//Caculated values
 	height: -1,
 	width: -1,
+	lane_height: -1,
 };
 
 function component_viewer_res_schedule_board_getHtml() {
@@ -39,11 +41,13 @@ function component_viewer_res_schedule_board_getHtml() {
 	ret += "<a href=\"#component_viewer_res_schedule_board_recalc\">Re-Run schedule process</a>";
 	ret += component_viewer_res_getFailedToScheduleHTML();
 	
+	component_viewer_res_schedule_board_globs.lane_height = 100 * component_viewer_res_schedule_board_globs.lane_height_scale_factor;
+	
 	var days = 50;
 	var lanes = 3;
 	
 	component_viewer_res_schedule_board_globs.width = component_viewer_res_schedule_board_globs.x_title_width + (days * component_viewer_res_schedule_board_globs.day_width);
-	component_viewer_res_schedule_board_globs.height = component_viewer_res_schedule_board_globs.y_title_height + (lanes * component_viewer_res_schedule_board_globs.lane_height);
+	component_viewer_res_schedule_board_globs.height = (component_viewer_res_schedule_board_globs.y_title_height * 2) + (lanes * component_viewer_res_schedule_board_globs.lane_height);
 	
 	
 	ret += "<br>";
@@ -82,11 +86,24 @@ function component_viewer_res_schedule_board_getSVG(days, lanes) {
 		var x1 = component_viewer_res_schedule_board_globs.x_title_width + (d * component_viewer_res_schedule_board_globs.day_width);
 		var x2 = component_viewer_res_schedule_board_globs.x_title_width + ((d+1) * component_viewer_res_schedule_board_globs.day_width);
 		
+		//Day number at top
+		ret += "<g>";
+		ret += "<text text-anchor=\"middle\" alignment-baseline=\"middle\" x=\"" + (x1 + (component_viewer_res_schedule_board_globs.day_width/2)) + "\" y=\"" + ((component_viewer_res_schedule_board_globs.y_title_height * 0.5) + component_viewer_res_schedule_board_globs.lane_day_number_y_offset) + "\">" + (d+1) + "</text>"
+		ret += "</g>";
+
+		//Day number at bottom
+		ret += "<g>";
+		ret += "<text text-anchor=\"middle\" alignment-baseline=\"middle\" x=\"" + (x1 + (component_viewer_res_schedule_board_globs.day_width/2)) + "\" y=\"" + ((component_viewer_res_schedule_board_globs.y_title_height * 1.5) + (lanes * component_viewer_res_schedule_board_globs.lane_height) + component_viewer_res_schedule_board_globs.lane_day_number_y_offset) + "\">" + (d+1) + "</text>"
+		ret += "</g>";
+		
+		//Right hand side line
 		ret += "<line class=\"grid\" x1=" + x2 + " y1=0 x2=" + x2 + " y2=" + component_viewer_res_schedule_board_globs.height + " />";
 		
+		/*
 		c = x1;
 		if (d % 10 == 0) y += 10;
 		ret +="   <polygon fill=red stroke-width=0 points=\"" + c + "," + (y+10) + " " + (c + 20) + "," + (y+10) + " " + (c+10) + "," + y + "\" />";
+		*/
 	};
 	
 	for (var cur_lane=0;cur_lane<lanes;cur_lane++) {
