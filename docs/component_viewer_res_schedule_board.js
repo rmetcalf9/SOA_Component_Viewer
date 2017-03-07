@@ -29,7 +29,6 @@ var component_viewer_res_schedule_board_globs = {
 	//Caculated values
 	height: -1,
 	width: -1,
-	lane_height: -1,
 };
 
 function component_viewer_res_schedule_board_getHtml() {
@@ -44,10 +43,15 @@ function component_viewer_res_schedule_board_getHtml() {
 	component_viewer_res_schedule_board_globs.lane_height = 100 * component_viewer_res_schedule_board_globs.lane_height_scale_factor;
 	
 	var days = 50;
-	var lanes = 3;
+	var lanes = dataObjects.RESOURCELANESkeys.length;
 	
 	component_viewer_res_schedule_board_globs.width = component_viewer_res_schedule_board_globs.x_title_width + (days * component_viewer_res_schedule_board_globs.day_width);
-	component_viewer_res_schedule_board_globs.height = (component_viewer_res_schedule_board_globs.y_title_height * 2) + (lanes * component_viewer_res_schedule_board_globs.lane_height);
+	component_viewer_res_schedule_board_globs.height = (component_viewer_res_schedule_board_globs.y_title_height * 2);
+	for (var cur_do = 0; cur_do < dataObjects.RESOURCELANESkeys.length; cur_do++) {
+		var res_lane_obj = dataObjects.RESOURCELANESs[dataObjects.RESOURCELANESkeys[cur_do]];
+		component_viewer_res_schedule_board_globs.height += (res_lane_obj.rate * component_viewer_res_schedule_board_globs.lane_height_scale_factor);
+	};
+
 	
 	
 	ret += "<br>";
@@ -93,7 +97,7 @@ function component_viewer_res_schedule_board_getSVG(days, lanes) {
 
 		//Day number at bottom
 		ret += "<g>";
-		ret += "<text text-anchor=\"middle\" alignment-baseline=\"middle\" x=\"" + (x1 + (component_viewer_res_schedule_board_globs.day_width/2)) + "\" y=\"" + ((component_viewer_res_schedule_board_globs.y_title_height * 1.5) + (lanes * component_viewer_res_schedule_board_globs.lane_height) + component_viewer_res_schedule_board_globs.lane_day_number_y_offset) + "\">" + (d+1) + "</text>"
+		ret += "<text text-anchor=\"middle\" alignment-baseline=\"middle\" x=\"" + (x1 + (component_viewer_res_schedule_board_globs.day_width/2)) + "\" y=\"" + (component_viewer_res_schedule_board_globs.height - (component_viewer_res_schedule_board_globs.y_title_height * 0.5)) + "\">" + (d+1) + "</text>"
 		ret += "</g>";
 		
 		//Right hand side line
@@ -106,12 +110,29 @@ function component_viewer_res_schedule_board_getSVG(days, lanes) {
 		*/
 	};
 	
+	var top = component_viewer_res_schedule_board_globs.y_title_height;
+	var bottom = -1;
+	for (var cur_do = 0; cur_do < dataObjects.RESOURCELANESkeys.length; cur_do++) {
+		var res_lane_obj = dataObjects.RESOURCELANESs[dataObjects.RESOURCELANESkeys[cur_do]];
+		bottom = top + (component_viewer_res_schedule_board_globs.lane_height_scale_factor * res_lane_obj.rate);
+		
+		//Lane title at left
+		ret += "<g>";
+		ret += "<text text-anchor=\"end\" alignment-baseline=\"middle\" x=\"" + (component_viewer_res_schedule_board_globs.x_title_width - 5) + "\" y=\"" + (top + ((bottom - top)/2)) + "\">" + res_lane_obj.uid + ":" + "</text>"
+		ret += "</g>";		
+		
+		ret += "<line class=\"grid\" x1=0 y1=" + bottom + " x2=" + component_viewer_res_schedule_board_globs.width + " y2=" + bottom + " />";
+		
+		top = bottom;
+	}
+/*	
 	for (var cur_lane=0;cur_lane<lanes;cur_lane++) {
 		var y1 = component_viewer_res_schedule_board_globs.y_title_height + ((cur_lane) * component_viewer_res_schedule_board_globs.lane_height);
 		var y2 = component_viewer_res_schedule_board_globs.y_title_height + ((cur_lane+1) * component_viewer_res_schedule_board_globs.lane_height);
+*/
 		
 		//Draw line at bottom of lane
-		ret += "<line class=\"grid\" x1=0 y1=" + y2 + " x2=" + component_viewer_res_schedule_board_globs.width + " y2=" + y2 + " />";
-	};
+//		
+//	};
 	return ret;
 };
