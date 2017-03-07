@@ -125,8 +125,26 @@ function component_viewer_res_schedule_board_getSVG(days) {
 		
 		ret += "<line class=\"grid\" x1=0 y1=" + bottom + " x2=" + component_viewer_res_schedule_board_globs.width + " y2=" + bottom + " />";
 		
+		ret += component_viewer_res_schedule_board_getSVG_for_laneItems(
+			{x:component_viewer_res_schedule_board_globs.x_title_width,y:top},
+			component_viewer_res_schedule_board_globs.lane_height_scale_factor,
+			component_viewer_res_schedule_board_globs.day_width,
+			component_viewer_res_process_get_scheduled_lane(res_lane_obj.uid)
+		);
+		
 		top = bottom;
 	}
 
 	return ret;
 };
+
+function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scale, day_width, lane_obj) {
+	var ret = "";
+	
+	console.log("TODO");
+	console.log(origin);
+	console.log(y_scale);
+	console.log(lane_obj);
+	
+	return ret;
+}
