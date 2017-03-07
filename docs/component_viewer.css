@@ -86,3 +86,7 @@ svg.component_viewer_res_schedule_board > line.grid {
 	stroke-width: 3;
 	stroke: black;	
 }
+
+svg.component_viewer_res_schedule_board > g > rect.test {
+	fill: lightgrey;
+}

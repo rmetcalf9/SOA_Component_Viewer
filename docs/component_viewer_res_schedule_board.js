@@ -134,6 +134,8 @@ function component_viewer_res_schedule_board_getSVG(days) {
 		
 		top = bottom;
 	}
+	
+
 
 	return ret;
 };
