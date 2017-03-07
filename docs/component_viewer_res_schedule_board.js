@@ -148,5 +148,26 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	console.log(y_scale);
 	console.log(lane_obj);
 	
+	//SORT all allocated resourses by duration descending
+	
+	//Draw and place each allocated resourse in durations logging it as drawn and splitting boxes if required
+	
 	return ret;
 }
+
+function component_viewer_res_schedule_board_getSVG_for_laneItems(
+	lane_origin,
+	y_scale, 
+	day_width,
+	start_day,
+	end_day,
+	start_percent,
+	end_percent,
+	lane_obj
+) {
+	console.log("TODO");
+}
+	
+	
+	
+	
