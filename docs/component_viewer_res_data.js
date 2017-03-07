@@ -249,3 +249,17 @@ function component_viewer_res_data_create_estimate(component_uid, work_text, day
 	component_viewer_res_updateMenuText();
 	
 };
+
+
+
+//**Functions below deal with scheduled data
+
+//Returns the highest lane end day
+// passed the scheduled lane object
+function component_viewer_res_data_sch_getHighestLaneEndDay(lane_obj) {
+	var max_end = 0;
+	for (var alloc_res in lane_obj.allocated_resourses) {
+		if (lane_obj.allocated_resourses[alloc_res].end_day>max_end) max_end=lane_obj.allocated_resourses[alloc_res].end_day;
+	};
+	return max_end;
+};

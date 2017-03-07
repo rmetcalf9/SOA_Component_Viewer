@@ -42,22 +42,24 @@ function component_viewer_res_schedule_board_getHtml() {
 	
 	component_viewer_res_schedule_board_globs.lane_height = 100 * component_viewer_res_schedule_board_globs.lane_height_scale_factor;
 	
-	var days = 50;
-	var lanes = dataObjects.RESOURCELANESkeys.length;
+	var days = 10;
 	
-	component_viewer_res_schedule_board_globs.width = component_viewer_res_schedule_board_globs.x_title_width + (days * component_viewer_res_schedule_board_globs.day_width);
 	component_viewer_res_schedule_board_globs.height = (component_viewer_res_schedule_board_globs.y_title_height * 2);
 	for (var cur_do = 0; cur_do < dataObjects.RESOURCELANESkeys.length; cur_do++) {
 		var res_lane_obj = dataObjects.RESOURCELANESs[dataObjects.RESOURCELANESkeys[cur_do]];
 		component_viewer_res_schedule_board_globs.height += (res_lane_obj.rate * component_viewer_res_schedule_board_globs.lane_height_scale_factor);
+		
+		var lane_obj = component_viewer_res_process_get_scheduled_lane(res_lane_obj.uid);
+		var highest_end_day_for_lane = component_viewer_res_data_sch_getHighestLaneEndDay(lane_obj);
+		if (days < highest_end_day_for_lane) days = highest_end_day_for_lane;
 	};
+	component_viewer_res_schedule_board_globs.width = component_viewer_res_schedule_board_globs.x_title_width + (days * component_viewer_res_schedule_board_globs.day_width);
 
-	
 	
 	ret += "<br>";
 	ret += "<svg class=\"component_viewer_res_schedule_board\" style=\"width: " + (component_viewer_res_schedule_board_globs.width + 10) + "px; height: " + (component_viewer_res_schedule_board_globs.height + 10) + "px;\">";
 	
-	ret += component_viewer_res_schedule_board_getSVG(days, lanes);
+	ret += component_viewer_res_schedule_board_getSVG(days);
 	
 	ret += "</svg>";
 	
@@ -74,7 +76,7 @@ function component_viewer_res_schedule_board_INIT() {
 	});
 };
 
-function component_viewer_res_schedule_board_getSVG(days, lanes) {
+function component_viewer_res_schedule_board_getSVG(days) {
 	var ret = "";
 	var c = 0;
 	var y = 0;
@@ -125,14 +127,6 @@ function component_viewer_res_schedule_board_getSVG(days, lanes) {
 		
 		top = bottom;
 	}
-/*	
-	for (var cur_lane=0;cur_lane<lanes;cur_lane++) {
-		var y1 = component_viewer_res_schedule_board_globs.y_title_height + ((cur_lane) * component_viewer_res_schedule_board_globs.lane_height);
-		var y2 = component_viewer_res_schedule_board_globs.y_title_height + ((cur_lane+1) * component_viewer_res_schedule_board_globs.lane_height);
-*/
-		
-		//Draw line at bottom of lane
-//		
-//	};
+
 	return ret;
 };
