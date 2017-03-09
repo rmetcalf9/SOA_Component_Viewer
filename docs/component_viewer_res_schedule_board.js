@@ -371,7 +371,9 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 	var rect_class = "outer default";
 	if (typeof(alloc_res.res_alloc_obj.itemuid)!="undefined") {
 		var component = ic_soa_data_getComponentFromUID(alloc_res.res_alloc_obj.itemuid);
-		rect_class = "outer " + ic_soa_data_getSheetMetrics()[component.source_sheet].css_tag;
+		if (typeof(component)!="undefined") {
+			rect_class = "outer " + ic_soa_data_getSheetMetrics()[component.source_sheet].css_tag;
+		};
 	};
 	
 	ret += rjmlib_svg_cropped_text_in_rect(

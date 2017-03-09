@@ -92,6 +92,9 @@ svg.component_viewer_res_schedule_board > g.lane  rect.outer {
 	stroke: black;	
 }
 
+svg.component_viewer_res_schedule_board > g.lane  rect.outer.default {
+	fill: lightgrey;
+}
 svg.component_viewer_res_schedule_board > g.lane  rect.outer.red {
 	fill: pink;
 }
