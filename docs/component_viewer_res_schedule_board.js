@@ -366,13 +366,14 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 	var width = (end_day - start_day + 1) * day_width;
 	var height = end_percent - start_percent;
 	var text = alloc_res.res_alloc_obj.text + " (" + alloc_res.res_alloc_obj.remainingdays + " Remaing - " + alloc_res.rate + "% effort)";
-
+	var component_status = undefined;
 	
 	var rect_class = "outer default";
 	if (typeof(alloc_res.res_alloc_obj.itemuid)!="undefined") {
 		var component = ic_soa_data_getComponentFromUID(alloc_res.res_alloc_obj.itemuid);
 		if (typeof(component)!="undefined") {
 			rect_class = "outer " + ic_soa_data_getSheetMetrics()[component.source_sheet].css_tag;
+			component_status = "(" + component.status + ")"
 		};
 	};
 	
@@ -383,7 +384,7 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 		undefined, //cl
 		undefined,
 		undefined,
-		undefined, //bl
+		component_status, //bottom left
 		undefined,
 		alloc_res.rate + "%", //br
 		rect_x_pos,
