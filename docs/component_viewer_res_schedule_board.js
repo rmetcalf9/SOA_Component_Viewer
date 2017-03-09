@@ -163,6 +163,21 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	
 
 	
+	//Test code to draw some boxes
+	for (var cur in lane_obj.allocated_resourses) {
+		var allocation = lane_obj.allocated_resourses[cur];
+		ret += component_viewer_res_schedule_board_getSVG_for_laneItem(
+			origin,
+			y_scale, 
+			day_width,
+			allocation.start_day, //start_day
+			allocation.end_day, //dne_day
+			0, //start_per
+			allocation.rate, //end_per
+			allocation //alloc_res
+		);
+	};
+	
 	return ret;
 }
 
@@ -174,9 +189,18 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 	end_day,
 	start_percent,
 	end_percent,
-	lane_obj
+	alloc_res
 ) {
-	console.log("TODO");
+	var ret = "";
+	
+	var rect_x_pos = (lane_origin.x + ((start_day-1)*day_width));
+	var rect_y_pos = lane_origin.y + (start_percent-1);
+	var width = (end_day - start_day + 1) * day_width;
+	var height = end_percent - start_percent;
+	
+	ret += "<rect x=\"" + rect_x_pos + "\" y=\"" + rect_y_pos + "\" width=\"" + width + "\" height=\"" + height + "\"/>";	
+	
+	return ret;	
 }
 	
 	
