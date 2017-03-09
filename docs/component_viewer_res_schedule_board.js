@@ -152,6 +152,8 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	//TODO
 	
 	//Group resAlocs into chains
+	var chains = component_viewer_res_schedule_board_group_into_chains(lane_obj);
+	
 	
 	//SORT all allocated resourses by duration descending
 	
@@ -176,6 +178,73 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	
 	return ret;
 }
+
+function component_viewer_res_schedule_board_group_into_chains(lane_obj) {
+	var ret = [];
+	
+	//Go through all allocated resourses that have not been assigned and see if we can group any 
+	// together. Resulting in one chain of resourse which can be drawn in sequence (because they fit in a rectangle)
+	
+	var unassigned_objects = [];
+	for (var cur in lane_obj.allocated_resourses) {
+		unassigned_objects.push(cur);
+	};
+	
+	console.log("Building chains for " + lane_obj.obj.uid);
+	console.log(lane_obj);
+	console.log(unassigned_objects);
+	
+	//While objects remain on the list
+	while (unassigned_objects.length>0) {
+		//Pick the longest obj in the lowest day from the list - make this a chain and remove it from unassigned_objects list
+		var cur_obj_idx = component_viewer_res_schedule_board_getLongestObjWithLowestDay(lane_obj, unassigned_objects);
+		//console.log(lane_obj.allocated_resourses[cur_obj_idx]);
+		if (rjmllib_ArrayRemove(unassigned_objects,cur_obj_idx)==false) {
+			console.log("ERROR FAILED TO REMOVE - GIVING UP MAKING CHAIN");
+			break;
+		};
+		
+		//TODO
+		
+		//While objects of same size exist at the day after the chain ends
+		  //add object to chain and remove it from unassigned_objects
+		//wend
+	}; //wend
+	
+	
+	
+	return ret;
+}
+
+//unassigned_objects is array of ID's for the lane_obj.allocated_resourses 
+function component_viewer_res_schedule_board_getLongestObjWithLowestDay(lane_obj, unassigned_objects) {
+	//Check lowest day first
+	var objs_with_lowest_day = [];
+	var day = 9999999;
+	for (var cur_idx in unassigned_objects) {
+		var obj = lane_obj.allocated_resourses[cur_idx];
+		if (obj.start_day<day) {
+			day = obj.start_day;
+			objs_with_lowest_day = [];
+		};
+		if (obj.start_day==day) {
+			objs_with_lowest_day.push(cur_idx);
+		};
+	};
+
+	//console.log("Objects starting on lowest day:" + day);
+	//console.log(objs_with_lowest_day);
+	var max_duration = -1;
+	var obj_idx_ret = undefined;
+	for (var cur_idx2 in objs_with_lowest_day) {
+		var obj = lane_obj.allocated_resourses[objs_with_lowest_day[cur_idx2]];
+		if (obj.duration > max_duration) {
+			max_duration = obj.duration;
+			obj_idx_ret = objs_with_lowest_day[cur_idx2];
+		};
+	};
+	return unassigned_objects[obj_idx_ret];
+};
 
 function component_viewer_res_schedule_board_getSVG_for_laneItem(
 	lane_origin,

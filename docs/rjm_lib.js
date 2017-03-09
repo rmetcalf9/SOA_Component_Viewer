@@ -109,4 +109,11 @@ function rjmllib_randU32(strong) {
 	return window.crypto.getRandomValues(new Uint32Array(1))[0] / 0x100000000;
 }
 
+function rjmllib_ArrayRemove(arr,v) {
+    if (arr.indexOf(v) != -1) {
+        arr.splice(arr.indexOf(v), 1);
+        return true;
+    }
+    return false;
+};
 
