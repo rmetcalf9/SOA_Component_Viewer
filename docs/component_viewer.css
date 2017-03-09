@@ -87,21 +87,21 @@ svg.component_viewer_res_schedule_board > line.grid {
 	stroke: black;	
 }
 
-svg.component_viewer_res_schedule_board > g.lane > rect.outer {
+svg.component_viewer_res_schedule_board > g.lane  rect.outer {
 	stroke-width: 1;
 	stroke: black;	
 }
 
-svg.component_viewer_res_schedule_board > g.lane > rect.outer.red {
+svg.component_viewer_res_schedule_board > g.lane  rect.outer.red {
 	fill: pink;
 }
-svg.component_viewer_res_schedule_board > g.lane > rect.outer.green {
+svg.component_viewer_res_schedule_board > g.lane  rect.outer.green {
 	fill: lightgreen;
 }
-svg.component_viewer_res_schedule_board > g.lane > rect.outer.blue {
+svg.component_viewer_res_schedule_board > g.lane  rect.outer.blue {
 	fill: lightblue;
 }
-svg.component_viewer_res_schedule_board > g.lane > rect.outer.yellow {
+svg.component_viewer_res_schedule_board > g.lane  rect.outer.yellow {
 	fill: yellow;
 }
 
