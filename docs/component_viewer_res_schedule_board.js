@@ -162,8 +162,13 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	//Draw and place each allocated resourse in durations logging it as drawn and splitting boxes if required
 	
 
+	//Draw chains
+	for (var cur in chains) {
+		ret += component_viewer_res_schedule_board_drawchain(chains[cur],origin, y_scale, day_width, lane_obj);
+	};
+
 	
-	//Test code to draw some boxes
+/*	//Test code to draw some boxes
 	for (var cur in lane_obj.allocated_resourses) {
 		var allocation = lane_obj.allocated_resourses[cur];
 		ret += component_viewer_res_schedule_board_getSVG_for_laneItem(
@@ -177,9 +182,33 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 			allocation //alloc_res
 		);
 	};
-	
+*/	
 	return ret;
 }
+
+function component_viewer_res_schedule_board_drawchain(chain,origin, y_scale, day_width, lane_obj) {
+	var ret = "";
+
+
+	for (var cur in chain.res_alocs) {
+		//console.log(chain.res_alocs[cur]);
+		var allocation = chain.res_alocs[cur];
+		ret += component_viewer_res_schedule_board_getSVG_for_laneItem(
+			origin,
+			y_scale, 
+			day_width,
+			allocation.start_day, //start_day
+			allocation.end_day, //dne_day
+			0, //start_per
+			allocation.rate, //end_per
+			allocation //alloc_res
+		);
+	};
+
+
+	return ret;
+}
+
 
 function component_viewer_res_schedule_board_group_into_chains(lane_obj) {
 	var ret_chains = [];
