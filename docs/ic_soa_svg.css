@@ -20,12 +20,12 @@ svg.ic_soa_svg text {
 }
 
 svg.ic_soa_svg ellipse.edf {
-	fill: red;
+	fill: pink;
 	stroke-width: 1;
 	stroke: black;
 }
 svg.ic_soa_svg rect.edf {
-	fill: red;
+	fill: pink;
 	stroke-width: 1;
 	stroke: none;
 }

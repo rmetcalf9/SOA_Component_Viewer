@@ -127,7 +127,7 @@ function component_viewer_res_schedule_board_getSVG(days) {
 		ret += "<line class=\"grid\" x1=0 y1=" + bottom + " x2=" + component_viewer_res_schedule_board_globs.width + " y2=" + bottom + " />";
 		
 		var clip_path_str = "component_viewer_res_schedule_board_cp" + res_lane_obj.uid;
-		ret += "<g clip-path=\"url(#" + clip_path_str + ")\">";
+		ret += "<g class=\"lane\" clip-path=\"url(#" + clip_path_str + ")\">";
 		ret += component_viewer_res_schedule_board_getSVG_for_laneItems(
 			{x:component_viewer_res_schedule_board_globs.x_title_width,y:top},
 			component_viewer_res_schedule_board_globs.lane_height_scale_factor,
@@ -149,11 +149,7 @@ function component_viewer_res_schedule_board_getSVG(days) {
 
 function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scale, day_width, lane_obj) {
 	var ret = "";
-	
-	console.log("TODO cp");
-	console.log(origin);
-	console.log(y_scale);
-	console.log(lane_obj);
+	//TODO
 	
 	//Group resAlocs into chains
 	
@@ -193,12 +189,21 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 ) {
 	var ret = "";
 	
+	console.log(alloc_res);
+	
 	var rect_x_pos = (lane_origin.x + ((start_day-1)*day_width));
 	var rect_y_pos = lane_origin.y + (start_percent-1);
 	var width = (end_day - start_day + 1) * day_width;
 	var height = end_percent - start_percent;
 	
-	ret += "<rect x=\"" + rect_x_pos + "\" y=\"" + rect_y_pos + "\" width=\"" + width + "\" height=\"" + height + "\"/>";	
+	var rect_class = "outer default";
+	if (typeof(alloc_res.res_alloc_obj.itemuid)!="undefined") {
+		var component = ic_soa_data_getComponentFromUID(alloc_res.res_alloc_obj.itemuid);
+		rect_class = "outer " + ic_soa_data_getSheetMetrics()[component.source_sheet].css_tag;
+	};
+	
+	
+	ret += "<rect class=\"" + rect_class + "\" x=\"" + rect_x_pos + "\" y=\"" + rect_y_pos + "\" width=\"" + width + "\" height=\"" + height + "\"/>";	
 	
 	return ret;	
 }
