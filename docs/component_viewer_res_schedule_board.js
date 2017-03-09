@@ -116,7 +116,8 @@ function component_viewer_res_schedule_board_getSVG(days) {
 	var bottom = -1;
 	for (var cur_do = 0; cur_do < dataObjects.RESOURCELANESkeys.length; cur_do++) {
 		var res_lane_obj = dataObjects.RESOURCELANESs[dataObjects.RESOURCELANESkeys[cur_do]];
-		bottom = top + (component_viewer_res_schedule_board_globs.lane_height_scale_factor * res_lane_obj.rate);
+		var height = component_viewer_res_schedule_board_globs.lane_height_scale_factor * res_lane_obj.rate;
+		bottom = top + height;
 		
 		//Lane title at left
 		ret += "<g>";
@@ -125,13 +126,19 @@ function component_viewer_res_schedule_board_getSVG(days) {
 		
 		ret += "<line class=\"grid\" x1=0 y1=" + bottom + " x2=" + component_viewer_res_schedule_board_globs.width + " y2=" + bottom + " />";
 		
+		var clip_path_str = "component_viewer_res_schedule_board_cp" + res_lane_obj.uid;
+		ret += "<g clip-path=\"url(#" + clip_path_str + ")\">";
 		ret += component_viewer_res_schedule_board_getSVG_for_laneItems(
 			{x:component_viewer_res_schedule_board_globs.x_title_width,y:top},
 			component_viewer_res_schedule_board_globs.lane_height_scale_factor,
 			component_viewer_res_schedule_board_globs.day_width,
 			component_viewer_res_process_get_scheduled_lane(res_lane_obj.uid)
 		);
-		
+		ret += "</g>";
+		ret += "<clipPath id=\"" + clip_path_str + "\">";
+		ret += "<rect x=\"" + component_viewer_res_schedule_board_globs.x_title_width + "\" y=\"" + top + "\" width=\"" + (days * component_viewer_res_schedule_board_globs.day_width) + "\" height=\"" + height + "\"/>";
+		ret += "</clipPath>";
+
 		top = bottom;
 	}
 	
@@ -143,19 +150,23 @@ function component_viewer_res_schedule_board_getSVG(days) {
 function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scale, day_width, lane_obj) {
 	var ret = "";
 	
-	console.log("TODO");
+	console.log("TODO cp");
 	console.log(origin);
 	console.log(y_scale);
 	console.log(lane_obj);
+	
+	//Group resAlocs into chains
 	
 	//SORT all allocated resourses by duration descending
 	
 	//Draw and place each allocated resourse in durations logging it as drawn and splitting boxes if required
 	
+
+	
 	return ret;
 }
 
-function component_viewer_res_schedule_board_getSVG_for_laneItems(
+function component_viewer_res_schedule_board_getSVG_for_laneItem(
 	lane_origin,
 	y_scale, 
 	day_width,
