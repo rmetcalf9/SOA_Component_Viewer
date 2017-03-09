@@ -190,6 +190,10 @@ function component_viewer_res_schedule_board_drawchain(chain,origin, y_scale, da
 	var ret = "";
 
 
+	//TODO Sort chains from longest to shortest
+	//TODO Some method of moving chains down so they dont render one on top of the other
+	//TODO Some method of indicating when the rendering code has failed to arrange the objects correctly. (Bon't bother splitting just make it clear to the user that some days have an error)
+
 	for (var cur in chain.res_alocs) {
 		//console.log(chain.res_alocs[cur]);
 		var allocation = chain.res_alocs[cur];
