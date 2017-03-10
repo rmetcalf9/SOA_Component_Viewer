@@ -151,52 +151,50 @@ function component_viewer_res_schedule_board_getSVG(days) {
 
 function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scale, day_width, lane_obj) {
 	var ret = "";
-	//TODO
+	var days_with_rendering_errors = [];
 	
 	//Group resAlocs into chains
 	var chains = component_viewer_res_schedule_board_group_into_chains(lane_obj);
 	
-	
-	//SORT all allocated resourses by duration descending
-	
-	//Draw and place each allocated resourse in durations logging it as drawn and splitting boxes if required
-	
-
-	//Draw chains
+	var chains_to_draw = []; //Stores indexes of chains
 	for (var cur in chains) {
-		ret += component_viewer_res_schedule_board_drawchain(chains[cur],origin, y_scale, day_width, lane_obj);
+		chains_to_draw.push(cur);
 	};
-
 	
-/*	//Test code to draw some boxes
-	for (var cur in lane_obj.allocated_resourses) {
-		var allocation = lane_obj.allocated_resourses[cur];
-		ret += component_viewer_res_schedule_board_getSVG_for_laneItem(
-			origin,
-			y_scale, 
-			day_width,
-			allocation.start_day, //start_day
-			allocation.end_day, //dne_day
-			0, //start_per
-			allocation.rate, //end_per
-			allocation //alloc_res
-		);
+	while (chains_to_draw.length>0) {
+		//TODO Create list of chains that all start on the LOWEST day
+		
+		//TODO Sort list form highest duration to lowest duration
+		
+		//TODO Inistalise "TOP" height for the day all these chains start on
+		
+		//TODO Draw chains in sorted order incrementing our TOP height
+			//TODO If we run out of height then add days to error day list (Keep drawing - it will be cropped anyway)
+		
+		ret += component_viewer_res_schedule_board_drawchain(chains_to_draw, chains, chains_to_draw[0],origin, y_scale, day_width, lane_obj);
 	};
-*/	
+	
+	
+	//TODO Sort days_with_rendering_errors into assecending order
+	
+	//TODO Draw Put X's on days_with_rendering_errors (Deduplicating as we go)
+
 	return ret;
 }
 
-function component_viewer_res_schedule_board_drawchain(chain,origin, y_scale, day_width, lane_obj) {
+//Draws a chain and removes it from chains_to_draw list
+function component_viewer_res_schedule_board_drawchain(chains_to_draw,chains,chain_idx,origin, y_scale, day_width, lane_obj) {
 	var ret = "";
 
-
-	//TODO Sort chains from longest to shortest
-	//TODO Some method of moving chains down so they dont render one on top of the other
-	//TODO Some method of indicating when the rendering code has failed to arrange the objects correctly. (Bon't bother splitting just make it clear to the user that some days have an error)
-
-	for (var cur in chain.res_alocs) {
+	if (rjmllib_ArrayRemove(chains_to_draw,chain_idx)==false) {
+		console.log("ERROR FAILED TO REMOVE Chains to draw");
+		return "";
+	};		
+	
+	
+	for (var cur in chains[chain_idx].res_alocs) {
 		//console.log(chain.res_alocs[cur]);
-		var allocation = chain.res_alocs[cur];
+		var allocation = chains[chain_idx].res_alocs[cur];
 		ret += component_viewer_res_schedule_board_getSVG_for_laneItem(
 			origin,
 			y_scale, 
