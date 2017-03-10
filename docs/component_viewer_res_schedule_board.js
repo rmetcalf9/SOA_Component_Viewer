@@ -127,7 +127,7 @@ function component_viewer_res_schedule_board_getSVG(days) {
 		ret += "<line class=\"grid\" x1=0 y1=" + bottom + " x2=" + component_viewer_res_schedule_board_globs.width + " y2=" + bottom + " />";
 		
 		var clip_path_str = "component_viewer_res_schedule_board_cp" + res_lane_obj.uid;
-//if ((res_lane_obj.uid=="OA_100")) { //Useful for testing a single lane to reduce debug messages
+if ((res_lane_obj.uid=="EB_100")) { //Useful for testing a single lane to reduce debug messages
 		ret += "<g class=\"lane\" clip-path=\"url(#" + clip_path_str + ")\">";
 		ret += component_viewer_res_schedule_board_getSVG_for_laneItems(
 			{x:component_viewer_res_schedule_board_globs.x_title_width,y:top},
@@ -136,7 +136,7 @@ function component_viewer_res_schedule_board_getSVG(days) {
 			component_viewer_res_process_get_scheduled_lane(res_lane_obj.uid)
 		);
 		ret += "</g>";
-//};
+};
 		ret += "<clipPath id=\"" + clip_path_str + "\">";
 		ret += "<rect x=\"" + component_viewer_res_schedule_board_globs.x_title_width + "\" y=\"" + top + "\" width=\"" + (days * component_viewer_res_schedule_board_globs.day_width) + "\" height=\"" + height + "\"/>";
 		ret += "</clipPath>";
@@ -201,23 +201,72 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	*/
 	
 	while (chains_to_draw.length>0) {
-		//TODO Create list of chains that all start on the same LOWEST day (Sorted from higest duration to Lowest Duration)
-		var lowest_day = 1; //TODO Replace this with real code
+		//Create list of chains that all start on the same LOWEST day (Sorted from higest duration to Lowest Duration)
+		var chains_in_day = component_viewer_res_schedule_board_get_ordered_list_of_next_chains(chains, chains_to_draw);
+		var lowest_day = chains[chains_in_day[0]].start_day; //Replace this with real code
 		
 		//Inistalise "start_percentage" height for the day all these chains start on
 		//  Isn't always 0 as day might have blocks already. Create code to check this (using drawn chains)
 		var start_per = component_viewer_res_schedule_board_get_start_pos_for_day(next_start_info, lowest_day); 
 		
-		//TODO Draw chains in sorted order incrementing our TOP height
-			//TODO If we run out of height then add days to error day list (Keep drawing - it will be cropped anyway)
 		
-		//TODO Alter function to maintain list of drawn chains
-		ret += component_viewer_res_schedule_board_drawchain(chains_to_draw, chains, chains_to_draw[0],origin, y_scale, start_per, day_width, lane_obj);
+		
+		//Draw chains in sorted order incrementing our TOP height
+		for (var cur in chains_in_day) {
+			var chain_idx_to_draw = chains_in_day[cur];
+
+			
+			//If we run out of height then add days to error day list (Keep drawing - it will be cropped anyway)
+			if ((start_per+chains[chain_idx_to_draw].rate)>lane_obj.max_rate) {				
+				//Not drawing as this one will fall off the bottom. Won't draw anymore for today
+				console.log("Rendering Errors in " + lane_obj.uid + " - max_rate=" + lane_obj.max_rate + " need " + (start_per+chains[chain_idx_to_draw].rate));
+				console.log("Trying to draw:");
+				console.log(chains[chain_idx_to_draw]);
+				for (var c=chains[chain_idx_to_draw].start_day;c<=chains[chain_idx_to_draw].end_day;c++) {
+					days_with_rendering_errors.push(c);
+				};
+			} else {
+				console.log("chains_in_day_draw");
+				
+				//As well as drawing this will maintain the next_start_info structure
+				ret += component_viewer_res_schedule_board_drawchain(chains_to_draw, chains, chain_idx_to_draw,origin, y_scale, start_per, day_width, lane_obj, next_start_info);
+
+				console.log(chains[chain_idx_to_draw].duration);
+			};
+			start_per += chains[chain_idx_to_draw].rate;
+		};
 	};
 	
 	ret += component_viewer_res_schedule_board_drawRenderErrors(origin, y_scale, day_width, lane_obj.max_rate, days_with_rendering_errors);
 	return ret;
 }
+
+//Taking into account ONLY chains in chains_to_draw; Return an ordered list of "indexes of chains" that
+// 1. All have the same LOWEST day
+// 2. In descending order of duration (longest first)
+function component_viewer_res_schedule_board_get_ordered_list_of_next_chains(chains, chains_to_draw) {
+	var ret = []; //Stores indexes of chains
+	
+	var day = 9999999;
+	for (var cur in chains_to_draw) {
+		if (chains[chains_to_draw[cur]].start_day<day) {
+			ret = [];
+			day = chains[chains_to_draw[cur]].start_day; 
+		};
+		ret.push(chains_to_draw[cur]); //make sure we push an index of chains
+	};
+	console.log("list_of_next_chains");
+	console.log(chains);
+	console.log(ret);
+	
+	ret = ret.sort(function (ak,bk) {
+		console.log(chains[ak]);
+		if (chains[ak].duration==chains[bk].duration) return 0;
+		if (chains[ak].duration<chains[bk].duration) return -1;
+		return 1;
+	});	
+	return ret;
+};
 
 function component_viewer_res_schedule_board_get_start_pos_for_day(next_start_info, day) {
 	//Given a day and the next start info work out it's next free slot
@@ -287,7 +336,16 @@ function component_viewer_res_schedule_board_drawRenderError(origin, y_scale, da
 };
 
 //Draws a chain and removes it from chains_to_draw list
-function component_viewer_res_schedule_board_drawchain(chains_to_draw,chains,chain_idx,origin, y_scale, start_per, day_width, lane_obj) {
+function component_viewer_res_schedule_board_drawchain(
+	chains_to_draw,
+	chains,
+	chain_idx,
+	origin, 
+	y_scale, start_per, 
+	day_width, 
+	lane_obj,
+	next_start_info
+) {
 	var ret = "";
 
 	if (rjmllib_ArrayRemove(chains_to_draw,chain_idx)==false) {
@@ -306,11 +364,31 @@ function component_viewer_res_schedule_board_drawchain(chains_to_draw,chains,cha
 			allocation.start_day, //start_day
 			allocation.end_day, //dne_day
 			start_per, //start_per
-			allocation.rate, //end_per
+			(start_per+allocation.rate)-1, //end_per
 			allocation //alloc_res
 		);
 	};
 
+	//Maintain next_start_info structure
+	var curent_bar_value = next_start_info.next_start[chains[chain_idx].start_day].next_start_pos;
+	//console.log("DEBUGF");
+	console.log(chains[chain_idx].start_day + "-" + chains[chain_idx].end_day);
+	for (var cur_day=chains[chain_idx].start_day;cur_day<=chains[chain_idx].end_day;cur_day++) {
+		//For all the days in the duration lower the bar to the bottom of this chain
+		console.log(cur_day);
+		if (typeof(next_start_info.next_start[cur_day])!="undefined") {
+			curent_bar_value = next_start_info.next_start[cur_day].next_start_pos;
+			
+			console.log(cur_day);
+			console.log("Setting day :" + cur_day + ": next start to " + (start_per+allocation.rate));
+			
+			//Set bar value to start_per+allocation.rate
+			component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info,cur_day,(start_per+allocation.rate));
+		};
+	};	
+	console.log("Setting day " + (chains[chain_idx].end_day+1) + " next start to " + (curent_bar_value));
+	//For the final day ensure the bar is unchanged (set to curent_bar_value)*****
+	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info,(chains[chain_idx].end_day+1),curent_bar_value);
 
 	return ret;
 }
@@ -327,8 +405,8 @@ function component_viewer_res_schedule_board_group_into_chains(lane_obj) {
 		unassigned_objects.push(cur);
 	};
 	
-	console.log("Building chains for " + lane_obj.obj.uid);
-	console.log(lane_obj);
+	//console.log("Building chains for " + lane_obj.obj.uid);
+	//console.log(lane_obj);
 	
 	//While objects remain on the list
 	while (unassigned_objects.length>0) {
@@ -363,8 +441,8 @@ function component_viewer_res_schedule_board_group_into_chains(lane_obj) {
 		ret_chains.push(chain);
 	}; //wend
 	
-	console.log("Chains returned:");
-	console.log(ret_chains);
+	//console.log("Chains returned:");
+	//console.log(ret_chains);
 	
 	return ret_chains;
 }
@@ -462,6 +540,8 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 	var ret = "";
 	
 	//console.log(alloc_res);
+	if (end_percent<start_percent) console.log("ERROR negative height");
+	if (end_day<start_day) console.log("ERROR negative width");
 	
 	var rect_x_pos = (lane_origin.x + ((start_day-1)*day_width));
 	var rect_y_pos = lane_origin.y + (start_percent-1);
