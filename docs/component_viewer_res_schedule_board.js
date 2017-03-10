@@ -178,17 +178,19 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 		chains_to_draw.push(cur);
 	};
 	
+	//TODO Init list of drawn chains
+	
 	while (chains_to_draw.length>0) {
-		//TODO Create list of chains that all start on the LOWEST day
+		//TODO Create list of chains that all start on the same LOWEST day (Sorted from higest duration to Lowest Duration)
 		
-		//TODO Sort list form highest duration to lowest duration
-		
-		//TODO Inistalise "TOP" height for the day all these chains start on
+		//TODO Inistalise "start_percentage" height for the day all these chains start on
+		var start_per = 0; //TODO Isn't always 0 as day might have blocks already. Create code to check this (using drawn chains)
 		
 		//TODO Draw chains in sorted order incrementing our TOP height
 			//TODO If we run out of height then add days to error day list (Keep drawing - it will be cropped anyway)
 		
-		ret += component_viewer_res_schedule_board_drawchain(chains_to_draw, chains, chains_to_draw[0],origin, y_scale, day_width, lane_obj);
+		//TODO Alter function to maintain list of drawn chains
+		ret += component_viewer_res_schedule_board_drawchain(chains_to_draw, chains, chains_to_draw[0],origin, y_scale, start_per, day_width, lane_obj);
 	};
 	
 	ret += component_viewer_res_schedule_board_drawRenderErrors(origin, y_scale, day_width, lane_obj.max_rate, days_with_rendering_errors);
@@ -232,7 +234,7 @@ function component_viewer_res_schedule_board_drawRenderError(origin, y_scale, da
 };
 
 //Draws a chain and removes it from chains_to_draw list
-function component_viewer_res_schedule_board_drawchain(chains_to_draw,chains,chain_idx,origin, y_scale, day_width, lane_obj) {
+function component_viewer_res_schedule_board_drawchain(chains_to_draw,chains,chain_idx,origin, y_scale, start_per, day_width, lane_obj) {
 	var ret = "";
 
 	if (rjmllib_ArrayRemove(chains_to_draw,chain_idx)==false) {
@@ -250,7 +252,7 @@ function component_viewer_res_schedule_board_drawchain(chains_to_draw,chains,cha
 			day_width,
 			allocation.start_day, //start_day
 			allocation.end_day, //dne_day
-			0, //start_per
+			start_per, //start_per
 			allocation.rate, //end_per
 			allocation //alloc_res
 		);
