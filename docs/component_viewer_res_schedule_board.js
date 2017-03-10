@@ -367,6 +367,7 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 	var height = end_percent - start_percent;
 	var text = alloc_res.res_alloc_obj.text + " (" + alloc_res.res_alloc_obj.remainingdays + " Remaing - " + alloc_res.rate + "% effort)";
 	var component_status = undefined;
+	var component_tags = undefined;
 	
 	var rect_class = "outer default";
 	if (typeof(alloc_res.res_alloc_obj.itemuid)!="undefined") {
@@ -374,19 +375,20 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 		if (typeof(component)!="undefined") {
 			rect_class = "outer " + ic_soa_data_getSheetMetrics()[component.source_sheet].css_tag;
 			component_status = "(" + component.status + ")"
+			component_tags = component.tags;
 		};
 	};
 	
 	ret += rjmlib_svg_cropped_text_in_rect(
 		alloc_res.res_alloc_obj.text, //tl
 		undefined,
-		"(" + alloc_res.res_alloc_obj.remainingdays + "/" + alloc_res.duration + " days effort/duration)", //top right
+		"(" + alloc_res.res_alloc_obj.remainingdays + "/" + alloc_res.duration + " days effort/duration) - " + alloc_res.rate + "%", //top right
 		undefined, //cl
 		undefined,
 		undefined,
 		component_status, //bottom left
 		undefined,
-		alloc_res.rate + "%", //br
+		component_tags, //bottom right
 		rect_x_pos,
 		rect_y_pos,
 		width,
