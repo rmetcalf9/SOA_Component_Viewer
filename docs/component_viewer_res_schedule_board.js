@@ -191,7 +191,12 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 		ret += component_viewer_res_schedule_board_drawchain(chains_to_draw, chains, chains_to_draw[0],origin, y_scale, day_width, lane_obj);
 	};
 	
-	
+	ret += component_viewer_res_schedule_board_drawRenderErrors(origin, y_scale, day_width, lane_obj.max_rate, days_with_rendering_errors);
+	return ret;
+}
+
+function component_viewer_res_schedule_board_drawRenderErrors(origin, y_scale, day_width, max_rate, days_with_rendering_errors) {
+	var ret = "";
 	//Sort days_with_rendering_errors into assecending order
 	days_with_rendering_errors = days_with_rendering_errors.sort(function (ak,bk) {
 		if (ak==bk) return 0;
@@ -205,10 +210,9 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 		var cur_day = days_with_rendering_errors[cur];
 		if (last_day_rendered != cur_day) {
 			last_day_rendered = cur_day;
-			ret += component_viewer_res_schedule_board_drawRenderError(origin, y_scale, day_width, lane_obj.max_rate, cur_day);
+			ret += component_viewer_res_schedule_board_drawRenderError(origin, y_scale, day_width, max_rate, cur_day);
 		};
 	};
-
 	return ret;
 }
 
