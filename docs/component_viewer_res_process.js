@@ -10,7 +10,7 @@ function component_viewer_res_process_ScheduleProcessDone() {
 
 function component_viewer_res_process_ScheduleResourses() {
 
-	//console.log("TODO Sort resourse allocaitons by priority asc");
+	//console.log("Sort resourse allocaitons by priority asc");
 	dataObjects.RESOURCEALLOCATIONkeys = dataObjects.RESOURCEALLOCATIONkeys.sort(function (ak,bk) {
 		if (dataObjects.RESOURCEALLOCATIONs[ak].binpackpriority==dataObjects.RESOURCEALLOCATIONs[bk].binpackpriority) return 0;
 		if (dataObjects.RESOURCEALLOCATIONs[ak].binpackpriority<dataObjects.RESOURCEALLOCATIONs[bk].binpackpriority) return -1;
@@ -43,7 +43,7 @@ function component_viewer_res_process_ScheduleResourses() {
 		};
 	};
 
-	//console.log("TODO Clear all current scheduled allocations");
+	//console.log("Clear all current scheduled allocations");
 	component_viewer_res_process_resourse_schedules = {
 		Lanes: [],
 		Failed_To_Schedule: []
@@ -56,13 +56,13 @@ function component_viewer_res_process_ScheduleResourses() {
 	}
 	
 
-	//console.log("TODO Go through ResoueseAllocaitons in order and schedule each one");
+	//console.log("Go through ResoueseAllocaitons in order and schedule each one");
 	for (var cur_do = 0; cur_do < dataObjects.RESOURCEALLOCATIONkeys.length; cur_do++) {
 		var res_alloc_obj = dataObjects.RESOURCEALLOCATIONs[dataObjects.RESOURCEALLOCATIONkeys[cur_do]];
 		
 		//Step 1 decide which lane to allocate this resourse to
 		var schedule_proposal_obj = undefined;
-		//TODO Code for pre-allocated resourses
+		//Code for pre-allocated resourses
 		schedule_proposal_obj = component_viewer_res_process_find_best_lane_for_object(res_alloc_obj);
 		
 		

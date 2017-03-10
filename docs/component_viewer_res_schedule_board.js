@@ -178,13 +178,35 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 		chains_to_draw.push(cur);
 	};
 	
-	//TODO Init list of drawn chains
+	//Init day next start information
+	var next_start_info = {
+		next_start: [], 		//Indexd by day
+		next_start_idx: [],		//indexed by number 0, 1, 2, etc
+	};
+	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, 1, 0);
+	/*
+	Sample test to ensure upsert free slot and get start pos work
+	console.log("Next Start Info=");
+	console.log(next_start_info);
+	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, 5, 10);
+	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, 6, 50);
+	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, 15, 10);
+	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, 25, 0);
+	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, 30, 60);
+	console.log("Next Start Info=");
+	console.log(next_start_info);
+	for (var c=0;c<31;c++) {
+		console.log(component_viewer_res_schedule_board_get_start_pos_for_day(next_start_info, c));
+	};
+	*/
 	
 	while (chains_to_draw.length>0) {
 		//TODO Create list of chains that all start on the same LOWEST day (Sorted from higest duration to Lowest Duration)
+		var lowest_day = 1; //TODO Replace this with real code
 		
-		//TODO Inistalise "start_percentage" height for the day all these chains start on
-		var start_per = 0; //TODO Isn't always 0 as day might have blocks already. Create code to check this (using drawn chains)
+		//Inistalise "start_percentage" height for the day all these chains start on
+		//  Isn't always 0 as day might have blocks already. Create code to check this (using drawn chains)
+		var start_per = component_viewer_res_schedule_board_get_start_pos_for_day(next_start_info, lowest_day); 
 		
 		//TODO Draw chains in sorted order incrementing our TOP height
 			//TODO If we run out of height then add days to error day list (Keep drawing - it will be cropped anyway)
@@ -195,6 +217,37 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	
 	ret += component_viewer_res_schedule_board_drawRenderErrors(origin, y_scale, day_width, lane_obj.max_rate, days_with_rendering_errors);
 	return ret;
+}
+
+function component_viewer_res_schedule_board_get_start_pos_for_day(next_start_info, day) {
+	//Given a day and the next start info work out it's next free slot
+	var next_start_percent = next_start_info.next_start[1].next_start_pos; //init to day 1 next start pos
+	for (var cur in next_start_info.next_start_idx) {
+		var cur_day = next_start_info.next_start_idx[cur];
+		if (cur_day > day) return next_start_percent;
+		next_start_percent = next_start_info.next_start[cur_day].next_start_pos;
+	};
+	return next_start_percent;
+};
+
+function component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, day, next_start_pos) {
+	var already_there = true;
+	if (typeof(next_start_info.next_start[day])=="undefined") already_there = false;
+	next_start_info.next_start[day] = {
+		day: day,
+		next_start_pos: next_start_pos
+	};
+	if (already_there) return;
+	next_start_info.next_start_idx = [];
+	for (var cur in next_start_info.next_start) {
+		next_start_info.next_start_idx.push(next_start_info.next_start[cur].day);
+	};
+	
+	next_start_info.next_start_idx = next_start_info.next_start_idx.sort(function (ak,bk) {
+		if (ak==bk) return 0;
+		if (ak<bk) return -1;
+		return 1;
+	});	
 }
 
 function component_viewer_res_schedule_board_drawRenderErrors(origin, y_scale, day_width, max_rate, days_with_rendering_errors) {
