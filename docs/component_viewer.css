@@ -107,4 +107,8 @@ svg.component_viewer_res_schedule_board > g.lane  rect.outer.blue {
 svg.component_viewer_res_schedule_board > g.lane  rect.outer.yellow {
 	fill: yellow;
 }
+svg.component_viewer_res_schedule_board > g.lane  line.rendererror {
+	stroke-width: 3;
+	stroke: black;
+}
 

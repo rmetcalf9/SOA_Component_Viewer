@@ -152,6 +152,23 @@ function component_viewer_res_schedule_board_getSVG(days) {
 function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scale, day_width, lane_obj) {
 	var ret = "";
 	var days_with_rendering_errors = [];
+	//Some test data to see how rendering days with errors works
+	/*
+	days_with_rendering_errors.push(16);
+	days_with_rendering_errors.push(15);
+	days_with_rendering_errors.push(14);
+	days_with_rendering_errors.push(4);
+	days_with_rendering_errors.push(5);
+	days_with_rendering_errors.push(6);
+	days_with_rendering_errors.push(23);
+	days_with_rendering_errors.push(21);
+	days_with_rendering_errors.push(20);
+	days_with_rendering_errors.push(21);
+	days_with_rendering_errors.push(1);
+	days_with_rendering_errors.push(22);
+	days_with_rendering_errors.push(24);
+	days_with_rendering_errors.push(23);
+	*/	
 	
 	//Group resAlocs into chains
 	var chains = component_viewer_res_schedule_board_group_into_chains(lane_obj);
@@ -175,12 +192,40 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	};
 	
 	
-	//TODO Sort days_with_rendering_errors into assecending order
+	//Sort days_with_rendering_errors into assecending order
+	days_with_rendering_errors = days_with_rendering_errors.sort(function (ak,bk) {
+		if (ak==bk) return 0;
+		if (ak<bk) return -1;
+		return 1;
+	});	
 	
-	//TODO Draw Put X's on days_with_rendering_errors (Deduplicating as we go)
+	//Put X's on days_with_rendering_errors (Deduplicating as we go)
+	var last_day_rendered = -1;
+	for (var cur in days_with_rendering_errors) {
+		var cur_day = days_with_rendering_errors[cur];
+		if (last_day_rendered != cur_day) {
+			last_day_rendered = cur_day;
+			ret += component_viewer_res_schedule_board_drawRenderError(origin, y_scale, day_width, lane_obj.max_rate, cur_day);
+		};
+	};
 
 	return ret;
 }
+
+function component_viewer_res_schedule_board_drawRenderError(origin, y_scale, day_width, max_rate, day) {
+	var ret = "";
+	
+	//co-ords make rect
+	var x1 = origin.x + ((day-1)*day_width);
+	var x2 = x1 + day_width;
+	var y1 = origin.y;
+	var y2 = y1 + (max_rate * y_scale); //lane_height;
+	ret += "<line class=\"rendererror\" x1=\"" + x1 + "\" y1=\"" + y1 + "\" x2=" + x2 + " y2=" + y2 + " />";
+	ret += "<line class=\"rendererror\" x1=\"" + x1 + "\" y1=\"" + y2 + "\" x2=" + x2 + " y2=" + y1 + " />";
+
+	
+	return ret;
+};
 
 //Draws a chain and removes it from chains_to_draw list
 function component_viewer_res_schedule_board_drawchain(chains_to_draw,chains,chain_idx,origin, y_scale, day_width, lane_obj) {
