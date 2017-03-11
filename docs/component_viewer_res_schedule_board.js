@@ -225,13 +225,19 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 				for (var c=chains[chain_idx_to_draw].start_day;c<=chains[chain_idx_to_draw].end_day;c++) {
 					days_with_rendering_errors.push(c);
 				};
+				//Remove this chain from to draw list
+				if (rjmllib_ArrayRemove(chains_to_draw,chain_idx_to_draw)==false) {
+					console.log("ERROR FAILED TO REMOVE Chains to draw222");
+					break;
+				};		
 			} else {
-				console.log("chains_in_day_draw");
-				
 				//As well as drawing this will maintain the next_start_info structure
 				ret += component_viewer_res_schedule_board_drawchain(chains_to_draw, chains, chain_idx_to_draw,origin, y_scale, start_per, day_width, lane_obj, next_start_info);
 
-				console.log(chains[chain_idx_to_draw].duration);
+				if (rjmllib_ArrayRemove(chains_to_draw,chain_idx_to_draw)==false) {
+					console.log("ERROR FAILED TO REMOVE Chains to draw222");
+					break;
+				};		
 			};
 			start_per += chains[chain_idx_to_draw].rate;
 		};
@@ -253,16 +259,17 @@ function component_viewer_res_schedule_board_get_ordered_list_of_next_chains(cha
 			ret = [];
 			day = chains[chains_to_draw[cur]].start_day; 
 		};
-		ret.push(chains_to_draw[cur]); //make sure we push an index of chains
+		if (chains[chains_to_draw[cur]].start_day==day) {
+			ret.push(chains_to_draw[cur]); //make sure we push an index of chains
+		}
 	};
-	console.log("list_of_next_chains");
-	console.log(chains);
-	console.log(ret);
+	//console.log("list_of_next_chains");
+	//console.log(chains);
+	//console.log(ret);
 	
 	ret = ret.sort(function (ak,bk) {
-		console.log(chains[ak]);
 		if (chains[ak].duration==chains[bk].duration) return 0;
-		if (chains[ak].duration<chains[bk].duration) return -1;
+		if (chains[ak].duration>chains[bk].duration) return -1;
 		return 1;
 	});	
 	return ret;
@@ -348,12 +355,6 @@ function component_viewer_res_schedule_board_drawchain(
 ) {
 	var ret = "";
 
-	if (rjmllib_ArrayRemove(chains_to_draw,chain_idx)==false) {
-		console.log("ERROR FAILED TO REMOVE Chains to draw");
-		return "";
-	};		
-	
-	
 	for (var cur in chains[chain_idx].res_alocs) {
 		//console.log(chain.res_alocs[cur]);
 		var allocation = chains[chain_idx].res_alocs[cur];
@@ -371,15 +372,11 @@ function component_viewer_res_schedule_board_drawchain(
 
 	//Maintain next_start_info structure
 	var curent_bar_value = next_start_info.next_start[chains[chain_idx].start_day].next_start_pos;
-	//console.log("DEBUGF");
-	console.log(chains[chain_idx].start_day + "-" + chains[chain_idx].end_day);
 	for (var cur_day=chains[chain_idx].start_day;cur_day<=chains[chain_idx].end_day;cur_day++) {
 		//For all the days in the duration lower the bar to the bottom of this chain
-		console.log(cur_day);
 		if (typeof(next_start_info.next_start[cur_day])!="undefined") {
 			curent_bar_value = next_start_info.next_start[cur_day].next_start_pos;
 			
-			console.log(cur_day);
 			console.log("Setting day :" + cur_day + ": next start to " + (start_per+allocation.rate));
 			
 			//Set bar value to start_per+allocation.rate
