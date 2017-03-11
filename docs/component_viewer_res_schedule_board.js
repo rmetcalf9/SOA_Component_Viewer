@@ -29,6 +29,9 @@ var component_viewer_res_schedule_board_globs = {
 	//Caculated values
 	height: -1,
 	width: -1,
+
+	//Debug Values
+	//debug_chain_uid: "EO_100",
 };
 
 function component_viewer_res_schedule_board_getHtml() {
@@ -127,16 +130,17 @@ function component_viewer_res_schedule_board_getSVG(days) {
 		ret += "<line class=\"grid\" x1=0 y1=" + bottom + " x2=" + component_viewer_res_schedule_board_globs.width + " y2=" + bottom + " />";
 		
 		var clip_path_str = "component_viewer_res_schedule_board_cp" + res_lane_obj.uid;
-if ((res_lane_obj.uid=="EB_100")) { //Useful for testing a single lane to reduce debug messages
-		ret += "<g class=\"lane\" clip-path=\"url(#" + clip_path_str + ")\">";
-		ret += component_viewer_res_schedule_board_getSVG_for_laneItems(
-			{x:component_viewer_res_schedule_board_globs.x_title_width,y:top},
-			component_viewer_res_schedule_board_globs.lane_height_scale_factor,
-			component_viewer_res_schedule_board_globs.day_width,
-			component_viewer_res_process_get_scheduled_lane(res_lane_obj.uid)
-		);
-		ret += "</g>";
-};
+
+		if ((typeof(component_viewer_res_schedule_board_globs.debug_chain_uid)=="undefined") | (res_lane_obj.uid==component_viewer_res_schedule_board_globs.debug_chain_uid)) {
+			ret += "<g class=\"lane\" clip-path=\"url(#" + clip_path_str + ")\">";
+			ret += component_viewer_res_schedule_board_getSVG_for_laneItems(
+				{x:component_viewer_res_schedule_board_globs.x_title_width,y:top},
+				component_viewer_res_schedule_board_globs.lane_height_scale_factor,
+				component_viewer_res_schedule_board_globs.day_width,
+				component_viewer_res_process_get_scheduled_lane(res_lane_obj.uid)
+			);
+			ret += "</g>";
+		};
 		ret += "<clipPath id=\"" + clip_path_str + "\">";
 		ret += "<rect x=\"" + component_viewer_res_schedule_board_globs.x_title_width + "\" y=\"" + top + "\" width=\"" + (days * component_viewer_res_schedule_board_globs.day_width) + "\" height=\"" + height + "\"/>";
 		ret += "</clipPath>";
@@ -377,13 +381,13 @@ function component_viewer_res_schedule_board_drawchain(
 		if (typeof(next_start_info.next_start[cur_day])!="undefined") {
 			curent_bar_value = next_start_info.next_start[cur_day].next_start_pos;
 			
-			console.log("Setting day :" + cur_day + ": next start to " + (start_per+allocation.rate));
+			//console.log("Setting day :" + cur_day + ": next start to " + (start_per+allocation.rate));
 			
 			//Set bar value to start_per+allocation.rate
 			component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info,cur_day,(start_per+allocation.rate));
 		};
 	};	
-	console.log("Setting day " + (chains[chain_idx].end_day+1) + " next start to " + (curent_bar_value));
+	//console.log("Setting day " + (chains[chain_idx].end_day+1) + " next start to " + (curent_bar_value));
 	//For the final day ensure the bar is unchanged (set to curent_bar_value)*****
 	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info,(chains[chain_idx].end_day+1),curent_bar_value);
 
