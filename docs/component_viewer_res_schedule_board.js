@@ -375,10 +375,15 @@ function component_viewer_res_schedule_board_drawchain(
 	};
 
 	//Maintain next_start_info structure
-	var curent_bar_value = next_start_info.next_start[chains[chain_idx].start_day].next_start_pos;
+
+	//Read current bar value (may not be already set value may need to read back)
+	var curent_bar_value = component_viewer_res_schedule_board_get_start_pos_for_day(next_start_info, chains[chain_idx].start_day);
+	//Upsert current bar value so an entry exists in start day	
+	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, chains[chain_idx].start_day, curent_bar_value);
 	for (var cur_day=chains[chain_idx].start_day;cur_day<=chains[chain_idx].end_day;cur_day++) {
 		//For all the days in the duration lower the bar to the bottom of this chain
 		if (typeof(next_start_info.next_start[cur_day])!="undefined") {
+			//console.log("Reducing bar value for day " + cur_day);
 			curent_bar_value = next_start_info.next_start[cur_day].next_start_pos;
 			
 			//console.log("Setting day :" + cur_day + ": next start to " + (start_per+allocation.rate));
