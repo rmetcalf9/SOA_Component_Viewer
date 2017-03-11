@@ -231,6 +231,7 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 
 				if (typeof(hole)=="undefined") {
 					//could not find any hole
+					// TODO Consider split representation of chains by drawing the same chain split in mutiple holes
 					console.log("Rendering Errors in " + lane_obj.uid + " - max_rate=" + lane_obj.max_rate + " need " + (start_per+chains[chain_idx_to_draw].rate));
 					console.log("Trying to draw:");
 					console.log(chains[chain_idx_to_draw]);
@@ -238,7 +239,19 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 						days_with_rendering_errors.push(c);
 					};
 				} else {
-					console.log("TODO Hole found draw chain in hole");
+					//console.log("Hole found draw chain in hole");
+					//console.log(hole);
+					ret += component_viewer_res_schedule_board_drawchain(
+						chains_to_draw, 
+						chains, 
+						chain_idx_to_draw,
+						origin, 
+						y_scale, 
+						hole.start, 
+						day_width, 
+						lane_obj, 
+						next_start_info
+					);
 
 					//We do noe need to adjust max rates since hole is not at the bottom (or else we would have drawn it without getting here)
 				};
@@ -267,21 +280,13 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 
 function component_viewer_res_schedule_board_get_any_hole_for_chain(day, rate, next_start_info) {
 	//Holes searched for by day and rate. Duration dosen't matter any hole today is valid forever
-	console.log("TODO Find hole - searching for hole in day " + day + " of size + " + rate);
-	console.log(next_start_info);
-	/* Code snippet from draw chain for reference
-	next_start_info.drawn_chains.push({
-			chain_idx: chain_idx,
-			start_day: allocation.start_day,
-			end_day: allocation.end_day,
-			start_per: start_per,
-			end_per: (start_per+allocation.rate)-1,
-		});*/
+	//console.log("Find hole - searching for hole in day " + day + " of size + " + rate);
+	//console.log(next_start_info);
 
 	//instalise a completly open hole list
 	var hole_list = [{start:0, end:100}];
 
-	console.log("Going through active chains on this day and remove items from hole list");
+	//console.log("Going through active chains on this day and remove items from hole list");
 	for (var cur in next_start_info.drawn_chains) {
 		var cur_chain = next_start_info.drawn_chains[cur];
 		if (day >= cur_chain.start_day) {
@@ -292,8 +297,8 @@ function component_viewer_res_schedule_board_get_any_hole_for_chain(day, rate, n
 		};
 	};
 
-	console.log("Resultant Hole list:");
-	console.log(hole_list);
+	//console.log("Resultant Hole list:");
+	//console.log(hole_list);
 
 	//Go through hole list and add all holes that are at least the required size
 	var acceptable_hole_list = [];
@@ -310,7 +315,35 @@ function component_viewer_res_schedule_board_get_any_hole_for_chain(day, rate, n
 // This will return a new hole l ist object
 function component_viewer_res_schedule_board_punch_new_hole_in_hole_list(hole_list,start,end) {
 	var ret_list = [];
-	console.log("TODO Remove area from " + start + " to " + end);
+	//console.log("Remove area from " + start + " to " + end);
+
+	for (var cur in hole_list) {
+		var cur_hole = hole_list[cur];
+		if (cur_hole.start > end) {
+			//CASE 1
+			//This hole is OK because the gap we want to punch starts after it finishes
+			ret_list.push(cur_hole);
+		} else if (cur_hole.end < start) {
+			//CASE 2
+			//This hole is OK because the gap we want to punch ends before it starts
+			ret_list.push(cur_hole);
+		} else if ((cur_hole.start >= start) & (cur_hole.end <= end)) {
+			//CASE 3
+			//Hole is completly inside the area we need to punch out - So don't add it to the return list
+		} else if (cur_hole.start < start) {
+			//CASE 4
+			//Hole starts before the bit we need to punch out. (It either ends inside the gap or after)
+			// in either case we need to create a new smaller hole for the free bit at the begenning
+			ret_list.push({start:cur_hole.start,end:(start-1)});
+		} else if (cur_hole.end > end) {
+			//CASE 5
+			//Hole ends after the bit we need to punch out. (It either starts before or during)
+			// in either case we need to create a new smaller hole for the free bit at the end
+			ret_list.push({start:(end+1),end:cur_hole.start});
+		} else {
+			console.log("ERROR - I thought I have covered all the cases - clearly not :(");
+		};
+	};
 
 	return ret_list;
 };
