@@ -19,7 +19,7 @@ transform: scale(1.9);
 */
 
 var component_viewer_res_schedule_board_globs = {
-	x_title_width: 200,
+	x_title_width: 100,
 	y_title_height: 25,
 	day_width: 50,
 	lane_height_scale_factor: 1,
@@ -186,6 +186,7 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	var next_start_info = {
 		next_start: [], 		//Indexd by day
 		next_start_idx: [],		//indexed by number 0, 1, 2, etc
+		drawn_chains: [],		//Information about already drawn chains
 	};
 	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, 1, 0);
 	/*
@@ -221,14 +222,27 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 
 			
 			//If we run out of height then add days to error day list (Keep drawing - it will be cropped anyway)
-			if ((start_per+chains[chain_idx_to_draw].rate)>lane_obj.max_rate) {				
-				//Not drawing as this one will fall off the bottom. Won't draw anymore for today
-				console.log("Rendering Errors in " + lane_obj.uid + " - max_rate=" + lane_obj.max_rate + " need " + (start_per+chains[chain_idx_to_draw].rate));
-				console.log("Trying to draw:");
-				console.log(chains[chain_idx_to_draw]);
-				for (var c=chains[chain_idx_to_draw].start_day;c<=chains[chain_idx_to_draw].end_day;c++) {
-					days_with_rendering_errors.push(c);
+			if ((start_per+chains[chain_idx_to_draw].rate)>lane_obj.max_rate) {
+				//The next position is not availiable for this chain and if we drew it it would be off the bottom.
+				// There may still be a hole higher up where this chain can fit
+				// As chains are drawn from lowest start day to highest and chains are always square if there is a hole in the start day
+				//  it is graunteed that there is a hole in all following days
+				var hole = component_viewer_res_schedule_board_get_any_hole_for_chain(chains[chain_idx_to_draw].start_day, chains[chain_idx_to_draw].rate, next_start_info);
+
+				if (typeof(hole)=="undefined") {
+					//could not find any hole
+					console.log("Rendering Errors in " + lane_obj.uid + " - max_rate=" + lane_obj.max_rate + " need " + (start_per+chains[chain_idx_to_draw].rate));
+					console.log("Trying to draw:");
+					console.log(chains[chain_idx_to_draw]);
+					for (var c=chains[chain_idx_to_draw].start_day;c<=chains[chain_idx_to_draw].end_day;c++) {
+						days_with_rendering_errors.push(c);
+					};
+				} else {
+					console.log("TODO Hole found draw chain in hole");
+
+					//We do noe need to adjust max rates since hole is not at the bottom (or else we would have drawn it without getting here)
 				};
+
 				//Remove this chain from to draw list
 				if (rjmllib_ArrayRemove(chains_to_draw,chain_idx_to_draw)==false) {
 					console.log("ERROR FAILED TO REMOVE Chains to draw222");
@@ -250,6 +264,56 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 	ret += component_viewer_res_schedule_board_drawRenderErrors(origin, y_scale, day_width, lane_obj.max_rate, days_with_rendering_errors);
 	return ret;
 }
+
+function component_viewer_res_schedule_board_get_any_hole_for_chain(day, rate, next_start_info) {
+	//Holes searched for by day and rate. Duration dosen't matter any hole today is valid forever
+	console.log("TODO Find hole - searching for hole in day " + day + " of size + " + rate);
+	console.log(next_start_info);
+	/* Code snippet from draw chain for reference
+	next_start_info.drawn_chains.push({
+			chain_idx: chain_idx,
+			start_day: allocation.start_day,
+			end_day: allocation.end_day,
+			start_per: start_per,
+			end_per: (start_per+allocation.rate)-1,
+		});*/
+
+	//instalise a completly open hole list
+	var hole_list = [{start:0, end:100}];
+
+	console.log("Going through active chains on this day and remove items from hole list");
+	for (var cur in next_start_info.drawn_chains) {
+		var cur_chain = next_start_info.drawn_chains[cur];
+		if (day >= cur_chain.start_day) {
+			if (day <= cur_chain.end_day) {
+				//Current chain is active on day in consideration
+				hole_list = component_viewer_res_schedule_board_punch_new_hole_in_hole_list(hole_list,cur_chain.start_per,cur_chain.end_per);
+			};
+		};
+	};
+
+	console.log("Resultant Hole list:");
+	console.log(hole_list);
+
+	//Go through hole list and add all holes that are at least the required size
+	var acceptable_hole_list = [];
+	for (var cur in hole_list) {
+		var cur_hole = hole_list[cur];
+		if ((cur_hole.end - cur_hole.start)>rate) acceptable_hole_list.push(cur_hole);
+	};
+
+	//Return the first acceptable hole list (underfined if there are none acceptable)
+	return acceptable_hole_list[0];
+};
+
+//Given a list of FREE slots in a hole remove the area passed by start and end inclusive
+// This will return a new hole l ist object
+function component_viewer_res_schedule_board_punch_new_hole_in_hole_list(hole_list,start,end) {
+	var ret_list = [];
+	console.log("TODO Remove area from " + start + " to " + end);
+
+	return ret_list;
+};
 
 //Taking into account ONLY chains in chains_to_draw; Return an ordered list of "indexes of chains" that
 // 1. All have the same LOWEST day
@@ -352,12 +416,14 @@ function component_viewer_res_schedule_board_drawchain(
 	chains,
 	chain_idx,
 	origin, 
-	y_scale, start_per, 
+	y_scale, 
+	start_per, 
 	day_width, 
 	lane_obj,
 	next_start_info
 ) {
 	var ret = "";
+
 
 	for (var cur in chains[chain_idx].res_alocs) {
 		//console.log(chain.res_alocs[cur]);
@@ -395,6 +461,15 @@ function component_viewer_res_schedule_board_drawchain(
 	//console.log("Setting day " + (chains[chain_idx].end_day+1) + " next start to " + (curent_bar_value));
 	//For the final day ensure the bar is unchanged (set to curent_bar_value)*****
 	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info,(chains[chain_idx].end_day+1),curent_bar_value);
+
+	//Add info to drawn_chains (this allows us to do the hole search later)
+	next_start_info.drawn_chains.push({
+		chain_idx: chain_idx,
+		start_day: chains[chain_idx].start_day,
+		end_day: chains[chain_idx].end_day,
+		start_per: start_per,
+		end_per: (start_per+chains[chain_idx].rate)-1,
+	});
 
 	return ret;
 }
