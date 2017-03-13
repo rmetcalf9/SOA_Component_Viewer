@@ -72,9 +72,17 @@ function component_viewer_res_schedule_board_getHtml() {
 };
 
 function component_viewer_res_schedule_board_INIT() {
-	$(document).off('click.component_viewer_res_schedule_board').on('click.component_viewer_res_schedule_board', "a[href$='#component_viewer_res_schedule_board_recalc']", function (event) {
+	$(document).off('click.component_viewer_res_schedule_board');
+	$(document).on('click.component_viewer_res_schedule_board', "a[href$='#component_viewer_res_schedule_board_recalc']", function (event) {
 		component_viewer_res_process_ScheduleResourses();
 		component_viewer_res_displayRES("ScheduleBoard");
+		event.preventDefault();
+	});
+	$(document).on('click.component_viewer_res_schedule_board', "svg.component_viewer_res_schedule_board > g.lane > g.resAlloc", function (event)
+	{
+		component_viewer_res_schedule_ui_addedit(
+			true //Edit Mode
+		);
 		event.preventDefault();
 	});
 };
@@ -689,7 +697,8 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 		rect_y_pos,
 		width,
 		height,
-		rect_class
+		rect_class,
+		"resAlloc"
 	)
 	
 	return ret;	

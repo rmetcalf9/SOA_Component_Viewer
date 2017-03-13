@@ -5,46 +5,41 @@
 var component_viewer_res_schedule_ui_globs = {
 };
 
-function component_viewer_res_schedule_board_getHtml() {
-	var ret = "";
-	ret += "<h1>Resourse Schedule - Board</h1>";
-
-	if (!component_viewer_res_process_ScheduleProcessDone()) component_viewer_res_process_ScheduleResourses();
-	
-	ret += "<a href=\"#component_viewer_res_schedule_board_recalc\">Re-Run schedule process</a>";
-	ret += component_viewer_res_getFailedToScheduleHTML();
-	
-	component_viewer_res_schedule_board_globs.lane_height = 100 * component_viewer_res_schedule_board_globs.lane_height_scale_factor;
-	
-	var days = 10;
-	
-	component_viewer_res_schedule_board_globs.height = (component_viewer_res_schedule_board_globs.y_title_height * 2);
-	for (var cur_do = 0; cur_do < dataObjects.RESOURCELANESkeys.length; cur_do++) {
-		var res_lane_obj = dataObjects.RESOURCELANESs[dataObjects.RESOURCELANESkeys[cur_do]];
-		component_viewer_res_schedule_board_globs.height += (res_lane_obj.rate * component_viewer_res_schedule_board_globs.lane_height_scale_factor);
-		
-		var lane_obj = component_viewer_res_process_get_scheduled_lane(res_lane_obj.uid);
-		var highest_end_day_for_lane = component_viewer_res_data_sch_getHighestLaneEndDay(lane_obj);
-		if (days < highest_end_day_for_lane) days = highest_end_day_for_lane;
-	};
-	component_viewer_res_schedule_board_globs.width = component_viewer_res_schedule_board_globs.x_title_width + (days * component_viewer_res_schedule_board_globs.day_width);
-
-	
-	ret += "<br>";
-	ret += "<svg class=\"component_viewer_res_schedule_board\" style=\"width: " + (component_viewer_res_schedule_board_globs.width + 10) + "px; height: " + (component_viewer_res_schedule_board_globs.height + 10) + "px;\">";
-	
-	ret += component_viewer_res_schedule_board_getSVG(days);
-	
-	ret += "</svg>";
-	
-
-	
-	return ret;
-};
-
 function component_viewer_res_schedule_ui_INIT() {
-	//TODO
+	var formHTML = "";
+	formHTML = "<div id=\"component_viewer_res_schedule_ui_add_edit_work\" title=\"Dialog Title\">"
+	formHTML += "<p>Prompt...</p><br><textarea cols=80 rows=15></textarea>";
+	formHTML += "</div>"
+	
+	
+	$("body").append(formHTML);		
+	$( "#component_viewer_res_schedule_ui_add_edit_work" ).dialog({
+		autoOpen: false,
+		width: 800
+	});
+	
 };
 
+function component_viewer_res_schedule_ui_addedit_isopen() {
+	if ($("#component_viewer_res_schedule_ui_add_edit_work").dialog( "isOpen" )==true) return true;
+	return false;
+}
 	
+function component_viewer_res_schedule_ui_addedit(
+	edit_mode //true for edit, false for add new workitem
+) {
+	if (component_viewer_res_schedule_ui_addedit_isopen()==true) {
+		alert("ERROR in component_viewer_res_schedule_ui_addedit SECOND DIALOG LAUNCHED - " + str);
+		return;
+	};
+	
+	if (edit_mode) {
+		$( "#component_viewer_res_schedule_ui_add_edit_work" ).dialog('option', 'title', "Edit ResourceAllocation");
+	} else {
+		$( "#component_viewer_res_schedule_ui_add_edit_work" ).dialog('option', 'title', "Create ResourceAllocation");
+	};
+	
+	$( "#component_viewer_res_schedule_ui_add_edit_work" ).dialog( "open" );
+	
+}
 	

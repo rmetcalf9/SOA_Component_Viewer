@@ -25,7 +25,8 @@ function rjmlib_svg_cropped_text_in_rect(
 	y1,
 	width,
 	height,
-	visible_rect_class
+	visible_rect_class,
+	parent_group_class
 ) {
 	var ret = "";
 	rjmlib_svg.cropped_text_in_rect_next_clippath += 1;
@@ -54,8 +55,11 @@ function rjmlib_svg_cropped_text_in_rect(
 		text_x = (x1+(width)-5);
 	};
 */
-	
-	ret += "<g>";
+	if (typeof(parent_group_class) != "undefined") {
+		ret += "<g class=\"" + parent_group_class + "\">";
+	} else {
+		ret += "<g>";
+	};
 	
 	if (typeof(visible_rect_class) != "undefined") {
 		ret += " <rect class=\"" + visible_rect_class + "\" x=\"" + x1 + "\" y=\"" + y1 + "\" width=\"" + width + "\" height=\"" + height + "\"/>";
