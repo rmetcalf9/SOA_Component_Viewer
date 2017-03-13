@@ -90,18 +90,19 @@ function component_viewer_res_schedule_board_INIT() {
 				remain: resAlloc_obj.remainingdays,
 				binpack: resAlloc_obj.binpackpriority,
 			}, //Default Obk
-			function (result_obj) { //Ok Callback
-				component_viewer_res_schedule_board_edit_return(true, result_obj);
+			$(this).data("uid"), //passback
+			function (result_obj, uid) { //Ok Callback
+				component_viewer_res_schedule_board_edit_return(false, result_obj, uid);
 			},
-			function (result_obj) { //Complete Callback
-				component_viewer_res_schedule_board_edit_return(false, result_obj);
+			function (result_obj, uid) { //Complete Callback
+				component_viewer_res_schedule_board_edit_return(true, result_obj, uid);
 			}
 		);
 		event.preventDefault();
 	});
 };
 
-function component_viewer_res_schedule_board_edit_return(complete_pressed, result_obj) {
+function component_viewer_res_schedule_board_edit_return(complete_pressed, result_obj, uid) {
 	if (complete_pressed) result_obj.remain = 0;
 	
 	//Lane will be returned as null for ANY lane
@@ -112,16 +113,21 @@ function component_viewer_res_schedule_board_edit_return(complete_pressed, resul
 	
 	//rate is number
 	if (isNaN(result_obj.rate)) {rjmlib_ui_questionbox("You must enter a number for rate");return;}
+	if (result_obj.rate=="") result_obj.rate=0;
+	result_obj.rate = parseInt(result_obj.rate);
 	
 	//remain is number
 	if (isNaN(result_obj.remain)) {rjmlib_ui_questionbox("You must enter a number for remaining percentage");return;}
+	result_obj.remain = parseInt(result_obj.remain);
 
 	//binpack is number
 	if (isNaN(result_obj.binpack)) {rjmlib_ui_questionbox("You must enter a number for Bin Pack");return;}
+	result_obj.binpack = parseInt(result_obj.binpack);
 	
+	component_viewer_res_data_edit_estimate(uid, result_obj);
 	
-	console.log("TODO Process Edit Press - complete = " + complete_pressed);
-	console.log(result_obj);
+	component_viewer_res_process_ScheduleResourses();
+	component_viewer_res_displayRES("ScheduleBoard");
 };
 
 function component_viewer_res_schedule_board_getSVG(days) {

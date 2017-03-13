@@ -69,6 +69,7 @@ function component_viewer_res_process_ScheduleResourses() {
 		//Step 2 allocate resourse to this lane
 		if (typeof(schedule_proposal_obj)=="undefined") {
 			console.log("WARNING - Failed to schedule " + res_alloc_obj.text + " (Try lowering it's rate)");
+			console.log(res_alloc_obj);
 			component_viewer_res_process_resourse_schedules.Failed_To_Schedule.push(res_alloc_obj);
 		} else {
 			component_viewer_res_process_lane_allocate_proposal(schedule_proposal_obj);
@@ -170,8 +171,10 @@ function component_viewer_res_process_find_best_lane_for_object(res_alloc_obj) {
 function component_viewer_res_process_lane_make_proposal(proposals, lane_schedule_obj, res_alloc_obj) {
 	if (typeof(res_alloc_obj.resourcelaneassignment)!="undefined") {
 		if (res_alloc_obj.resourcelaneassignment != "") {
-			//There is a resourse lane set in the spreadsheet. Only return a proposal if it is this lane
-			if (res_alloc_obj.resourcelaneassignment!=lane_schedule_obj.obj.uid) return;
+			if (res_alloc_obj.resourcelaneassignment != null) {
+				//There is a resourse lane set in the spreadsheet. Only return a proposal if it is this lane
+				if (res_alloc_obj.resourcelaneassignment!=lane_schedule_obj.obj.uid) return;
+			};
 		};
 	};
 	for (var cur in lane_schedule_obj.free_slots_idx) {
@@ -180,7 +183,7 @@ function component_viewer_res_process_lane_make_proposal(proposals, lane_schedul
 	return;
 }
 
-//Make proposial for particular lane and particular slot
+//Make proposal for particular lane and particular slot
 function component_viewer_res_process_lane_make_proposal_slot(proposals, lane_schedule_obj, res_alloc_obj, slot) {
 	if (slot.amount_free==0) return 0;
 	var rate = slot.amount_free;
@@ -195,7 +198,7 @@ function component_viewer_res_process_lane_make_proposal_slot(proposals, lane_sc
 	var start_day = slot.day;
 	var duration = Math.ceil(res_alloc_obj.remainingdays * (100 / rate));
 	var end_day = (start_day + duration) - 1;
-	
+
 	//Go through every day in the duration and make sure any new slots encountered have more amount_free values
 	// if the amount_free value is less check for 0 and return or reduce the rate and extend the end date
 	for (var cur_day = start_day; cur_day <= end_day; cur_day++) {

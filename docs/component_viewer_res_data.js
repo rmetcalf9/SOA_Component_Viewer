@@ -251,6 +251,31 @@ function component_viewer_res_data_create_estimate(component_uid, work_text, day
 	
 };
 
+//Edit estimate
+function component_viewer_res_data_edit_estimate(estimate_uid, edited_value_obj) {
+	var resAlloc_obj = dataObjects.RESOURCEALLOCATIONs[estimate_uid];
+	if (typeof(resAlloc_obj)=="undefined") {
+		console.log("ERROR couldn't save bad uid");
+		return;
+	};
+	
+	resAlloc_obj.text = edited_value_obj.text;
+	resAlloc_obj.resourcelaneassignment = edited_value_obj.lane;
+	resAlloc_obj.assignmentrate = edited_value_obj.rate;
+	resAlloc_obj.remainingdays = edited_value_obj.remain;
+	resAlloc_obj.binpackpriority = edited_value_obj.binpack;
+	var d = new Date();	
+	resAlloc_obj.lastupdate = d.toString();
+	
+	//Write data to spreadsheet
+	board_prepare_saveBatch();
+	component_viewer_res_data_save_resourse_allocation_into_batch(estimate_uid);
+	board_execute_saveBatch(spreadsheetId);
+
+
+}
+
+
 
 
 //**Functions below deal with scheduled data

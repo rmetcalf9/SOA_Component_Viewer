@@ -38,7 +38,8 @@ function component_viewer_res_schedule_ui_INIT() {
 	$("body").append(formHTML);		
 	$( "#component_viewer_res_schedule_ui_add_edit_work" ).dialog({
 		autoOpen: false,
-		width: 800
+		width: 800,
+		modal: true,
 	});
 	
 };
@@ -52,6 +53,7 @@ function component_viewer_res_schedule_ui_addedit(
 	edit_mode, //true for edit, false for add new workitem
 	default_value_obj, //Object of default values:
 						// text, lane, rate, remain, binpack
+	passback,
 	ok_fn_callback,
 	complete_fn_callback
 ) {
@@ -77,13 +79,13 @@ function component_viewer_res_schedule_ui_addedit(
 	
 	buts.push({
 		text: "Ok",
-		click: function() {$( this ).dialog( "close" );ok_fn_callback(component_viewer_res_schedule_ui_addedit_readresult());}
+		click: function() {$( this ).dialog( "close" );ok_fn_callback(component_viewer_res_schedule_ui_addedit_readresult(),passback);}
 	});
 	if (edit_mode) {
 		$( "#component_viewer_res_schedule_ui_add_edit_work" ).dialog('option', 'title', "Edit ResourceAllocation");
 		buts.push({
 			text: "Mark Complete",
-			click: function() {$( this ).dialog( "close" );complete_fn_callback(component_viewer_res_schedule_ui_addedit_readresult());}
+			click: function() {$( this ).dialog( "close" );complete_fn_callback(component_viewer_res_schedule_ui_addedit_readresult(),passback);}
 		});
 	} else {
 		$( "#component_viewer_res_schedule_ui_add_edit_work" ).dialog('option', 'title', "Create ResourceAllocation");
