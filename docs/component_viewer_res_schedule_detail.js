@@ -89,7 +89,8 @@ function component_viewer_res_schedule_detail_getTaskHtml(task_obj) {
 }
 
 function component_viewer_res_schedule_detail_INIT() {
-	$(document).on('click.component_viewer_res_unestimated', "a[href$='#component_viewer_res_schedule_detail_recalc']", function (event) {
+	$(document).off('component_viewer_res_schedule_detail');
+	$(document).on('click.component_viewer_res_schedule_detail', "a[href$='#component_viewer_res_schedule_detail_recalc']", function (event) {
 		component_viewer_res_process_ScheduleResourses();
 		component_viewer_res_displayRES("ScheduleDetail");
 		event.preventDefault();

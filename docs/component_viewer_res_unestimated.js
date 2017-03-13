@@ -68,7 +68,9 @@ function component_viewer_res_unestimated_tableRowsForTAG(tag, decision_function
 };
 
 function component_viewer_res_unestimated_INIT() {
-	$(document).on('click.component_viewer_res_unestimated', "a[href$='#component_viewer_res_unestimated_click_table_row']", function (event) {
+	$(document).off('click.component_viewer_res_unestimated').on('click.component_viewer_res_unestimated', "a[href$='#component_viewer_res_unestimated_click_table_row']", function (event) {
+		console.log("Click");
+		console.log($(this));
 		component_viewer_res_unestimated_click_table_row($(this).closest("tr"));
 		event.preventDefault();
 	});
@@ -81,7 +83,7 @@ function component_viewer_res_unestimated_click_table_row(link_clicked) {
 	var days = ic_soa_data_getSheetMetrics()[component_obj.source_sheet].default_estimate;
 	
 	rjmlib_ui_textareainputbox(
-		"How many days will development twak with 1 person assigned 100% of time", 
+		"How many days will development take with 1 person assigned 100% of time", 
 		"Create estimate for " + component_obj.name, 
 		days, 
 		[

@@ -72,7 +72,7 @@ function component_viewer_res_schedule_board_getHtml() {
 };
 
 function component_viewer_res_schedule_board_INIT() {
-	$(document).on('click.component_viewer_res_unestimated', "a[href$='#component_viewer_res_schedule_board_recalc']", function (event) {
+	$(document).off('click.component_viewer_res_schedule_board').on('click.component_viewer_res_schedule_board', "a[href$='#component_viewer_res_schedule_board_recalc']", function (event) {
 		component_viewer_res_process_ScheduleResourses();
 		component_viewer_res_displayRES("ScheduleBoard");
 		event.preventDefault();
