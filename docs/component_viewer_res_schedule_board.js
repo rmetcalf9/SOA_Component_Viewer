@@ -345,6 +345,7 @@ function component_viewer_res_schedule_board_getSVG_for_laneItems(origin, y_scal
 				// There may still be a hole higher up where this chain can fit
 				// As chains are drawn from lowest start day to highest and chains are always square if there is a hole in the start day
 				//  it is graunteed that there is a hole in all following days
+				//console.log("HOLE SEARCH!");
 				var hole = component_viewer_res_schedule_board_get_any_hole_for_chain(chains[chain_idx_to_draw].start_day, chains[chain_idx_to_draw].rate, next_start_info);
 
 				if (typeof(hole)=="undefined") {
@@ -599,6 +600,14 @@ function component_viewer_res_schedule_board_drawchain(
 	var curent_bar_value = component_viewer_res_schedule_board_get_start_pos_for_day(next_start_info, chains[chain_idx].start_day);
 	//Upsert current bar value so an entry exists in start day	
 	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, chains[chain_idx].start_day, curent_bar_value);
+
+	if (typeof(chains[chain_idx].end_day+1)!="undefined") {
+		//There is no marker the day after this chain
+		//We need to upsert one to it's current value
+		var day_after_end_bar_value = component_viewer_res_schedule_board_get_start_pos_for_day(next_start_info, chains[chain_idx].end_day+1);
+		component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info, chains[chain_idx].end_day+1, day_after_end_bar_value);
+	};
+
 	for (var cur_day=chains[chain_idx].start_day;cur_day<=chains[chain_idx].end_day;cur_day++) {
 		//For all the days in the duration lower the bar to the bottom of this chain
 		if (typeof(next_start_info.next_start[cur_day])!="undefined") {
@@ -611,9 +620,6 @@ function component_viewer_res_schedule_board_drawchain(
 			component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info,cur_day,(start_per+allocation.rate));
 		};
 	};	
-	//console.log("Setting day " + (chains[chain_idx].end_day+1) + " next start to " + (curent_bar_value));
-	//For the final day ensure the bar is unchanged (set to curent_bar_value)
-	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info,(chains[chain_idx].end_day+1),curent_bar_value);
 
 	//Add info to drawn_chains (this allows us to do the hole search later)
 	next_start_info.drawn_chains.push({
