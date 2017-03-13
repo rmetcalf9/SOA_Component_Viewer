@@ -29,7 +29,7 @@ function component_viewer_res_schedule_ui_INIT() {
 	formHTML += "<input class=\"remain\" type=\"text\" size=\"10\"/><td>(How many days development remaining assuming 1 person assigned 100% of time)</td>";
 	formHTML += "</td></tr>";
 	formHTML += "<tr><th>Bin Pack Priority:</th><td>";
-	formHTML += "<input class=\"binpack\" type=\"text\" size=\"10\"/><td></td>";
+	formHTML += "<input class=\"binpack\" type=\"text\" size=\"10\"/><td>Low numbers are allocated before high numbers.</td>";
 	formHTML += "</td></tr>";
 	formHTML += "</table>";
 	formHTML += "</div>"

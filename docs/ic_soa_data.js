@@ -106,7 +106,8 @@ function ic_soa_data_getSheetMetrics() {
 			lastupdatecol: 7,
 			statuscol: 8,
 			binpackprioritycol: 9,
-			tagscol: 10
+			tagscol: 10,
+			datecreatecol: 11,
 		};	
 	}; //if undefined
 	return ic_soa_data_SheetMetrics;
@@ -397,6 +398,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 					status: row[cur_sheet_metrics.statuscol],
 					binpackpriority: parseInt(row[cur_sheet_metrics.binpackprioritycol]),
 					tags: row[cur_sheet_metrics.tagscol],
+					datecreate: row[cur_sheet_metrics.datecreatecol],
 				}
 			}
 		} else {

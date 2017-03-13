@@ -40,7 +40,12 @@ function component_viewer_res_schedule_board_getHtml() {
 
 	if (!component_viewer_res_process_ScheduleProcessDone()) component_viewer_res_process_ScheduleResourses();
 	
-	ret += "<a href=\"#component_viewer_res_schedule_board_recalc\">Re-Run schedule process</a>";
+	//Should not be automatic - not putting it here anymore
+	//ret += "<a href=\"#component_viewer_res_schedule_board_recalc\">Re-Run schedule process</a>";
+	
+	if (accessLevel=="READWRITE") {
+		ret += " <a href=\"#component_viewer_res_schedule_board_new_resourse_allocation\">Create new Resourse Allocation</a>";
+	};
 	ret += component_viewer_res_getFailedToScheduleHTML();
 	
 	component_viewer_res_schedule_board_globs.lane_height = 100 * component_viewer_res_schedule_board_globs.lane_height_scale_factor;
@@ -102,29 +107,89 @@ function component_viewer_res_schedule_board_INIT() {
 			event.preventDefault();
 		};
 	});
+	$(document).on('click.component_viewer_res_schedule_board', "a[href$='#component_viewer_res_schedule_board_new_resourse_allocation']", function (event)
+	{
+		if (accessLevel=="READWRITE") {
+			component_viewer_res_schedule_ui_addedit(
+				false, //Edit Mode
+				{
+					text: "", 
+					lane: "",
+					rate: "",
+					remain: "",
+					binpack: "99999",
+				}, //Default Obk
+				undefined, //passback
+				function (result_obj, passback) { //Ok Callback
+					component_viewer_res_schedule_board_create_return(result_obj);
+				},
+				function (result_obj, passback) { //Complete Callback
+					console.log("ERROR - supposadaly unreachable code");
+				}
+			);		};
+		event.preventDefault();
+	});
+	
+	
 };
+
+//Function will return a cleaned up object
+function component_viewer_res_schedule_board_common_validation(result_obj) {
+	//Check inputs are valid
+	//Text length > 2
+	if (result_obj.text.length < 3) {rjmlib_ui_questionbox("You must enter more than 2 chars for text");return undefined;}
+	
+	//if it is set then rate is number
+	if (typeof(result_obj.rate)!="undefined") {
+		if (result_obj.rate != "") {
+			if (isNaN(parseInt(result_obj.rate))) {rjmlib_ui_questionbox("You must enter a number for rate");return undefined;}
+			if (result_obj.rate=="") result_obj.rate=0;
+			result_obj.rate = parseInt(result_obj.rate);
+		};
+	};
+	
+	//remain is always number
+	if (isNaN(parseInt(result_obj.remain))) {
+		rjmlib_ui_questionbox("You must enter a number for remaining days");
+		return undefined;
+	}
+	result_obj.remain = parseInt(result_obj.remain);
+
+	//if it is set then binpack is number
+	if (typeof(result_obj.binpack)!="undefined") {
+		if (result_obj.binpack != "") {
+			if (isNaN(parseInt(result_obj.binpack))) {rjmlib_ui_questionbox("You must enter a number for Bin Pack");return undefined;}
+			result_obj.binpack = parseInt(result_obj.binpack);
+		};
+	};
+	
+	return result_obj;
+};
+
+function component_viewer_res_schedule_board_create_return(result_obj) {
+	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
+	if (typeof(result_obj)=="undefined") return;
+
+	//remain must be gt 0
+	if (result_obj.remain<1) {
+		rjmlib_ui_questionbox("You must enter a number of days for this new item");
+		return undefined;
+	}
+	
+	component_viewer_res_data_create_unlinked_estimate(result_obj);
+	
+	component_viewer_res_process_ScheduleResourses();
+	component_viewer_res_displayRES("ScheduleBoard");
+
+}
 
 function component_viewer_res_schedule_board_edit_return(complete_pressed, result_obj, uid) {
 	if (complete_pressed) result_obj.remain = 0;
 	
 	//Lane will be returned as null for ANY lane
 	
-	//Check inputs are valid
-	//Text length > 2
-	if (result_obj.text.length < 3) {rjmlib_ui_questionbox("You must enter more than 2 chars for text");return;}
-	
-	//rate is number
-	if (isNaN(result_obj.rate)) {rjmlib_ui_questionbox("You must enter a number for rate");return;}
-	if (result_obj.rate=="") result_obj.rate=0;
-	result_obj.rate = parseInt(result_obj.rate);
-	
-	//remain is number
-	if (isNaN(result_obj.remain)) {rjmlib_ui_questionbox("You must enter a number for remaining percentage");return;}
-	result_obj.remain = parseInt(result_obj.remain);
-
-	//binpack is number
-	if (isNaN(result_obj.binpack)) {rjmlib_ui_questionbox("You must enter a number for Bin Pack");return;}
-	result_obj.binpack = parseInt(result_obj.binpack);
+	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
+	if (typeof(result_obj)=="undefined") return;
 	
 	component_viewer_res_data_edit_estimate(uid, result_obj);
 	
@@ -731,7 +796,8 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 	ret += rjmlib_svg_cropped_text_in_rect(
 		alloc_res.res_alloc_obj.text, //tl
 		undefined,
-		"(" + alloc_res.res_alloc_obj.remainingdays + "/" + alloc_res.duration + " days effort/duration) - " + alloc_res.rate + "%", //top right
+//		"(" + alloc_res.res_alloc_obj.remainingdays + "/" + alloc_res.duration + " days effort/duration) - " + alloc_res.rate + "%", //top right
+		alloc_res.rate + "%", //top right
 		undefined, //cl
 		undefined,
 		undefined,

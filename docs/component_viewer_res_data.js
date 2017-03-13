@@ -99,25 +99,25 @@ function component_viewer_res_data_notify_component_has_entry_in_missing_estimat
 
 //Callers must call 	component_viewer_res_updateMenuText();
 // on completion
-function component_viewer_res_data_notify_component_state_change(uid) {
-	//console.log("Change of state for " + uid);
-	var comp = ic_soa_data_getComponentFromUID(uid);
+function component_viewer_res_data_notify_component_state_change(component_uid) {
+	//console.log("Change of state for " + component_uid);
+	var comp = ic_soa_data_getComponentFromUID(component_uid);
 	var missing_estimate = false;
 	if (component_viewer_res_data_componentRequiresEstimate(comp)) {
-		if (typeof(component_viewer_res_data_getResoueseEstimate(uid))=="undefined") {
+		if (typeof(component_viewer_res_data_get_active_estimate_for_component(component_uid))=="undefined") {
 			missing_estimate = true;
 		}
 	};
 	
 	//If we do not need to change the missing estimate list return
-	if (missing_estimate==component_viewer_res_data_notify_component_has_entry_in_missing_estimate_list(uid)) return;
+	if (missing_estimate==component_viewer_res_data_notify_component_has_entry_in_missing_estimate_list(component_uid)) return;
 	
 	if (missing_estimate) {
-		//console.log("Adding " + uid + " to estimate missing list");
-		component_viewer_res_data_glob.componentsMissingEstimate.push(uid);		
+		//console.log("Adding " + component_uid + " to estimate missing list");
+		component_viewer_res_data_glob.componentsMissingEstimate.push(component_uid);		
 	} else {
 		//console.log("Remove entry from missing elements list");
-		component_viewer_res_data_ensure_component_not_in_missing_estimate_list(uid);
+		component_viewer_res_data_ensure_component_not_in_missing_estimate_list(component_uid);
 	};
 	
 };
@@ -141,7 +141,7 @@ function component_viewer_res_data_calc_next_avail() {
 	//console.log("Next row is " + next_row);
 };
 
-function component_viewer_res_data_save_resourse_allocation_into_batch(resourseAllocaiton_uid) {
+function component_viewer_res_data_save_resourse_allocation_into_batch(resourseAllocaiton_uid, creating) {
 	var rec = dataObjects.RESOURCEALLOCATIONs[resourseAllocaiton_uid]
 	var sheet_data_item = ic_soa_data_getSheetMetrics()["RESOURCEALLOCATION"]
 	board_append_saveBatch({
@@ -200,6 +200,65 @@ function component_viewer_res_data_save_resourse_allocation_into_batch(resourseA
 			[rec.binpackpriority]
 		],
 	});	
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.assignmentratecol) + rec.sheet_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[rec.assignmentrate / 100]
+		],
+	});	
+	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.resourcelaneassignmentcol) + rec.sheet_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[rec.resourcelaneassignment]
+		],
+	});	
+	if (typeof(creating)!="undefined") {
+		if (creating==true) {
+			board_append_saveBatch({
+				"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.datecreatecol) + rec.sheet_row,
+				"majorDimension": "ROWS",
+				"values": [
+					[rec.datecreate]
+				],
+			});	
+		};
+	};
+};
+
+//Create an unlinked estimate without a compnent
+function component_viewer_res_data_create_unlinked_estimate(edited_value_obj) {
+	if (typeof(component_viewer_res_data_glob.next_avail)=="undefined") {
+		component_viewer_res_data_calc_next_avail();
+	};
+	var new_row_uid = rjmlib_createGuid();
+
+	var d = new Date();	
+	dataObjects.RESOURCEALLOCATIONkeys.push(new_row_uid);
+	dataObjects.RESOURCEALLOCATIONs[new_row_uid] = {
+		source_sheet: "RESOURCEALLOCATION",
+		sheet_row: (component_viewer_res_data_glob.next_avail.next_row),
+		uid: new_row_uid,
+		itemuid: "",
+		text: edited_value_obj.text,
+		resourcelaneassignment: edited_value_obj.lane,
+		assignmentrate: edited_value_obj.rate,
+		originaldays: edited_value_obj.remain,
+		remainingdays: edited_value_obj.remain,
+		lastupdate: d.toString(),
+		status: "Allocated",
+		binpackpriority: edited_value_obj.binpack,
+		tags: undefined,
+		datecreate: d.toString(),
+	}
+	
+	//Write data to spreadsheet
+	board_prepare_saveBatch();
+	component_viewer_res_data_save_resourse_allocation_into_batch(new_row_uid, true);
+	board_execute_saveBatch(spreadsheetId);
+	component_viewer_res_data_glob.next_avail.next_row = component_viewer_res_data_glob.next_avail.next_row + 1;	
+	
 };
 
 //Create an estimate for an unestimated component
@@ -235,11 +294,12 @@ function component_viewer_res_data_create_estimate(component_uid, work_text, day
 		status: "Allocated",
 		binpackpriority: 99999, //Arbitrarily high to ensure items go to end as default
 		tags: undefined,
+		datecreate: d.toString(),
 	}
 	
 	//Write data to spreadsheet
 	board_prepare_saveBatch();
-	component_viewer_res_data_save_resourse_allocation_into_batch(new_row_uid);
+	component_viewer_res_data_save_resourse_allocation_into_batch(new_row_uid, true);
 	board_execute_saveBatch(spreadsheetId);
 	component_viewer_res_data_glob.next_avail.next_row = component_viewer_res_data_glob.next_avail.next_row + 1;
 
