@@ -59,22 +59,25 @@ function component_viewer_res_process_ScheduleResourses() {
 	//console.log("Go through ResoueseAllocaitons in order and schedule each one");
 	for (var cur_do = 0; cur_do < dataObjects.RESOURCEALLOCATIONkeys.length; cur_do++) {
 		var res_alloc_obj = dataObjects.RESOURCEALLOCATIONs[dataObjects.RESOURCEALLOCATIONkeys[cur_do]];
+		if (res_alloc_obj.status != "Completed") {
+			if (res_alloc_obj.remainingdays > 0) {
 		
-		//Step 1 decide which lane to allocate this resourse to
-		var schedule_proposal_obj = undefined;
-		//Code for pre-allocated resourses
-		schedule_proposal_obj = component_viewer_res_process_find_best_lane_for_object(res_alloc_obj);
-		
-		
-		//Step 2 allocate resourse to this lane
-		if (typeof(schedule_proposal_obj)=="undefined") {
-			console.log("WARNING - Failed to schedule " + res_alloc_obj.text + " (Try lowering it's rate)");
-			console.log(res_alloc_obj);
-			component_viewer_res_process_resourse_schedules.Failed_To_Schedule.push(res_alloc_obj);
-		} else {
-			component_viewer_res_process_lane_allocate_proposal(schedule_proposal_obj);
+				//Step 1 decide which lane to allocate this resourse to
+				var schedule_proposal_obj = undefined;
+				//Code for pre-allocated resourses
+				schedule_proposal_obj = component_viewer_res_process_find_best_lane_for_object(res_alloc_obj);
+				
+				
+				//Step 2 allocate resourse to this lane
+				if (typeof(schedule_proposal_obj)=="undefined") {
+					console.log("WARNING - Failed to schedule " + res_alloc_obj.text + " (Try lowering it's rate)");
+					console.log(res_alloc_obj);
+					component_viewer_res_process_resourse_schedules.Failed_To_Schedule.push(res_alloc_obj);
+				} else {
+					component_viewer_res_process_lane_allocate_proposal(schedule_proposal_obj);
+				};
+			};
 		};
-		
 	};
 	
 	//Sort allocated resourses in each lane

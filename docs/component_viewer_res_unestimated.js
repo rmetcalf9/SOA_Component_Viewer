@@ -69,8 +69,6 @@ function component_viewer_res_unestimated_tableRowsForTAG(tag, decision_function
 
 function component_viewer_res_unestimated_INIT() {
 	$(document).off('click.component_viewer_res_unestimated').on('click.component_viewer_res_unestimated', "a[href$='#component_viewer_res_unestimated_click_table_row']", function (event) {
-		console.log("Click");
-		console.log($(this));
 		component_viewer_res_unestimated_click_table_row($(this).closest("tr"));
 		event.preventDefault();
 	});
@@ -118,5 +116,7 @@ function component_viewer_res_unestimated_create_estimate(component_obj, days) {
 	
 	//REMOVE FROM unestimated table
 	$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_obj.uid + "']").remove()
-	
+
+	//Automaticall re-schedule
+	component_viewer_res_process_ScheduleResourses();
 };

@@ -267,11 +267,21 @@ function component_viewer_res_data_edit_estimate(estimate_uid, edited_value_obj)
 	var d = new Date();	
 	resAlloc_obj.lastupdate = d.toString();
 	
+	if (resAlloc_obj.remainingdays==0) {
+		resAlloc_obj.status = "Completed";
+	};
+	
 	//Write data to spreadsheet
 	board_prepare_saveBatch();
 	component_viewer_res_data_save_resourse_allocation_into_batch(estimate_uid);
 	board_execute_saveBatch(spreadsheetId);
 
+	if (typeof(resAlloc_obj.itemuid)!="undefined") {
+		//Check if this needs to be added to estimate missing list
+		component_viewer_res_data_notify_component_state_change(resAlloc_obj.itemuid);
+		//Refresh Number in menu
+		component_viewer_res_updateMenuText();
+	};
 
 }
 

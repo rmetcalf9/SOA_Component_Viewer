@@ -80,25 +80,27 @@ function component_viewer_res_schedule_board_INIT() {
 	});
 	$(document).on('click.component_viewer_res_schedule_board', "svg.component_viewer_res_schedule_board > g.lane > g.resAlloc", function (event)
 	{
-		var resAlloc_obj = dataObjects.RESOURCEALLOCATIONs[$(this).data("uid")];
-		component_viewer_res_schedule_ui_addedit(
-			true, //Edit Mode
-			{
-				text: resAlloc_obj.text, 
-				lane: resAlloc_obj.resourcelaneassignment,
-				rate: resAlloc_obj.assignmentrate,
-				remain: resAlloc_obj.remainingdays,
-				binpack: resAlloc_obj.binpackpriority,
-			}, //Default Obk
-			$(this).data("uid"), //passback
-			function (result_obj, uid) { //Ok Callback
-				component_viewer_res_schedule_board_edit_return(false, result_obj, uid);
-			},
-			function (result_obj, uid) { //Complete Callback
-				component_viewer_res_schedule_board_edit_return(true, result_obj, uid);
-			}
-		);
-		event.preventDefault();
+		if (accessLevel=="READWRITE") {
+			var resAlloc_obj = dataObjects.RESOURCEALLOCATIONs[$(this).data("uid")];
+			component_viewer_res_schedule_ui_addedit(
+				true, //Edit Mode
+				{
+					text: resAlloc_obj.text, 
+					lane: resAlloc_obj.resourcelaneassignment,
+					rate: resAlloc_obj.assignmentrate,
+					remain: resAlloc_obj.remainingdays,
+					binpack: resAlloc_obj.binpackpriority,
+				}, //Default Obk
+				$(this).data("uid"), //passback
+				function (result_obj, uid) { //Ok Callback
+					component_viewer_res_schedule_board_edit_return(false, result_obj, uid);
+				},
+				function (result_obj, uid) { //Complete Callback
+					component_viewer_res_schedule_board_edit_return(true, result_obj, uid);
+				}
+			);
+			event.preventDefault();
+		};
 	});
 };
 
