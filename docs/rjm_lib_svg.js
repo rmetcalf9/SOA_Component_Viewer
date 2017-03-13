@@ -26,7 +26,7 @@ function rjmlib_svg_cropped_text_in_rect(
 	width,
 	height,
 	visible_rect_class,
-	parent_group_class
+	parent_group_extra_tags
 ) {
 	var ret = "";
 	rjmlib_svg.cropped_text_in_rect_next_clippath += 1;
@@ -55,8 +55,8 @@ function rjmlib_svg_cropped_text_in_rect(
 		text_x = (x1+(width)-5);
 	};
 */
-	if (typeof(parent_group_class) != "undefined") {
-		ret += "<g class=\"" + parent_group_class + "\">";
+	if (typeof(parent_group_extra_tags) != "undefined") {
+		ret += "<g " + parent_group_extra_tags + ">";
 	} else {
 		ret += "<g>";
 	};

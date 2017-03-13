@@ -80,11 +80,48 @@ function component_viewer_res_schedule_board_INIT() {
 	});
 	$(document).on('click.component_viewer_res_schedule_board', "svg.component_viewer_res_schedule_board > g.lane > g.resAlloc", function (event)
 	{
+		var resAlloc_obj = dataObjects.RESOURCEALLOCATIONs[$(this).data("uid")];
 		component_viewer_res_schedule_ui_addedit(
-			true //Edit Mode
+			true, //Edit Mode
+			{
+				text: resAlloc_obj.text, 
+				lane: resAlloc_obj.resourcelaneassignment,
+				rate: resAlloc_obj.assignmentrate,
+				remain: resAlloc_obj.remainingdays,
+				binpack: resAlloc_obj.binpackpriority,
+			}, //Default Obk
+			function (result_obj) { //Ok Callback
+				component_viewer_res_schedule_board_edit_return(true, result_obj);
+			},
+			function (result_obj) { //Complete Callback
+				component_viewer_res_schedule_board_edit_return(false, result_obj);
+			}
 		);
 		event.preventDefault();
 	});
+};
+
+function component_viewer_res_schedule_board_edit_return(complete_pressed, result_obj) {
+	if (complete_pressed) result_obj.remain = 0;
+	
+	//Lane will be returned as null for ANY lane
+	
+	//Check inputs are valid
+	//Text length > 2
+	if (result_obj.text.length < 3) {rjmlib_ui_questionbox("You must enter more than 2 chars for text");return;}
+	
+	//rate is number
+	if (isNaN(result_obj.rate)) {rjmlib_ui_questionbox("You must enter a number for rate");return;}
+	
+	//remain is number
+	if (isNaN(result_obj.remain)) {rjmlib_ui_questionbox("You must enter a number for remaining percentage");return;}
+
+	//binpack is number
+	if (isNaN(result_obj.binpack)) {rjmlib_ui_questionbox("You must enter a number for Bin Pack");return;}
+	
+	
+	console.log("TODO Process Edit Press - complete = " + complete_pressed);
+	console.log(result_obj);
 };
 
 function component_viewer_res_schedule_board_getSVG(days) {
@@ -500,7 +537,7 @@ function component_viewer_res_schedule_board_drawchain(
 		};
 	};	
 	//console.log("Setting day " + (chains[chain_idx].end_day+1) + " next start to " + (curent_bar_value));
-	//For the final day ensure the bar is unchanged (set to curent_bar_value)*****
+	//For the final day ensure the bar is unchanged (set to curent_bar_value)
 	component_viewer_res_schedule_board_init_upsert_free_slot(next_start_info,(chains[chain_idx].end_day+1),curent_bar_value);
 
 	//Add info to drawn_chains (this allows us to do the hole search later)
@@ -698,7 +735,7 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 		width,
 		height,
 		rect_class,
-		"resAlloc"
+		"class=\"resAlloc\" data-uid=\"" + alloc_res.res_alloc_obj.uid + "\""
 	)
 	
 	return ret;	
