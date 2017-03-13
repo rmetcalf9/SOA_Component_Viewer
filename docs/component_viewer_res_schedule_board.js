@@ -149,11 +149,11 @@ function component_viewer_res_schedule_board_common_validation(result_obj) {
 	};
 	
 	//remain is always number
-	if (isNaN(parseInt(result_obj.remain))) {
+	if (isNaN(parseFloat(result_obj.remain))) {
 		rjmlib_ui_questionbox("You must enter a number for remaining days");
 		return undefined;
 	}
-	result_obj.remain = parseInt(result_obj.remain);
+	result_obj.remain = parseFloat(result_obj.remain);
 
 	//if it is set then binpack is number
 	if (typeof(result_obj.binpack)!="undefined") {
@@ -190,6 +190,8 @@ function component_viewer_res_schedule_board_edit_return(complete_pressed, resul
 	
 	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
 	if (typeof(result_obj)=="undefined") return;
+
+console.log(result_obj.remain);
 	
 	component_viewer_res_data_edit_estimate(uid, result_obj);
 	

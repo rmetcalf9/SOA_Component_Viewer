@@ -391,7 +391,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 					itemuid: row[cur_sheet_metrics.itemuidcol],
 					text: row[cur_sheet_metrics.textcol],
 					resourcelaneassignment: row[cur_sheet_metrics.resourcelaneassignmentcol],
-					assignmentrate: ic_soa_data_parseIntNaNZero(row[cur_sheet_metrics.assignmentratecol]),
+					assignmentrate: ic_soa_data_parseFloatNaNZero(row[cur_sheet_metrics.assignmentratecol]),
 					originaldays: parseInt(row[cur_sheet_metrics.originaldayscol]),
 					remainingdays: parseInt(row[cur_sheet_metrics.remainingdayscol]),
 					lastupdate: row[cur_sheet_metrics.lastupdatecol],
@@ -489,6 +489,14 @@ function ic_soa_data_getComponentFromUID(uid) {
 function ic_soa_data_parseIntNaNZero(inp) {
 	if (typeof(inp)=="undefined") return 0;
 	var out = parseInt(inp);
+	if (isNaN(out)) return 0;	
+	return out;
+};
+
+//Parse a value as a number but if it is undefined or NaN then return 0
+function ic_soa_data_parseFloatNaNZero(inp) {
+	if (typeof(inp)=="undefined") return 0;
+	var out = parseFloat(inp);
 	if (isNaN(out)) return 0;	
 	return out;
 };
