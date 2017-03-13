@@ -191,8 +191,6 @@ function component_viewer_res_schedule_board_edit_return(complete_pressed, resul
 	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
 	if (typeof(result_obj)=="undefined") return;
 
-console.log(result_obj.remain);
-	
 	component_viewer_res_data_edit_estimate(uid, result_obj);
 	
 	component_viewer_res_process_ScheduleResourses();
