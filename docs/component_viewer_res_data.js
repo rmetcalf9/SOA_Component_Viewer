@@ -233,7 +233,7 @@ function component_viewer_res_data_create_estimate(component_uid, work_text, day
 		remainingdays: days,
 		lastupdate: d.toString(),
 		status: "Allocated",
-		binpackpriority: undefined,
+		binpackpriority: 99999, //Arbitrarily high to ensure items go to end as default
 		tags: undefined,
 	}
 	
