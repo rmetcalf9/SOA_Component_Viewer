@@ -31,7 +31,7 @@ var component_viewer_res_schedule_board_globs = {
 	width: -1,
 
 	//Debug Values
-	//debug_chain_uid: "EO_100",
+	//debug_chain_uid: "Elijah",
 };
 
 function component_viewer_res_schedule_board_getHtml() {
@@ -422,8 +422,10 @@ function component_viewer_res_schedule_board_get_any_hole_for_chain(day, rate, n
 	var acceptable_hole_list = [];
 	for (var cur in hole_list) {
 		var cur_hole = hole_list[cur];
-		if ((cur_hole.end - cur_hole.start)>rate) acceptable_hole_list.push(cur_hole);
+		if ((cur_hole.end - cur_hole.start)>=rate) acceptable_hole_list.push(cur_hole);
 	};
+
+	//console.log(acceptable_hole_list);
 
 	//Return the first acceptable hole list (underfined if there are none acceptable)
 	return acceptable_hole_list[0];
