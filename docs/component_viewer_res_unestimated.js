@@ -5,8 +5,8 @@ var component_viewer_res_unestimated_tableCols = 3;
 function component_viewer_res_unestimated_getHtml() {
 	var ret = "";
 	ret += "<h1>SOA Components that need Estimates</h1>";
-	ret += "<p>This page lists all SOA Components that are not in the “Completed” or “Obsolete” states that do not have a Resource Allocation. (“Completed” Resource Allocations are ignored.) Components will appear multiple times if they have more than one tag associated.</p>"
-	
+	ret += "<p>This page lists all SOA Components that are not in the \"Completed\", \"In UAT\" or \"Obsolete\" states that do not have a Resource Allocation. (“Completed” Resource Allocations are ignored.) Components will appear multiple times if they have more than one tag associated.</p>"
+	//This is implemented in the component_viewer_res_data_componentRequiresEstimate function
 	
 	if (accessLevel=="READWRITE") {
 		component_viewer_res_unestimated_tableCols = 4;
@@ -19,7 +19,10 @@ function component_viewer_res_unestimated_getHtml() {
 	};
 	ret += "</tr>";
 	
+	//Generate the list for NO tag
 	ret += component_viewer_res_unestimated_tableRowsForTAG("",component_viewer_res_unestimated_componentHasNoTag);
+	
+	//Go thorugh tags and generate ths list for items with that tag
 	for (var tag in dataObjects.TAGs) {
 		ret += component_viewer_res_unestimated_tableRowsForTAG(tag,component_viewer_res_unestimated_componentHasTag);
 	}

@@ -16,6 +16,7 @@ function component_viewer_res_data_componentRequiresEstimate(component_object) {
 		console.log("Warning - passing object with no status to component_viewer_res_data_componentRequiresEstimate");
 		return false;
 	};
+	if (component_object.status=="In UAT") return false;
 	if (component_object.status=="In Support") return false;
 	if (component_object.status=="Abandoned") return false;
 	return true;
