@@ -393,7 +393,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 					resourcelaneassignment: row[cur_sheet_metrics.resourcelaneassignmentcol],
 					assignmentrate: ic_soa_data_parseFloatNaNZero(row[cur_sheet_metrics.assignmentratecol]),
 					originaldays: parseInt(row[cur_sheet_metrics.originaldayscol]),
-					remainingdays: parseInt(row[cur_sheet_metrics.remainingdayscol]),
+					remainingdays: ic_soa_data_parseFloatNaNZero(row[cur_sheet_metrics.remainingdayscol]),
 					lastupdate: row[cur_sheet_metrics.lastupdatecol],
 					status: row[cur_sheet_metrics.statuscol],
 					binpackpriority: parseInt(row[cur_sheet_metrics.binpackprioritycol]),
