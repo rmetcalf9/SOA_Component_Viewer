@@ -805,7 +805,7 @@ function component_viewer_res_schedule_board_getSVG_for_laneItem(
 		alloc_res.res_alloc_obj.text, //tl
 		undefined,
 //		"(" + alloc_res.res_alloc_obj.remainingdays + "/" + alloc_res.duration + " days effort/duration) - " + alloc_res.rate + "%", //top right
-		alloc_res.rate + "%", //top right
+		undefined, //top right
 		undefined, //cl
 		undefined,
 		undefined,
