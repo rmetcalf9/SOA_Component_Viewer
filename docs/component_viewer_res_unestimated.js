@@ -1,6 +1,6 @@
 "use strict";	
 
-var component_viewer_res_unestimated_tableCols = 3;
+var component_viewer_res_unestimated_tableCols = 4;
 
 function component_viewer_res_unestimated_getHtml() {
 	var ret = "";
@@ -9,11 +9,11 @@ function component_viewer_res_unestimated_getHtml() {
 	//This is implemented in the component_viewer_res_data_componentRequiresEstimate function
 	
 	if (accessLevel=="READWRITE") {
-		component_viewer_res_unestimated_tableCols = 4;
+		component_viewer_res_unestimated_tableCols = 5;
 	};
 	
 	ret += "<table id=\"component_viewer_res_unestimated_main\">";
-	ret += "<tr><th>Source Sheet Name</th><th>Component Name</th><th>Status</th>";
+	ret += "<tr><th>Source Sheet Name</th><th>Component Name</th><th>Status</th><th>Tags</th>";
 	if (accessLevel=="READWRITE") {
 		ret += "<th>Action</th>";
 	};
@@ -42,11 +42,17 @@ function component_viewer_res_unestimated_componentHasTag(component_obj,tag) {
 function component_viewer_res_unestimated_tableRowsForTAG(tag, decision_function) {
 	var title = tag;
 	if (title=="") title = "No Tags";
-	var ret = "<tr>";
-	ret += "<th colspan=\"" + component_viewer_res_unestimated_tableCols + "\">" + title + "</th>";
-	ret += "</tr>";
+	var ret = "";
 	
+	var first_row = true;
 	for (var comp_idx in component_viewer_res_data_glob.componentsMissingEstimate) {
+		if (first_row) {
+			//Make sure title is only shown where there is at least one item
+			first_row = false;
+			ret = "<tr>";
+			ret += "<th colspan=\"" + component_viewer_res_unestimated_tableCols + "\">" + title + "</th>";
+			ret += "</tr>";
+		};
 		var component_obj = ic_soa_data_getComponentFromUID(component_viewer_res_data_glob.componentsMissingEstimate[comp_idx]);
 		if (decision_function(component_obj,tag)) {
 			ret += "<tr class=\"" + ic_soa_data_getSheetMetrics()[component_obj.source_sheet].css_tag + "\" data-uid=\"" + component_obj.uid + "\">";
@@ -54,6 +60,7 @@ function component_viewer_res_unestimated_tableRowsForTAG(tag, decision_function
 			ret += "<td>" + ic_soa_data_getSheetMetrics()[component_obj.source_sheet].sheet_name + "</td>";
 			ret += "<td>" + component_obj.name + "</td>";
 			ret += "<td>" + component_obj.status + "</td>";
+			ret += "<td>" + component_obj.tags + "</td>";
 			if (accessLevel=="READWRITE") {
 				ret += "<td>";
 				ret += "<a href=\"#component_viewer_res_unestimated_click_table_row\">Add Estimate</a>";
