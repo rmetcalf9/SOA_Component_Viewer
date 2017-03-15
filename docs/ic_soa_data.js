@@ -86,11 +86,13 @@ function ic_soa_data_getSheetMetrics() {
 			rawnamecol: 2
 		};
 		ic_soa_data_SheetMetrics["RESOURCELANES"] = {
-			datarange: 'ResourceLanes!A2:B',
+			datarange: 'ResourceLanes!A2:D',
 			sheet_name: 'ResourceLanes',
 			toprow: 2,
 			uidcol: 0,
-			ratecol: 1
+			ratecol: 1,
+			autoassigncol: 2,
+			ordercol: 3
 		};
 		ic_soa_data_SheetMetrics["RESOURCEALLOCATION"] = {
 			datarange: 'ResourceAllocation!A2:K',
@@ -367,6 +369,8 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 				sheet_row: (cur_range+cur_sheet_metrics.toprow),
 				uid: row[cur_sheet_metrics.uidcol],
 				rate: parseInt(row[cur_sheet_metrics.ratecol]),
+				autoassign: ic_soa_data_parseYN(row[cur_sheet_metrics.autoassigncol],true),
+				order: parseInt(row[cur_sheet_metrics.ordercol]),
 			}
 		}
 	} else {
@@ -427,6 +431,11 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 	POINTkeys = POINTkeys.sort(function (ak,bk) {
 		if (POINTs[ak].name==POINTs[bk].name) return 0;
 		if (POINTs[ak].name<POINTs[bk].name) return -1;
+		return 1;
+	});
+	RESOURCELANESkeys = RESOURCELANESkeys.sort(function (ak,bk) {
+		if (RESOURCELANESs[ak].order==RESOURCELANESs[bk].order) return 0;
+		if (RESOURCELANESs[ak].order<RESOURCELANESs[bk].order) return -1;
 		return 1;
 	});
 	
@@ -499,4 +508,12 @@ function ic_soa_data_parseFloatNaNZero(inp) {
 	var out = parseFloat(inp);
 	if (isNaN(out)) return 0;	
 	return out;
+};
+
+//Parse a value as true or false from Y or N (Case insensitive first char only checked)
+function ic_soa_data_parseYN(inp,def) {
+	var t = inp.substr(0,1).toUpperCase();
+	if (t=="Y") return true;
+	if (t=="N") return false;
+	return def;
 };
