@@ -4,6 +4,7 @@
 
 var component_viewer_res_schedule_ui_globs = {
 	select_any_lane_value: "Select Any Lane",
+	comp_status_shown: false,
 };
 
 function component_viewer_res_schedule_ui_INIT() {
@@ -31,6 +32,13 @@ function component_viewer_res_schedule_ui_INIT() {
 	formHTML += "<tr><th>Bin Pack Priority:</th><td>";
 	formHTML += "<input class=\"binpack\" type=\"text\" size=\"10\"/><td>Low numbers are allocated before high numbers.</td>";
 	formHTML += "</td></tr>";
+	formHTML += "<tr><th>Component Status:</th><td>";
+	formHTML += "<select class=\"comp_status\" >";
+	for (i = 0; i < statusList.length; i++) {
+		formHTML += "<option value=\"" + statusList[i] + "\">" + statusList[i] + "</option>";
+	};
+	formHTML += "</select>";
+	formHTML += "</td></tr>";
 	formHTML += "</table>";
 	formHTML += "</div>"
 	
@@ -55,7 +63,8 @@ function component_viewer_res_schedule_ui_addedit(
 						// text, lane, rate, remain, binpack
 	passback,
 	ok_fn_callback,
-	complete_fn_callback
+	complete_fn_callback,
+	comp_status_val //Pass undefined if this item dosen't have a component
 ) {
 	if (component_viewer_res_schedule_ui_addedit_isopen()==true) {
 		alert("ERROR in component_viewer_res_schedule_ui_addedit SECOND DIALOG LAUNCHED - " + str);
@@ -73,6 +82,18 @@ function component_viewer_res_schedule_ui_addedit(
 	$("#component_viewer_res_schedule_ui_add_edit_work input.rate").val(default_value_obj.rate);
 	$("#component_viewer_res_schedule_ui_add_edit_work input.remain").val(default_value_obj.remain);
 	$("#component_viewer_res_schedule_ui_add_edit_work input.binpack").val(default_value_obj.binpack);
+	
+	if (typeof(comp_status_val)=="undefined") {
+		component_viewer_res_schedule_ui_globs.comp_status_shown = false;
+		$("#component_viewer_res_schedule_ui_add_edit_work select.comp_status").closest("tr").hide();
+	} else {
+		if (statusList.indexOf(comp_status_val)==-1) {
+			console.log("ERROR Invalid component status value " + comp_status_val);
+		};
+		component_viewer_res_schedule_ui_globs.comp_status_shown = true;
+		$("#component_viewer_res_schedule_ui_add_edit_work select.comp_status").closest("tr").show();
+		$("#component_viewer_res_schedule_ui_add_edit_work select.comp_status").val(comp_status_val);
+	};
 	
 	var buts = [];
 	
@@ -102,13 +123,20 @@ function component_viewer_res_schedule_ui_addedit(
 function component_viewer_res_schedule_ui_addedit_readresult() {
 	var lane = $("#component_viewer_res_schedule_ui_add_edit_work select.lane").val();
 	if (lane==component_viewer_res_schedule_ui_globs.select_any_lane_value) lane=null;	
-	return {
+	
+	var ret_obj = {
 		text: $("#component_viewer_res_schedule_ui_add_edit_work input.text").val(),
 		lane: lane,
 		rate: $("#component_viewer_res_schedule_ui_add_edit_work input.rate").val(),
 		remain: $("#component_viewer_res_schedule_ui_add_edit_work input.remain").val(),
 		binpack: $("#component_viewer_res_schedule_ui_add_edit_work input.binpack").val(),
 	};
+	
+	if (component_viewer_res_schedule_ui_globs.comp_status_shown) {
+		ret_obj.comp_status = $("#component_viewer_res_schedule_ui_add_edit_work select.comp_status").val();
+	};
+	
+	return ret_obj;
 };
 
 	

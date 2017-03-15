@@ -315,7 +315,8 @@ function component_viewer_res_data_create_estimate(component_uid, work_text, day
 };
 
 //Edit estimate
-function component_viewer_res_data_edit_estimate(estimate_uid, edited_value_obj) {
+// if change_comp_status is not undefined then also alter the component status
+function component_viewer_res_data_edit_estimate(estimate_uid, edited_value_obj, change_comp_status) {
 	var resAlloc_obj = dataObjects.RESOURCEALLOCATIONs[estimate_uid];
 	if (typeof(resAlloc_obj)=="undefined") {
 		console.log("ERROR couldn't save bad uid");
@@ -337,6 +338,26 @@ function component_viewer_res_data_edit_estimate(estimate_uid, edited_value_obj)
 	//Write data to spreadsheet
 	board_prepare_saveBatch();
 	component_viewer_res_data_save_resourse_allocation_into_batch(estimate_uid);
+	if (typeof(change_comp_status)!="undefined") {
+		
+		var component_obj = ic_soa_data_getComponentFromUID(resAlloc_obj.itemuid);
+		if (typeof(component_obj)=="undefined") {
+			console.log("ERROR got undefined for component " + resAlloc_obj.itemuid + " not saving component status (Other changes saved)");
+		} else {
+			var sheet_data_item = sheet_data[component_obj.source_sheet];
+			if (typeof(sheet_data_item)=="undefined") {
+				console.log("ERROR got undefined for source sheet " + component_obj.source_sheet + " not saving component status (Other changes saved)");
+			} else {
+				//console.log("change component status of " + resAlloc_obj.itemuid + " to " + change_comp_status.new_status);
+				
+				component_obj.status = change_comp_status.new_status;
+				//Calling function from component_viewer_kanban.js
+				saveObj(sheet_data_item,component_obj.sheet_row,component_obj)
+			};
+		};
+		
+		
+	};
 	board_execute_saveBatch(spreadsheetId);
 
 	if (typeof(resAlloc_obj.itemuid)!="undefined") {
