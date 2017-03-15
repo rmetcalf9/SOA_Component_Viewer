@@ -207,11 +207,14 @@ function component_viewer_res_data_save_resourse_allocation_into_batch(resourseA
 			[rec.assignmentrate / 100]
 		],
 	});	
+	var tmp = rec.resourcelaneassignment;
+	if (typeof(tmp)=="undefined") tmp = "";
+	if (tmp==null) tmp = "";
 	board_append_saveBatch({
 		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.resourcelaneassignmentcol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
-			[rec.resourcelaneassignment]
+			[tmp]
 		],
 	});	
 	if (typeof(creating)!="undefined") {

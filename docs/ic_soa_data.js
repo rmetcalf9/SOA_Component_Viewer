@@ -392,7 +392,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 					source_sheet: sheetList[sheetListIdx],
 					sheet_row: (cur_range+cur_sheet_metrics.toprow),
 					uid: row[cur_sheet_metrics.uidcol],
-					itemuid: row[cur_sheet_metrics.itemuidcol],
+					itemuid: ic_soa_data_parseStringOrUndef(row[cur_sheet_metrics.itemuidcol]),
 					text: row[cur_sheet_metrics.textcol],
 					resourcelaneassignment: row[cur_sheet_metrics.resourcelaneassignmentcol],
 					assignmentrate: ic_soa_data_parseFloatNaNZero(row[cur_sheet_metrics.assignmentratecol]),
@@ -516,4 +516,11 @@ function ic_soa_data_parseYN(inp,def) {
 	if (t=="Y") return true;
 	if (t=="N") return false;
 	return def;
+};
+
+//Parse string but if it is empty use undefined
+function ic_soa_data_parseStringOrUndef(inp) {
+	if (typeof(inp)=="undefined") return undefined;
+	if (inp=="") return undefined;
+	return inp;
 };

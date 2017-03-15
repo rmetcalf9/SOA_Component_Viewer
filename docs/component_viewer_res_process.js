@@ -170,16 +170,27 @@ function component_viewer_res_process_find_best_lane_for_object(res_alloc_obj) {
 	return ret;
 };
 
+function component_viewer_res_process_lane_valueset(val) {
+	if (typeof(val)!="undefined") {
+		if (val != "") {
+			if (val != null) {
+				return true;
+			}
+		}
+	}
+	return false;
+};
+
 //Push proposals for particular resourse lane
 function component_viewer_res_process_lane_make_proposal(proposals, lane_schedule_obj, res_alloc_obj) {
-	if (typeof(res_alloc_obj.resourcelaneassignment)!="undefined") {
-		if (res_alloc_obj.resourcelaneassignment != "") {
-			if (res_alloc_obj.resourcelaneassignment != null) {
-				//There is a resourse lane set in the spreadsheet. Only return a proposal if it is this lane
-				if (res_alloc_obj.resourcelaneassignment!=lane_schedule_obj.obj.uid) return;
-			};
-		};
+	if (component_viewer_res_process_lane_valueset(res_alloc_obj.resourcelaneassignment)) {
+		//There is a resourse lane set in the spreadsheet. Only return a proposal if it is this lane
+		if (res_alloc_obj.resourcelaneassignment!=lane_schedule_obj.obj.uid) return;
+	} else {
+		//There is no resourse lane set. Only return a proposal if autoassign is true
+		if (!lane_schedule_obj.obj.autoassign) return;
 	};
+	
 	for (var cur in lane_schedule_obj.free_slots_idx) {
 		component_viewer_res_process_lane_make_proposal_slot(proposals, lane_schedule_obj, res_alloc_obj, lane_schedule_obj.free_slots[lane_schedule_obj.free_slots_idx[cur]]);
 	};
