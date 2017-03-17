@@ -1,7 +1,7 @@
 "use strict";
 
 function ic_soa_data_getSheetID() {
-	return '1u_DNhV7NO16uHZSP1KeYfAorW9tvwD9gbbYsCRp07G8';
+	return tenant_specific_data.google_sheets_sheet_id;
 };
 function ic_soa_data_getListsRange() {
 	return 'Data!A2:A';

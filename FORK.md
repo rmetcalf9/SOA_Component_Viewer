@@ -17,22 +17,12 @@ Click on it and inspect the URL. It should be something like
 https://docs.google.com/spreadsheets/d/1K28dX1gAmNmAwJ4JbKfC7al19oTlEl8dBlS2VkG6BFo/edit#gid=1483315145
 The document ID is the long string inbetween /d and /edit, in this case 1K28dX1gAmNmAwJ4JbKfC7al19oTlEl8dBlS2VkG6BFo
 
+Note down the document ID. It is the google_sheets_sheet_id and you will need it in the "Tenant Specific" step.
+
+
 Fork the git repo
 -
 You will need a github account for the following steps. Log into your github accounts and navigate to this project (https://github.com/rmetcalf9/SOA_Component_Viewer). In the top right corner click the "Fork" button. This will create a copy of the entire repo (including document pages) which you will be able to edit.
-
-Update the Forked Document references to point to new Google Sheets Spreadsheet
--
-The forked github repo must be changed to point to the newly created google sheets documented. To do this find the file:
-(docs/ic_soa_data.js) in your repo.
-It can be edited in the github ui. Edit it and change the following function:
-```javascript
-function ic_soa_data_getSheetID() {
-	return '1u_DNhV7NO16uHZSP1KeYfAorW9tvwD9gbbYsCRp07G8';
-};
-```
-so that it returns the sheet ID obtained previously.
-Remember to commit the change to the repo with an apropiate comment.
 
 Note down the URL for your forked copy
 -
@@ -70,10 +60,27 @@ Press Enable API
 Under Google Apps APIs select Sheets API
 Press Enable
 
-In your repo edit (docs/board.js) and enter in the client ID.
+Note down the client ID. It is the google_docs_client_id and you will need it in the "Tenant Specific" step.
+
+Update Tenant Specific file to make app use correct credentials
+-
+
+Edit the file (docs/tenant_specific.js) in your repo. This file should contain the google client ID, and the google docs sheet ID used eailier. Find the following structure:
+```javascript
+var tenant_specific_data = {
+	google_docs_client_id: '1079972761471-j4b2l90p0rpkrkplf1j6avkue436c74p.apps.googleusercontent.com',
+	google_sheets_sheet_id: '1u_DNhV7NO16uHZSP1KeYfAorW9tvwD9gbbYsCRp07G8',
+};
+```
+
+Change the google_docs_client_id to the value you recorded earlier. 
+Change the google_sheets_sheet_id to the value you recorded earlier.
+
 Save and commit your changes.
 
 These settings may take some time to take effect.
+
+Note: In future you will be able to recieve updates from the master repo as pull requests. The updates should not change the docs/tenant_specific.js file. This means that these values should be preserved.
 
 Update README.md to point to correct site
 -
