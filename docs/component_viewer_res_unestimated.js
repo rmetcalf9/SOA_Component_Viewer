@@ -87,48 +87,34 @@ function component_viewer_res_unestimated_click_table_row(link_clicked) {
 	
 	var days = ic_soa_data_getSheetMetrics()[component_obj.source_sheet].default_estimate;
 	
-	rjmlib_ui_textareainputbox(
-		"How many days will development take with 1 person assigned 100% of time", 
-		"Create estimate for " + component_obj.name, 
-		days, 
-		[
-			{
-				id: "submit",
-				text: "Submit",
-				fn: function (retVal,butID,component_obj) {
-					if (isNaN(retVal)) {
-						rjmlib_ui_questionbox("You must enter a number");
-					} else {
-						var edited_value_obj = {
-							text: component_obj.name,
-							lane: "",
-							rate: "",
-							remain: parseInt(retVal),
-							binpack: 99999,
-						};
+	component_viewer_res_schedule_ui_addedit(
+		false, //Edit Mode
+		{
+			text: component_obj.name, 
+			lane: "",
+			rate: "",
+			remain: "",
+			binpack: "99999",
+		}, //Default Obk
+		component_obj, //passback
+		function (result_obj, component_obj) { //Ok Callback
+			if (result_obj.remain==0) {
+				rjmlib_ui_questionbox("Number of days for estimate must be greater than 0");
+			} else {
+				component_viewer_res_data_create_estimate(component_obj.uid, result_obj);
+				
+				//REMOVE FROM unestimated table
+				$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_obj.uid + "']").remove()
 
-						component_viewer_res_data_create_estimate(component_obj.uid, edited_value_obj);
-						
-						//REMOVE FROM unestimated table
-						$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_obj.uid + "']").remove()
+				//Automaticall re-schedule
+				component_viewer_res_process_ScheduleResourses();
+			};
+		},
+		function (component_obj, passback) { //Complete Callback
+			console.log("ERROR - supposadaly unreachable code");
+		},
+		undefined //comp_status
+	);		
 
-						//Automaticall re-schedule
-						component_viewer_res_process_ScheduleResourses();
-						
-					};
-				}
-			},
-			{
-				id: "cancel",
-				text: "Cancel",
-				fn: function (retVal,butID,component_obj) {
-					//Cancel - do nothing
-				}
-			}
-		], //buts, 
-		component_obj, 
-		40, 
-		1
-	);
 };
 

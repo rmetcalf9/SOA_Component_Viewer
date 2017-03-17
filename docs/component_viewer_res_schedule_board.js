@@ -133,7 +133,8 @@ function component_viewer_res_schedule_board_INIT() {
 					console.log("ERROR - supposadaly unreachable code");
 				},
 				undefined //comp_status
-			);		};
+			);		
+		};
 		event.preventDefault();
 	});
 	
