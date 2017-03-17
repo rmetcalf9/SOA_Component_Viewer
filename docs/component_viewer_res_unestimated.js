@@ -99,8 +99,22 @@ function component_viewer_res_unestimated_click_table_row(link_clicked) {
 					if (isNaN(retVal)) {
 						rjmlib_ui_questionbox("You must enter a number");
 					} else {
-						days = retVal;
-						component_viewer_res_unestimated_create_estimate(component_obj, parseInt(days));
+						var edited_value_obj = {
+							text: component_obj.name,
+							lane: "",
+							rate: "",
+							remain: parseInt(retVal),
+							binpack: 99999,
+						};
+
+						component_viewer_res_data_create_estimate(component_obj.uid, edited_value_obj);
+						
+						//REMOVE FROM unestimated table
+						$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_obj.uid + "']").remove()
+
+						//Automaticall re-schedule
+						component_viewer_res_process_ScheduleResourses();
+						
 					};
 				}
 			},
@@ -118,12 +132,3 @@ function component_viewer_res_unestimated_click_table_row(link_clicked) {
 	);
 };
 
-function component_viewer_res_unestimated_create_estimate(component_obj, days) {
-	component_viewer_res_data_create_estimate(component_obj.uid, component_obj.name, days);
-	
-	//REMOVE FROM unestimated table
-	$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_obj.uid + "']").remove()
-
-	//Automaticall re-schedule
-	component_viewer_res_process_ScheduleResourses();
-};

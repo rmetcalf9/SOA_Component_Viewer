@@ -232,6 +232,14 @@ function component_viewer_res_data_save_resourse_allocation_into_batch(resourseA
 
 //Create an unlinked estimate without a compnent
 function component_viewer_res_data_create_unlinked_estimate(edited_value_obj) {
+	component_viewer_res_data_create_estimate_INTERNAL(
+		edited_value_obj, 
+		"", //No component
+		edited_value_obj.remain //Origional days same as remain
+	);
+}
+	
+function component_viewer_res_data_create_estimate_INTERNAL(edited_value_obj, component_uid, origional_days) {
 	if (typeof(component_viewer_res_data_glob.next_avail)=="undefined") {
 		component_viewer_res_data_calc_next_avail();
 	};
@@ -243,11 +251,11 @@ function component_viewer_res_data_create_unlinked_estimate(edited_value_obj) {
 		source_sheet: "RESOURCEALLOCATION",
 		sheet_row: (component_viewer_res_data_glob.next_avail.next_row),
 		uid: new_row_uid,
-		itemuid: "",
+		itemuid: component_uid,
 		text: edited_value_obj.text,
 		resourcelaneassignment: edited_value_obj.lane,
 		assignmentrate: edited_value_obj.rate,
-		originaldays: edited_value_obj.remain,
+		originaldays: origional_days,
 		remainingdays: edited_value_obj.remain,
 		lastupdate: d.toString(),
 		status: "Allocated",
@@ -265,46 +273,12 @@ function component_viewer_res_data_create_unlinked_estimate(edited_value_obj) {
 };
 
 //Create an estimate for an unestimated component
-function component_viewer_res_data_create_estimate(component_uid, work_text, days) {
-	if (typeof(component_viewer_res_data_glob.next_avail)=="undefined") {
-		component_viewer_res_data_calc_next_avail();
-	};
-	
-	var new_row_uid = rjmlib_createGuid();
-	/*
-	console.log("Add row to spreadsheet for:");
-	console.log("  uid=:" + new_row_uid);
-	console.log(" Cuid=:" + component_uid);
-	console.log("  txt=:" + work_text);
-	console.log(" days=:" + days);
-	console.log("  row=:" + component_viewer_res_data_glob.next_avail.next_row);
-	*/
-	
-	//Push to new row in internal data structure
-	var d = new Date();	
-	dataObjects.RESOURCEALLOCATIONkeys.push(new_row_uid);
-	dataObjects.RESOURCEALLOCATIONs[new_row_uid] = {
-		source_sheet: "RESOURCEALLOCATION",
-		sheet_row: (component_viewer_res_data_glob.next_avail.next_row),
-		uid: new_row_uid,
-		itemuid: component_uid,
-		text: work_text,
-		resourcelaneassignment: "",
-		assignmentrate: "",
-		originaldays: days,
-		remainingdays: days,
-		lastupdate: d.toString(),
-		status: "Allocated",
-		binpackpriority: 99999, //Arbitrarily high to ensure items go to end as default
-		tags: undefined,
-		datecreate: d.toString(),
-	}
-	
-	//Write data to spreadsheet
-	board_prepare_saveBatch();
-	component_viewer_res_data_save_resourse_allocation_into_batch(new_row_uid, true);
-	board_execute_saveBatch(spreadsheetId);
-	component_viewer_res_data_glob.next_avail.next_row = component_viewer_res_data_glob.next_avail.next_row + 1;
+function component_viewer_res_data_create_estimate(component_uid, edited_value_obj) {
+	component_viewer_res_data_create_estimate_INTERNAL(
+		edited_value_obj, 
+		component_uid, //No component
+		edited_value_obj.remain //Origional days same as remain
+	);
 
 	//REMOVE FROM estimate missing list
 	component_viewer_res_data_ensure_component_not_in_missing_estimate_list(component_uid);
