@@ -59,6 +59,7 @@ function component_viewer_res_getRESHtml(page) {
 function component_viewer_res_displayRES(page) {
 	$("#MAIN").html(component_viewer_res_getRESHtml(page));
 	$("#MAIN").css("display","inline");
+	rjmlib_svg_postdisplayfixes();
 };
 
 function component_viewer_res_getFailedToScheduleHTML() {

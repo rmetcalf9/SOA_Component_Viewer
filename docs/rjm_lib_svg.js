@@ -10,6 +10,21 @@ function rjmlib_svg_init() {
 	
 };
 
+//Fixes that need to be run after html is in DOM
+function rjmlib_svg_postdisplayfixes() {
+	if (typeof(rjmllib_getieersion())!="undefined") {
+		//Internet explorer
+		var texts_with_hanging = $("svg text[alignment-baseline='hanging']");
+		for (var cur=0; cur<texts_with_hanging.length;cur++) {
+			texts_with_hanging[cur].setAttribute('y',parseInt(texts_with_hanging[cur].getAttribute('y')) + parseInt(texts_with_hanging[cur].getBoundingClientRect().height))			
+		};
+		var texts_with_middle = $("svg text[alignment-baseline='middle']");
+		for (var cur=0; cur<texts_with_hanging.length;cur++) {
+			texts_with_hanging[cur].setAttribute('y',parseInt(texts_with_hanging[cur].getAttribute('y')) + (parseInt(texts_with_hanging[cur].getBoundingClientRect().height)/2))
+		};
+	};
+};
+
 //text_position: top_left|top_middle|top_right|center_left|center_middle|center_right|bottom_left|bottom_middle|bottom_right
 function rjmlib_svg_cropped_text_in_rect(
 	text_top_left,
