@@ -46,15 +46,15 @@ function component_viewer_res_unestimated_tableRowsForTAG(tag, decision_function
 	
 	var first_row = true;
 	for (var comp_idx in component_viewer_res_data_glob.componentsMissingEstimate) {
-		if (first_row) {
-			//Make sure title is only shown where there is at least one item
-			first_row = false;
-			ret = "<tr>";
-			ret += "<th colspan=\"" + component_viewer_res_unestimated_tableCols + "\">" + title + "</th>";
-			ret += "</tr>";
-		};
 		var component_obj = ic_soa_data_getComponentFromUID(component_viewer_res_data_glob.componentsMissingEstimate[comp_idx]);
 		if (decision_function(component_obj,tag)) {
+			if (first_row) {
+				//Make sure title is only shown where there is at least one item
+				first_row = false;
+				ret = "<tr>";
+				ret += "<th colspan=\"" + component_viewer_res_unestimated_tableCols + "\">" + title + "</th>";
+				ret += "</tr>";
+			};
 			ret += "<tr class=\"" + ic_soa_data_getSheetMetrics()[component_obj.source_sheet].css_tag + "\" data-uid=\"" + component_obj.uid + "\">";
 			
 			ret += "<td>" + ic_soa_data_getSheetMetrics()[component_obj.source_sheet].sheet_name + "</td>";
