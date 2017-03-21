@@ -53,6 +53,7 @@ function component_viewer_res_schedule_detail_getLaneHtml(lane_uid) {
 
 function component_viewer_res_schedule_detail_getTaskHtml(task_obj) {
 	var ret = "";
+	//console.log(task_obj);
 	
 	var component_obj = ic_soa_data_getComponentFromUID(task_obj.res_alloc_obj.itemuid);
 	
@@ -81,6 +82,10 @@ function component_viewer_res_schedule_detail_getTaskHtml(task_obj) {
 	ret += "<tr>";
 	ret += "<th>Duration:</th>";
 	ret += "<td>" + task_obj.duration + "</td>";
+	ret += "</tr>";
+	ret += "<tr>";
+	ret += "<th>TAGS:</th>";
+	ret += "<td>" + component_viewer_res_data_getcombinedtagString(task_obj.res_alloc_obj) + "</td>";
 	ret += "</tr>";
 	
 	ret += "</table>";

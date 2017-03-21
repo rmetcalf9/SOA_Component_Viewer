@@ -19,9 +19,6 @@ function loadDataIntoKanbanComponent() {
 	
 	var comma_sep_lis_of_tags = "";
 	for (var i in Object.keys(dataObjects.TAGs)) {
-		console.log(i);
-		console.log(dataObjects.TAGs[i]);
-		console.log(Object.keys(dataObjects.TAGs)[i]);
 		comma_sep_lis_of_tags += Object.keys(dataObjects.TAGs)[i] + ",";
 	};
 	

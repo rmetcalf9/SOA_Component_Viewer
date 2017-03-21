@@ -357,3 +357,48 @@ function component_viewer_res_data_sch_getHighestLaneEndDay(lane_obj) {
 	};
 	return max_end;
 };
+
+function component_viewer_res_data_getcombinedtagList(res_alloc_obj) {
+	var res = [];
+	
+	//Step 1 push all EDF/Int/etc tags
+	var component_obj = ic_soa_data_getComponentFromUID(res_alloc_obj.itemuid);
+	
+	if (typeof(component_obj)!="undefined") {
+		var arr = [];
+		ic_soa_data_buildtaglist_tag(component_obj.tags, arr)
+		for (var x in arr) {
+			res.push({
+				orig: "obj",
+				value: arr[x]
+			});
+		};
+	};
+	
+	//Step 2 push all local tags
+	var arr = [];
+	ic_soa_data_buildtaglist_tag(res_alloc_obj.tags, arr)
+	for (var x in arr) {
+		res.push({
+			orig: "res",
+			value: arr[x]
+		});
+	};
+	
+	return res;
+};
+
+function component_viewer_res_data_getcombinedtagString(res_alloc_obj) {
+	var res = "";
+	var arr = component_viewer_res_data_getcombinedtagList(res_alloc_obj);
+	if (typeof(arr)=="undefined") return "";
+	if (arr.length==0) return "";
+	for (var x in arr) {
+		if (x>0) res += ", ";
+		if (arr[x].orig=="res") {
+			res += "*";
+		};
+		res += arr[x].value;
+	};
+	return res;
+};
