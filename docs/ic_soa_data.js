@@ -387,6 +387,8 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 			for (var cur_range = 0; cur_range < range.values.length; cur_range++) {
 				var row = range.values[cur_range];
 
+				ic_soa_data_buildtaglist_tag(row[cur_sheet_metrics.tagscol],TAGs);				
+
 				RESOURCEALLOCATIONkeys.push(row[cur_sheet_metrics.uidcol]);
 				RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]] = {
 					source_sheet: sheetList[sheetListIdx],

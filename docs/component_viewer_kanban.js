@@ -16,6 +16,18 @@ function loadDataIntoKanbanComponent() {
 	kanbancomponent_setList(listToLoad);
 
 	kanbancomponent_resetdata();	
+	
+	var comma_sep_lis_of_tags = "";
+	for (var i in Object.keys(dataObjects.TAGs)) {
+		console.log(i);
+		console.log(dataObjects.TAGs[i]);
+		console.log(Object.keys(dataObjects.TAGs)[i]);
+		comma_sep_lis_of_tags += Object.keys(dataObjects.TAGs)[i] + ",";
+	};
+	
+	kanbancomponent_buildtaglist_append(comma_sep_lis_of_tags);
+	
+	
 	var sm = ic_soa_data_getSheetList();
 	
 	for (var cur_sheet = 0; cur_sheet < sm.length; cur_sheet++) {

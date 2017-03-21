@@ -159,6 +159,11 @@ function kanbancomponent_buildtaglist_tag(comma_seperated_tag_list, outputTagLis
 	};
 };
 
+//Called when we want more tags in option buttons than are in our component
+function kanbancomponent_buildtaglist_append(comma_seperated_tag_list) {
+	kanbancomponent_buildtaglist_tag(comma_seperated_tag_list,kanbancomponent_chart_obj.tag_list)
+};
+
 //Called as part of init to build the internal tag list
 //kanbancomponent_chart_obj.tag_list
 function kanbancomponent_buildtaglist() {
