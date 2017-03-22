@@ -52,4 +52,23 @@ function rjmlib_ui_table_comparer(index) {
 }
 function rjmlib_ui_table_getCellValue(row, index){ return $(row).children('td').eq(index).html() }
 
-
+function rjmlib_ui_table_selectTableForCopy(tbl_obj) {
+	var el = tbl_obj[0];
+	var body = document.body, range, sel;
+	if (document.createRange && window.getSelection) {
+		range = document.createRange();
+		sel = window.getSelection();
+		sel.removeAllRanges();
+		try {
+			range.selectNodeContents(el);
+			sel.addRange(range);
+		} catch (e) {
+			range.selectNode(el);
+			sel.addRange(range);
+		}
+	} else if (body.createTextRange) {
+		range = body.createTextRange();
+		range.moveToElementText(el);
+		range.select();
+	}	
+};
