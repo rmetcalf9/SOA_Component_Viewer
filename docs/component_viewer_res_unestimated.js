@@ -1,6 +1,8 @@
 "use strict";	
 
-var component_viewer_res_unestimated_tableCols = 4;
+var component_viewer_res_unestimated = {
+	tableCols: 4,
+};
 
 function component_viewer_res_unestimated_getHtml() {
 	var ret = "";
@@ -8,13 +10,10 @@ function component_viewer_res_unestimated_getHtml() {
 	ret += "<p>This page lists all SOA Components that are not in the \"Completed\", \"In UAT\" or \"Obsolete\" states that do not have a Resource Allocation. (“Completed” Resource Allocations are ignored.) Components will appear multiple times if they have more than one tag associated.</p>"
 	//This is implemented in the component_viewer_res_data_componentRequiresEstimate function
 	
-	if (accessLevel=="READWRITE") {
-		component_viewer_res_unestimated_tableCols = 5;
-	};
-	
 	ret += "<table id=\"component_viewer_res_unestimated_main\">";
 	ret += "<tr><th>Source Sheet Name</th><th>Component Name</th><th>Status</th><th>Tags</th>";
 	if (accessLevel=="READWRITE") {
+		component_viewer_res_unestimated.tableCols = component_viewer_res_unestimated.tableCols + 1;
 		ret += "<th>Action</th>";
 	};
 	ret += "</tr>";
@@ -52,7 +51,7 @@ function component_viewer_res_unestimated_tableRowsForTAG(tag, decision_function
 				//Make sure title is only shown where there is at least one item
 				first_row = false;
 				ret = "<tr>";
-				ret += "<th colspan=\"" + component_viewer_res_unestimated_tableCols + "\">" + title + "</th>";
+				ret += "<th colspan=\"" + component_viewer_res_unestimated.tableCols + "\">" + title + "</th>";
 				ret += "</tr>";
 			};
 			ret += "<tr class=\"" + ic_soa_data_getSheetMetrics()[component_obj.source_sheet].css_tag + "\" data-uid=\"" + component_obj.uid + "\">";

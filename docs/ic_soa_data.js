@@ -26,6 +26,7 @@ function ic_soa_data_getSheetMetrics() {
 		ic_soa_data_SheetMetrics["EDF"] = {
 			datarange: 'EDFList!A2:I',
 			sheet_name: 'EDFList',
+			user_component_type_name: 'EDF',
 			css_tag: 'red',
 			default_estimate: 12,
 			indexcol: 1,
@@ -42,6 +43,7 @@ function ic_soa_data_getSheetMetrics() {
 		ic_soa_data_SheetMetrics["INT"] = {
 			datarange: 'Integration!A2:I',
 			sheet_name: 'Integration',
+			user_component_type_name: 'Integration',
 			css_tag: 'green',
 			default_estimate: 7,
 			indexcol: 1,
@@ -58,6 +60,7 @@ function ic_soa_data_getSheetMetrics() {
 		ic_soa_data_SheetMetrics["PRES"] = {
 			datarange: 'Presentation!A2:H',
 			sheet_name: 'Presentation',
+			user_component_type_name: 'Presentation',
 			css_tag: 'blue',
 			default_estimate: 5,
 			toprow: 2,
@@ -73,6 +76,7 @@ function ic_soa_data_getSheetMetrics() {
 		ic_soa_data_SheetMetrics["POINT"] = {
 			datarange: 'Point2Point!A2:H',
 			sheet_name: 'Point2Point',
+			user_component_type_name: 'Point2Point',
 			css_tag: 'yellow',
 			default_estimate: 10,
 			toprow: 2,
@@ -95,7 +99,7 @@ function ic_soa_data_getSheetMetrics() {
 			ordercol: 3
 		};
 		ic_soa_data_SheetMetrics["RESOURCEALLOCATION"] = {
-			datarange: 'ResourceAllocation!A2:K',
+			datarange: 'ResourceAllocation!A2:L',
 			sheet_name: 'ResourceAllocation',
 			toprow: 2,
 			uidcol: 0,

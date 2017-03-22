@@ -16,6 +16,9 @@ function component_viewer_res_getMenuHtml() {
 	ret += "<td>";
 	ret += "<a href=\"javascript:component_viewer_res_displayRES(\'ScheduleBoard\')\">Schedule Board</a>";
 	ret += "</td>";
+	ret += "<td>";
+	ret += "<a href=\"javascript:component_viewer_res_displayRES(\'Project\')\">Project Estimates</a>";
+	ret += "</td>";
 	ret += "</tr></table>";
 
 	return ret;
@@ -46,6 +49,8 @@ function component_viewer_res_getRESHtml(page) {
 		ret += component_viewer_res_schedule_detail_getHtml();
 	} else if (page=="ScheduleBoard") {
 		ret += component_viewer_res_schedule_board_getHtml();
+	} else if (page=="Project") {
+		ret += component_viewer_res_project_getHtml();
 	} else {
 		ret += "<h1>ERROR - Unknown Page</H1>";
 		//alert("Error - unknown page " + page);

@@ -57,7 +57,7 @@ function component_viewer_res_schedule_detail_getTaskHtml(task_obj) {
 	
 	var component_obj = ic_soa_data_getComponentFromUID(task_obj.res_alloc_obj.itemuid);
 	
-	var tbl_class = "";
+	var tbl_class = "unknown";
 	if (typeof(component_obj)!="undefined") {
 		tbl_class = ic_soa_data_getSheetMetrics()[component_obj.source_sheet].css_tag;
 	};

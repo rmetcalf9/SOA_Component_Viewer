@@ -363,26 +363,33 @@ function component_viewer_res_data_getcombinedtagList(res_alloc_obj) {
 	
 	//Step 1 push all EDF/Int/etc tags
 	var component_obj = ic_soa_data_getComponentFromUID(res_alloc_obj.itemuid);
+	var temp_tag_name_hash = [];
 	
 	if (typeof(component_obj)!="undefined") {
 		var arr = [];
 		ic_soa_data_buildtaglist_tag(component_obj.tags, arr)
 		for (var x in arr) {
-			res.push({
-				orig: "obj",
-				value: arr[x]
-			});
+			if (typeof(temp_tag_name_hash[arr[x]])=="undefined") {
+				res.push({
+					orig: "obj",
+					value: arr[x]
+				});
+				temp_tag_name_hash[arr[x]]=arr[x];
+			};
 		};
 	};
 	
-	//Step 2 push all local tags
+	//Step 2 push all local tags ONLY if not already in list
 	var arr = [];
 	ic_soa_data_buildtaglist_tag(res_alloc_obj.tags, arr)
 	for (var x in arr) {
-		res.push({
-			orig: "res",
-			value: arr[x]
-		});
+		if (typeof(temp_tag_name_hash[arr[x]])=="undefined") {
+			res.push({
+				orig: "res",
+				value: arr[x]
+			});
+			temp_tag_name_hash[arr[x]]=arr[x];
+		};
 	};
 	
 	return res;
@@ -401,4 +408,17 @@ function component_viewer_res_data_getcombinedtagString(res_alloc_obj) {
 		res += arr[x].value;
 	};
 	return res;
+};
+
+function component_viewer_res_data_getresourseallocobjUserType(res_alloc_obj) {
+	//Return a nice user string for the type of this resourse allocation. "Misc", "EDF", etc.
+	if (typeof(res_alloc_obj.itemuid)=="undefined") return "Misc";
+	var component_obj = ic_soa_data_getComponentFromUID(res_alloc_obj.itemuid);
+	return ic_soa_data_getSheetMetrics()[component_obj.source_sheet].user_component_type_name;
+};
+
+function component_viewer_res_data_getresourseallocobjCSSTag(res_alloc_obj) {
+	if (typeof(res_alloc_obj.itemuid)=="undefined") return "unknown";
+	var component_obj = ic_soa_data_getComponentFromUID(res_alloc_obj.itemuid);
+	return ic_soa_data_getSheetMetrics()[component_obj.source_sheet].css_tag;
 };

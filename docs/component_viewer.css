@@ -77,6 +77,9 @@ table#component_viewer_res_schedule_main > tbody > tr > td > table > tbody > tr 
 table#component_viewer_res_schedule_main > tbody > tr > td > table > tbody > tr > td > table.task_table.yellow {
 	background-color: yellow;
 }
+table#component_viewer_res_schedule_main > tbody > tr > td > table > tbody > tr > td > table.task_table.unknown {
+	background-color: lightgrey;
+}
 
 svg.component_viewer_res_schedule_board {
 	transform-origin: 0px 0px 0px;
@@ -112,3 +115,32 @@ svg.component_viewer_res_schedule_board > g.lane  line.rendererror {
 	stroke: black;
 }
 
+table#component_viewer_res_project_main {
+	border: 2px solid;
+	border-collapse: collapse;
+}
+
+table#component_viewer_res_project_main > tbody > tr > th {
+	border: 2px solid;
+	padding-top: 10px;
+}
+
+table#component_viewer_res_project_main > tbody > tr > td {
+	border: 0.5px solid;
+}
+
+table#component_viewer_res_project_main > tbody > tr.red {
+	background-color: pink;
+}
+table#component_viewer_res_project_main > tbody > tr.green {
+	background-color: lightgreen;
+}
+table#component_viewer_res_project_main > tbody > tr.blue {
+	background-color: lightblue;
+}
+table#component_viewer_res_project_main > tbody > tr.yellow {
+	background-color: yellow;
+}
+table#component_viewer_res_project_main > tbody > tr.unknown {
+	background-color: lightgrey;
+}
