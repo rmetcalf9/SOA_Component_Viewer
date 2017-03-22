@@ -65,6 +65,10 @@ function component_viewer_res_displayRES(page) {
 	$("#MAIN").html(component_viewer_res_getRESHtml(page));
 	$("#MAIN").css("display","inline");
 	rjmlib_svg_postdisplayfixes();
+	
+	if (page=="Project") {
+		component_viewer_res_project_postHtmlInDom();
+	};
 };
 
 function component_viewer_res_getFailedToScheduleHTML() {

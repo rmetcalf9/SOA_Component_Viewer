@@ -38,6 +38,11 @@ function component_viewer_res_project_getHtml() {
 	return ret;
 };
 
+//Called after the HTML has been put in the Dom
+function component_viewer_res_project_postHtmlInDom() {
+	rjmlib_ui_table_make_tables_sortable("table[id='component_viewer_res_project_main']");
+};
+
 function component_viewer_res_project_getTableStart() {
 	var ret = "";
 	ret += "<table id=\"component_viewer_res_project_main\">";

@@ -10,6 +10,7 @@
 
 <script src="rjm_lib.js"></script>
 <script src="rjm_lib_ui.js"></script>
+<script src="rjm_lib_ui_table.js"></script>
 <script src="rjm_lib_svg.js"></script>
 
 <!--js files for ic_soa_svg sheets-->
@@ -104,6 +105,7 @@
 	
 	function LoadDoc() {
 		rjmlib_ui_init();
+		rjmlib_ui_table_init();
 		//Check Auth
 		board_checkAuth(LoadDoc2);
 	};
