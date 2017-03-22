@@ -118,7 +118,8 @@ function component_viewer_res_project_tableRowsForTAG(tag, decision_function) {
 				ret += "<td>" + res_lane_obj.uid + "</td>";
 				ret += "<td>" + task_obj.start_day + "</td>";
 				ret += "<td>" + task_obj.rate + "%</td>";
-				ret += "<td>" + task_obj.duration + "</td>";
+				//ret += "<td>" + task_obj.duration + "</td>";
+				ret += "<td>" + task_obj.res_alloc_obj.remainingdays + "</td>";
 				ret += "<td>" + task_obj.end_day + "</td>";
 				ret += "<td>" + task_obj.res_alloc_obj.status + "</td>";
 				ret += "<td>" + component_viewer_res_data_getcombinedtagString(task_obj.res_alloc_obj);
