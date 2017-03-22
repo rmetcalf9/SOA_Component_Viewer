@@ -7,7 +7,12 @@ var component_viewer_res_unestimated = {
 function component_viewer_res_unestimated_getHtml() {
 	var ret = "";
 	ret += "<h1>SOA Components that need Estimates</h1>";
-	ret += "<p>This page lists all SOA Components that are not in the \"Completed\", \"In UAT\" or \"Obsolete\" states that do not have a Resource Allocation. (“Completed” Resource Allocations are ignored.) Components will appear multiple times if they have more than one tag associated.</p>"
+	ret += "<p>This page lists all SOA Components that are not in the ";
+	for (var x in component_viewer_res_data_glob.skipped_component_object_status) {
+		if (x>0) ret += ", ";
+		ret += "\"" + component_viewer_res_data_glob.skipped_component_object_status[x] + "\"";
+	};
+	ret += " states that do not have a Resource Allocation. (“Completed” Resource Allocations are ignored.) Components will appear multiple times if they have more than one tag associated.</p>"
 	//This is implemented in the component_viewer_res_data_componentRequiresEstimate function
 	
 	ret += "<table id=\"component_viewer_res_unestimated_main\">";

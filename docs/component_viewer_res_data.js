@@ -1,6 +1,8 @@
 "use strict";	
 
-var component_viewer_res_data_glob = {};
+var component_viewer_res_data_glob = {
+	skipped_component_object_status: ['Ready for UAT','In UAT','In Support','Abandoned'],
+};
 
 //Component Viewer Resourses data manipulation code
 //All API's for changing result type data
@@ -16,9 +18,9 @@ function component_viewer_res_data_componentRequiresEstimate(component_object) {
 		console.log("Warning - passing object with no status to component_viewer_res_data_componentRequiresEstimate");
 		return false;
 	};
-	if (component_object.status=="In UAT") return false;
-	if (component_object.status=="In Support") return false;
-	if (component_object.status=="Abandoned") return false;
+	for (var x in component_viewer_res_data_glob.skipped_component_object_status) {
+		if (component_object.status==component_viewer_res_data_glob.skipped_component_object_status[x]) return false;
+	};
 	return true;
 };
 
