@@ -416,11 +416,13 @@ function component_viewer_res_data_getresourseallocobjUserType(res_alloc_obj) {
 	//Return a nice user string for the type of this resourse allocation. "Misc", "EDF", etc.
 	if (typeof(res_alloc_obj.itemuid)=="undefined") return "Misc";
 	var component_obj = ic_soa_data_getComponentFromUID(res_alloc_obj.itemuid);
+	if (typeof(component_obj)=="undefined") return "Misc***";
 	return ic_soa_data_getSheetMetrics()[component_obj.source_sheet].user_component_type_name;
 };
 
 function component_viewer_res_data_getresourseallocobjCSSTag(res_alloc_obj) {
 	if (typeof(res_alloc_obj.itemuid)=="undefined") return "unknown";
 	var component_obj = ic_soa_data_getComponentFromUID(res_alloc_obj.itemuid);
+	if (typeof(component_obj)=="undefined") return "unknown";
 	return ic_soa_data_getSheetMetrics()[component_obj.source_sheet].css_tag;
 };

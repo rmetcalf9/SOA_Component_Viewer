@@ -78,5 +78,28 @@ function component_viewer_res_getFailedToScheduleHTML() {
 		};
 		ret += "</ul>";
 	};
+	
+	
+	//Also produce a warning if any ResourseAllocations have a component ID which is missing
+	var fir = true;
+	for (var cur_do = 0; cur_do < dataObjects.RESOURCEALLOCATIONkeys.length; cur_do++) {
+		var res_alloc_obj = dataObjects.RESOURCEALLOCATIONs[dataObjects.RESOURCEALLOCATIONkeys[cur_do]];
+		if (typeof(res_alloc_obj.itemuid)!="undefined") {
+			var component_obj = ic_soa_data_getComponentFromUID(res_alloc_obj.itemuid);
+			if (typeof(component_obj)=="undefined") {
+				if (fir) {
+					fir = false;
+					ret += "<h2>Warning - resource alloactions exist with non-existant itemuid's supplied.</h2>";
+					ret += "<ul>";
+				};
+				ret += "<li>" + res_alloc_obj.text + " (itemuid=" + res_alloc_obj.itemuid + ")";
+			};
+		};
+	};
+	if (fir==false) {
+		ret += "</ul>";
+	};
+
+	
 	return ret;
 };
