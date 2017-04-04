@@ -100,7 +100,7 @@ function component_viewer_res_schedule_board_INIT() {
 					rate: resAlloc_obj.assignmentrate,
 					remain: resAlloc_obj.remainingdays,
 					binpack: resAlloc_obj.binpackpriority,
-				}, //Default Obk
+				}, //Default Ok
 				{uid:$(this).data("uid"),orig_comp_status:comp_status}, //passback
 				function (result_obj, pb) { //Ok Callback
 					component_viewer_res_schedule_board_edit_return(false, result_obj, pb);
@@ -124,7 +124,7 @@ function component_viewer_res_schedule_board_INIT() {
 					rate: "",
 					remain: "",
 					binpack: "99999",
-				}, //Default Obk
+				}, //Default Ok
 				undefined, //passback
 				function (result_obj, passback) { //Ok Callback
 					component_viewer_res_schedule_board_create_return(result_obj);
@@ -174,6 +174,7 @@ function component_viewer_res_schedule_board_common_validation(result_obj) {
 	return result_obj;
 };
 
+//used in create new resourse allocaiton link
 function component_viewer_res_schedule_board_create_return(result_obj) {
 	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
 	if (typeof(result_obj)=="undefined") return;

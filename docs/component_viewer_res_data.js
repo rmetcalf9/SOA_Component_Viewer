@@ -236,7 +236,7 @@ function component_viewer_res_data_save_resourse_allocation_into_batch(resourseA
 function component_viewer_res_data_create_unlinked_estimate(edited_value_obj) {
 	component_viewer_res_data_create_estimate_INTERNAL(
 		edited_value_obj, 
-		"", //No component
+		undefined, //No component
 		edited_value_obj.remain //Origional days same as remain
 	);
 }
