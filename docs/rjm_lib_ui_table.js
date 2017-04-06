@@ -13,7 +13,7 @@ function rjmlib_ui_table_init() {
 	$(document).off('click.rjmlib_ui_table_init').on('click.rjmlib_ui_table_init', "table.rjmlib_ui_table_init_setup > tbody > tr > th", function (event) {
 		
 		var table = $(this).parents('table').eq(0)
-		var rows = table.find('tr:gt(0)').toArray().sort(rjmlib_ui_table_comparer($(this).index()))
+		var rows = table.find('> tbody > tr:gt(0)').toArray().sort(rjmlib_ui_table_comparer($(this).index()))
 		this.asc = !this.asc
 		if (!this.asc){rows = rows.reverse()}
 		for (var i = 0; i < rows.length; i++){table.append(rows[i])}		
