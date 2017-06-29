@@ -64,6 +64,9 @@ function knabancomponent_getcardHTML(data_row_and_pos,inc_edit_icon) {
 	html += knabancomponent_getcardHTML_tagdivcontents(data_row_and_pos, inc_edit_icon);
 	html += '</div>';
 	
+	if (typeof(data_row_and_pos.data_obj.statusX) != "undefined") {
+		html += "(" + data_row_and_pos.data_obj.statusX + ")";
+	};
 	
 	//html += ' (ORDER=' + data_row_and_pos.$order + ')'; //DEBUG LINE TO DISPLAY ORDER
 	html += '</div>';

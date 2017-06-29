@@ -52,19 +52,27 @@ function getNOPARAMHtml() {
 	ret += "<tr>";
 	ret += "<td colspan=5>";
 
-	ret += "<h1>Components grouped by TAG</h1><table class=\"kanbancomponent\"><tr>";
-	for (var key in dataObjects.TAGs) {
-		ret += "<th>" + key + "</th>"; 
-	};
-	ret += "</tr><tr>";
-	var sm = ic_soa_data_getSheetMetrics();
+	ret += "<br><h1>Components in development (or planned) grouped by TAG</h1>"
+	ret += componentsGroupedByTagTable(displayItemDevelopmentState);
 
+	ret += "</td></tr><tr>";
+	ret += "<td colspan=5>";
+
+	ret += "<br><br>"
+	ret += "<h1>TAG list</h1>"
+	ret += "<ul>"
 	for (var key in dataObjects.TAGs) {
-		ret += "<td valign=\"top\">";
-		ret += displayItemsWithTag(key,sm);
-		ret += "</td>";
-	};
-	ret += "</tr></table>";
+		ret += "<li>" + key + "</li>";
+	}
+	ret += "</ul>"
+	
+	ret += "</td></tr><tr>";
+	ret += "<td colspan=5>";
+
+
+	ret += "<br><h1>Components grouped by TAG</h1>";
+	ret += "<p>NEW Excluded, status' excluded='In UAT', 'In Support', 'Abandoned'</p>"
+	ret += componentsGroupedByTagTable(displayItemAnyState);
 
 	ret += "</td>";
 	ret += "</tr>";
@@ -74,17 +82,57 @@ function getNOPARAMHtml() {
 	ret += "</table>";
 	return ret;
 };
-function displayItemsWithTag(tag,sm) {
+
+function componentsGroupedByTagTable(filterFN) {
+	var ret = "";
+	
+	var colHTML = [];
+	var sm = ic_soa_data_getSheetMetrics();
+	
+	ret += "<table class=\"kanbancomponent\"><tr>";
+	for (var key in dataObjects.TAGs) {
+		colHTML[key] = displayItemsWithTag(key,sm, filterFN);
+		if (colHTML[key] != "") ret += "<th>" + key + "</th>"; 
+	};
+	ret += "</tr><tr>";
+
+	for (var key in dataObjects.TAGs) {
+		if (colHTML[key] != "") {
+			ret += "<td valign=\"top\">";
+			ret += colHTML[key];
+			ret += "</td>";
+		}
+	};
+	ret += "</tr></table>";
+
+	return ret;
+}
+
+function displayItemAnyState(tag, item) {
+	if (ic_soa_data_istaginlist(tag, item.tags)) return true;
+	return false;
+}
+function displayItemDevelopmentState(tag, item) {
+	if (item.status=="In UAT") return false;
+	if (item.status=="In Support") return false;
+	if (item.status=="In Abandoned") return false;
+	
+	if (tag==="NEW") return false;
+	return displayItemAnyState(tag,item);
+}
+
+function displayItemsWithTag(tag,sm, filterFN) {
 	var ret = "";
 	//Complete misuse of this funciton
 	for (cur_do = 0; cur_do < dataObjects.EDFkeys.length; cur_do++) {
 		var cur = dataObjects.EDFs[dataObjects.EDFkeys[cur_do]];
-		if (ic_soa_data_istaginlist(tag, cur.tags)) {
+		if (filterFN(tag, cur)) {
 			ret += knabancomponent_getcardHTML({
 				data_obj: {
 					$css: sm["EDF"].css_tag,
 					text: "<a href=\"javascript:displayEDF('" + cur.uid + "')\">" + cur.name + "</a>",
 					tags: cur.tags,
+					statusX: cur.status,
 				},
 				data_pos: -1,
 			},false);
@@ -92,12 +140,13 @@ function displayItemsWithTag(tag,sm) {
 	}
 	for (var cur_do = 0; cur_do < dataObjects.INTkeys.length; cur_do++) {
 		var cur = dataObjects.INTs[dataObjects.INTkeys[cur_do]];
-		if (ic_soa_data_istaginlist(tag, cur.tags)) {
+		if (filterFN(tag, cur)) {
 			ret += knabancomponent_getcardHTML({
 				data_obj: {
 					$css: sm["INT"].css_tag,
 					text: "<a href=\"javascript:displayINT('" + cur.uid + "')\">" + cur.name + "</a>",
 					tags: cur.tags,
+					statusX: cur.status,
 				},
 				data_pos: -1,
 			},false);
@@ -105,12 +154,13 @@ function displayItemsWithTag(tag,sm) {
 	}
 	for (var cur_do = 0; cur_do < dataObjects.PRESkeys.length; cur_do++) {
 		var cur = dataObjects.PRESs[dataObjects.PRESkeys[cur_do]];
-		if (ic_soa_data_istaginlist(tag, cur.tags)) {
+		if (filterFN(tag, cur)) {
 			ret += knabancomponent_getcardHTML({
 				data_obj: {
 					$css: sm["PRES"].css_tag,
 					text: "<a href=\"javascript:displayPRES('" + cur.uid + "')\">" + cur.name + "</a>",
 					tags: cur.tags,
+					statusX: cur.status,
 				},
 				data_pos: -1,
 			},false);
@@ -118,12 +168,13 @@ function displayItemsWithTag(tag,sm) {
 	}
 	for (var cur_do = 0; cur_do < dataObjects.POINTkeys.length; cur_do++) {
 		var cur = dataObjects.POINTs[dataObjects.POINTkeys[cur_do]];
-		if (ic_soa_data_istaginlist(tag, cur.tags)) {
+		if (filterFN(tag, cur)) {
 			ret += knabancomponent_getcardHTML({
 				data_obj: {
 					$css: sm["POINT"].css_tag,
 					text: "<a href=\"javascript:displayPOINT('" + cur.uid + "')\">" + cur.name + "</a>",
 					tags: cur.tags,
+					statusX: cur.status,
 				},
 				data_pos: -1,
 			},false);
