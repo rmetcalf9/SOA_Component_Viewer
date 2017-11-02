@@ -8,6 +8,12 @@ SOA Component Viewer is a JavaScript based web-application that uses the google 
 SOA Component data is stored in a google sheets document. The ID for the exact document is uses is hard coded in docs/ic_soa_data.js (function ic_soa_data_getSheetID()). This document also describes the data ranges used for each type of component.
 SOA Component Viewer users should have access to this google sheet document. If they have read-only access they will be able to view the SOA components. If they are granted read/write access they will also be able to use the Kanban chart to change Component status’ and tags.
 
+## Run local copy on a Development machine
+I use python to do this, change to the docs directory and type
+````
+python -m http.server 8000
+````
+
 ## Component Types
 
 |Short Name|Full Name|Description|
