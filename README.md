@@ -24,6 +24,34 @@ python -m http.server 8000
 |Point2Point|Point to Point Integration|A direct integration between two systems.|
 
 
+## Direct links to components:
+Link depends on mode used:
+
+### EDF Mode
+
+Example:
+````
+http://localhost:8000/component_viewer.html?mode=EDF&name=Student
+````
+name param is name of EDF to view
+
+### INT Mode
+
+Example:
+````
+http://localhost:8000/component_viewer.html?mode=INT&name=TalentLink%20-%20Staff%20integration
+````
+name param is name of Integrations to view
+
+### SYSTEM Mode
+
+Example:
+````
+http://localhost:8000/component_viewer.html?mode=SYSTEM&name=Ebiz
+````
+
+name param is name of System to view
+
 
 ## Confluence Link
 

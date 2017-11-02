@@ -166,26 +166,42 @@
 				LoadStatusList(result);
 
 				postLoadDataObjectsInit();
-
 				//console.log(dataObjects);
 				if (QueryString.mode=="EDF") {
 					if (typeof(QueryString.name)=="undefined") {
+						console.log('Integration selected but no EDF param')
 						displayNOPARAM();
 					} else {
 						var edfobj = ic_soa_data_getEDFFromName(QueryString.name, dataObjects);
 						if (typeof(edfobj)=="undefined") {
+							console.log('Couldn\'t get edf object ' + QueryString.name)
+							displayNOPARAM();
 						} else {
 							displayEDF(edfobj.uid);
 						};
 					};
 				} else if (QueryString.mode=="SYSTEM") {
-					displaySYSTEM("SYSTEM");
+					if (typeof(QueryString.name)=="undefined") {
+						console.log('System selected but no SYSTEM param')
+						displayNOPARAM();
+					} else {
+						var system_object = ic_soa_data_getSystemFromName(QueryString.name, dataObjects);
+						if (typeof(system_object)=="undefined") {
+							console.log('Couldn\'t get system object ' + QueryString.name)
+							displayNOPARAM();
+						} else {
+							displaySYSTEM(system_object.uid);
+						}
+					}
 				} else if (QueryString.mode=="INT") {
 					if (typeof(QueryString.name)=="undefined") {
+						console.log('Integration selected but no INT param')
 						displayNOPARAM();
 					} else {
 						var intobj = ic_soa_data_getINTFromName(QueryString.name, dataObjects);
 						if (typeof(intobj)=="undefined") {
+							console.log('Couldn\'t get integration object ' + QueryString.name)
+							displayNOPARAM();
 						} else {
 							displayINT(intobj.uid);
 						};
