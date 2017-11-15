@@ -168,6 +168,13 @@ function component_viewer_res_data_save_resourse_allocation_into_batch(resourseA
 		],
 	});
 	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.descriptioncol) + rec.sheet_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[rec.description]
+		],
+	});
+	board_append_saveBatch({
 		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.originaldayscol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
@@ -255,6 +262,7 @@ function component_viewer_res_data_create_estimate_INTERNAL(edited_value_obj, co
 		uid: new_row_uid,
 		itemuid: component_uid,
 		text: edited_value_obj.text,
+		description: edited_value_obj.description,
 		resourcelaneassignment: edited_value_obj.lane,
 		assignmentrate: edited_value_obj.rate,
 		originaldays: origional_days,
@@ -300,6 +308,7 @@ function component_viewer_res_data_edit_estimate(estimate_uid, edited_value_obj,
 	};
 	
 	resAlloc_obj.text = edited_value_obj.text;
+	resAlloc_obj.description = edited_value_obj.description;
 	resAlloc_obj.resourcelaneassignment = edited_value_obj.lane;
 	resAlloc_obj.assignmentrate = edited_value_obj.rate;
 	resAlloc_obj.remainingdays = edited_value_obj.remain;

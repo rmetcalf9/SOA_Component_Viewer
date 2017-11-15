@@ -48,6 +48,7 @@ function component_viewer_res_project_getTableStart() {
 	ret += "<table id=\"component_viewer_res_project_main\">";
 	ret += "<tr><th>Text</th><th>Type</th><th>Resource</th><th>Start Day</th><th>Rate</th><th>Remaining Days</th><th>End Day</th>";
 	ret += "<th>Status</th>";
+	ret += "<th>Description</th>";
 	ret += "<th>Tags ";
 	ret += " <a href=\"#component_viewer_res_project_sel\">Select for Copy</a>";
 	ret += "</th>";
@@ -129,6 +130,7 @@ function component_viewer_res_project_tableRowsForTAG(tag, decision_function) {
 				ret += "<td>" + task_obj.res_alloc_obj.remainingdays + "</td>";
 				ret += "<td>" + task_obj.end_day + "</td>";
 				ret += "<td>" + task_obj.res_alloc_obj.status + "</td>";
+				ret += "<td>" + rjmlib_blankStringInsteadOfUndefined(task_obj.res_alloc_obj.description) + "</td>";
 				ret += "<td>" + component_viewer_res_data_getcombinedtagString(task_obj.res_alloc_obj);
 				if (combined_tag_list.length>1) ret += " WARNING MUTIPLE REPORT!!";
 				ret +=	"</td>";

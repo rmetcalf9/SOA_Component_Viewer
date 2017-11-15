@@ -129,3 +129,8 @@ function rjmllib_getieersion() {
 
     return undefined;
 }
+
+function rjmlib_blankStringInsteadOfUndefined(str) {
+    if (typeof(str) == 'undefined') return ''
+    return str
+}

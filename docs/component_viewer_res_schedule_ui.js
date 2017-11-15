@@ -14,6 +14,9 @@ function component_viewer_res_schedule_ui_INIT() {
 	formHTML += "<tr><th>Text:</th><td colspan=\"2\">";
 	formHTML += "<input class=\"text\" type=\"text\"/ size=\"50\">";
 	formHTML += "</td></tr>";
+	formHTML += "<tr><th>Work description:</th><td colspan=\"2\">";
+	formHTML += "<input class=\"description\" type=\"text\"/ size=\"50\">";
+	formHTML += "</td></tr>";
 	formHTML += "<tr><th>Lane:</th><td>";
 	formHTML += "<select class=\"lane\" >";
 	formHTML += "<option value=\"" + component_viewer_res_schedule_ui_globs.select_any_lane_value + "\">Select Any Lany</option>";
@@ -78,6 +81,7 @@ function component_viewer_res_schedule_ui_addedit(
 
 	if (default_value_obj.rate==0) default_value_obj.rate="";
 	$("#component_viewer_res_schedule_ui_add_edit_work input.text").val(default_value_obj.text);
+	$("#component_viewer_res_schedule_ui_add_edit_work input.description").val(default_value_obj.description);
 	$("#component_viewer_res_schedule_ui_add_edit_work select.lane").val(default_value_obj.lane);
 	$("#component_viewer_res_schedule_ui_add_edit_work input.rate").val(default_value_obj.rate);
 	$("#component_viewer_res_schedule_ui_add_edit_work input.remain").val(default_value_obj.remain);
@@ -126,6 +130,7 @@ function component_viewer_res_schedule_ui_addedit_readresult() {
 	
 	var ret_obj = {
 		text: $("#component_viewer_res_schedule_ui_add_edit_work input.text").val(),
+		description: $("#component_viewer_res_schedule_ui_add_edit_work input.description").val(),
 		lane: lane,
 		rate: $("#component_viewer_res_schedule_ui_add_edit_work input.rate").val(),
 		remain: $("#component_viewer_res_schedule_ui_add_edit_work input.remain").val(),

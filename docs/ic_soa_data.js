@@ -99,7 +99,7 @@ function ic_soa_data_getSheetMetrics() {
 			ordercol: 3
 		};
 		ic_soa_data_SheetMetrics["RESOURCEALLOCATION"] = {
-			datarange: 'ResourceAllocation!A2:L',
+			datarange: 'ResourceAllocation!A2:M',
 			sheet_name: 'ResourceAllocation',
 			toprow: 2,
 			uidcol: 0,
@@ -114,6 +114,7 @@ function ic_soa_data_getSheetMetrics() {
 			binpackprioritycol: 9,
 			tagscol: 10,
 			datecreatecol: 11,
+			descriptioncol: 12,
 		};	
 	}; //if undefined
 	return ic_soa_data_SheetMetrics;
@@ -409,6 +410,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 					binpackpriority: parseInt(row[cur_sheet_metrics.binpackprioritycol]),
 					tags: row[cur_sheet_metrics.tagscol],
 					datecreate: row[cur_sheet_metrics.datecreatecol],
+					description: row[cur_sheet_metrics.descriptioncol],
 				}
 			}
 		} else {

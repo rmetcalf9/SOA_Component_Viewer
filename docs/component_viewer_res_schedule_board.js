@@ -96,6 +96,7 @@ function component_viewer_res_schedule_board_INIT() {
 				true, //Edit Mode
 				{
 					text: resAlloc_obj.text, 
+					description: resAlloc_obj.description,
 					lane: resAlloc_obj.resourcelaneassignment,
 					rate: resAlloc_obj.assignmentrate,
 					remain: resAlloc_obj.remainingdays,
@@ -120,6 +121,7 @@ function component_viewer_res_schedule_board_INIT() {
 				false, //Edit Mode
 				{
 					text: "", 
+					description: "",
 					lane: "",
 					rate: "",
 					remain: "",
