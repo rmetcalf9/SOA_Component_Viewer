@@ -20,7 +20,7 @@ function component_viewer_tags_getUnestimatedHtml(tagobj) {
 		ret += "<td>" + component_obj.tags + "</td>";
 		if (accessLevel=="READWRITE") {
 			ret += "<td>";
-			ret += "<a href=\"#component_viewer_res_unestimated_click_table_row\">Add Estimate</a>";
+			ret += "<a href=\"#component_viewer_tags_click_unestimated\">Add Estimate</a>";
 			ret += "</td>";
 		};
 		
@@ -30,26 +30,43 @@ function component_viewer_tags_getUnestimatedHtml(tagobj) {
 
 	return ret;
 }
+
+function component_viewer_tags_click_unestimated_table_row(link_clicked) {
+	component_viewer_res_unestimated_click_table_row(link_clicked);
+	console.log('TODO extra hook to add row to resourse allocations');
+	
+	//TODO Re-do resourse caculations
+	//TODO get task_obj for new task
+	//TODO use component_viewer_tags_click_getResAllocTableRow for new table row
+	$("#component_viewer_tags_res_alloc_main > tbody").append("<tr><td>aa</td></tr>")
+}
+
+function component_viewer_tags_click_getResAllocTableRow(task_obj) {
+	var ret = "";
+	ret += "<tr class=\"" + component_viewer_res_data_getresourseallocobjCSSTag(task_obj.res_alloc_obj) + "\">";
+	ret += "<td>" + task_obj.res_alloc_obj.text + "</td>";
+	ret += "<td>" + component_viewer_res_data_getresourseallocobjUserType(task_obj.res_alloc_obj) + "</td>";
+	ret += "<td>" + task_obj.resourseLane.uid + "</td>";
+	ret += "<td>" + task_obj.start_day + "</td>";
+	ret += "<td>" + task_obj.rate + "%</td>";
+	//ret += "<td>" + task_obj.duration + "</td>";
+	ret += "<td>" + task_obj.res_alloc_obj.remainingdays + "</td>";
+	ret += "<td>" + task_obj.end_day + "</td>";
+	ret += "<td>" + task_obj.res_alloc_obj.status + "</td>";
+	ret += "<td>" + rjmlib_blankStringInsteadOfUndefined(task_obj.res_alloc_obj.description) + "</td>";
+	ret += "<td>" + component_viewer_res_data_getcombinedtagString(task_obj.res_alloc_obj);
+	ret +=	"</td>";
+	
+	ret += "</tr>";
+	return ret;
+}
+
 function component_viewer_tags_getResourseAllocationHtml(tagobj) {
 	var ret = "";
 	ret += "<h2>Resourse Allocations</h2>";
-	ret += component_viewer_res_project_getTableStart();
+	ret += component_viewer_res_project_getTableStart("component_viewer_tags_res_alloc_main");
 	tagobj.getTasks().map(function (task_obj) {
-		ret += "<tr class=\"" + component_viewer_res_data_getresourseallocobjCSSTag(task_obj.res_alloc_obj) + "\">";
-		ret += "<td>" + task_obj.res_alloc_obj.text + "</td>";
-		ret += "<td>" + component_viewer_res_data_getresourseallocobjUserType(task_obj.res_alloc_obj) + "</td>";
-		ret += "<td>" + task_obj.resourseLane.uid + "</td>";
-		ret += "<td>" + task_obj.start_day + "</td>";
-		ret += "<td>" + task_obj.rate + "%</td>";
-		//ret += "<td>" + task_obj.duration + "</td>";
-		ret += "<td>" + task_obj.res_alloc_obj.remainingdays + "</td>";
-		ret += "<td>" + task_obj.end_day + "</td>";
-		ret += "<td>" + task_obj.res_alloc_obj.status + "</td>";
-		ret += "<td>" + rjmlib_blankStringInsteadOfUndefined(task_obj.res_alloc_obj.description) + "</td>";
-		ret += "<td>" + component_viewer_res_data_getcombinedtagString(task_obj.res_alloc_obj);
-		ret +=	"</td>";
-		
-		ret += "</tr>";
+		ret += component_viewer_tags_click_getResAllocTableRow(task_obj);
 	})
 	ret += component_viewer_res_project_getTableEnd();
 	return ret;
@@ -76,7 +93,11 @@ function component_viewer_tags_getHtml(tagobj) {
 
 
 function component_viewer_tags_INIT() {
-	//TODO
+	$(document).off('click.component_viewer_tags_click_unestimated').on('click.component_viewer_tags_click_unestimated', "a[href$='#component_viewer_tags_click_unestimated']", function (event) {
+		component_viewer_tags_click_unestimated_table_row($(this).closest("tr"));
+		event.preventDefault();
+	});
+
 };
 
 function component_viewer_tags_display(tagname) {
