@@ -52,21 +52,24 @@ function getNOPARAMHtml() {
 	ret += "<tr>";
 	ret += "<td colspan=5>";
 
+	ret += "<br>"
+	ret += "<br><b>Tags:</b>"
+	for (var key in dataObjects.TAGs) {
+		ret += " <a href=\"javascript:component_viewer_tags_display('" + key + "')\">" + key + "</a>";
+		ret += ", ";
+	}
+	ret += "<br>"
+	
+	ret += "</td></tr>";
+
+	ret += "<tr>";
+	ret += "<td colspan=5>";
+
 	ret += "<br><h1>Components in development (or planned) grouped by TAG</h1>"
 	ret += componentsGroupedByTagTable(displayItemDevelopmentState);
 
-	ret += "</td></tr><tr>";
-	ret += "<td colspan=5>";
-
-	ret += "<br><br>"
-	ret += "<h1>TAG list</h1>"
-	ret += "<ul>"
-	for (var key in dataObjects.TAGs) {
-		ret += "<li>" + key + "</li>";
-	}
-	ret += "</ul>"
-	
-	ret += "</td></tr><tr>";
+	ret += "</td></tr>";
+	ret += "<tr>";
 	ret += "<td colspan=5>";
 
 

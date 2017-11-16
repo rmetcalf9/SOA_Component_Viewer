@@ -245,7 +245,8 @@
 							console.log('Couldn\'t get tag object ' + QueryString.name)
 							displayNOPARAM();
 						} else {
-							component_viewer_tags_display(tagobj);
+							//Must pass name because also called from javascript
+							component_viewer_tags_display(tagobj.name);
 						};
 					};
 				} else {

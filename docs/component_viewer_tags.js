@@ -19,7 +19,8 @@ function component_viewer_tags_INIT() {
 	//TODO
 };
 
-function component_viewer_tags_display(tagobj) {
+function component_viewer_tags_display(tagname) {
+	var tagobj = ic_soa_data_tags_getObject(tagname, dataObjects);
 	$("#MAIN").html(component_viewer_tags_getHtml(tagobj));
 	$("#MAIN").css("display","inline");
 };
