@@ -21,6 +21,7 @@
 
 <!-- js files for getting IC SOA data from sheet -->
 <script src="ic_soa_data.js" type="text/javascript"></script>
+<script src="ic_soa_data_tags.js" type="text/javascript"></script>
 
 <!-- js files for different view types broken down to make this file smaller -->
 <script src="component_viewer_edf.js" type="text/javascript"></script>
@@ -37,6 +38,7 @@
 <script src="component_viewer_res_schedule_detail.js" type="text/javascript"></script>
 <script src="component_viewer_res_schedule_board.js" type="text/javascript"></script>
 <script src="component_viewer_res_schedule_ui.js" type="text/javascript"></script>
+<script src="component_viewer_tags.js" type="text/javascript"></script>
 
 <!-- kanbancompnent -->
 <script src="kanbancomponent/kanbancomponent.js"></script>
@@ -52,6 +54,7 @@
 	var sheet_data = ic_soa_data_getSheetMetrics();
 	var spreadsheetId=ic_soa_data_getSheetID();
 	var dataObjects={};
+	var globalFunctions={}
 	var statusList=[];
 
 	//variable to hold access level to spradsheet
@@ -81,6 +84,32 @@
 	  } 
 	  return query_string;
 	}();
+
+	// Return the html for a page. Content is the page HTML, returned value is page with menu etc.
+	function GetPageContentWithMenu(content) {
+		var ret = "";
+		ret += '<table>';
+		ret += '<tr>';
+		ret += '<td>';
+
+		ret += '</td>';
+		ret += '</tr>';
+		ret += '<tr class="main">';
+		ret += '<td valign="top">';
+		
+		ret += GetMenu();
+
+		ret += content;
+		ret += "</tr>"
+		ret += "</table>"
+
+
+		ret += '</td>';
+		ret += '</tr>';
+		ret += '</table>';
+		return ret;
+	}
+	globalFunctions.GetPageContentWithMenu = GetPageContentWithMenu;
 
 	function GetMenu() {
 		var ret = "";
@@ -206,6 +235,19 @@
 							displayINT(intobj.uid);
 						};
 					};
+				} else if (QueryString.mode=="TAG") {
+					if (typeof(QueryString.name)=="undefined") {
+						console.log('TAG selected but no TAG param')
+						displayNOPARAM();
+					} else {
+						var tagobj = ic_soa_data_tags_getObject(QueryString.name, dataObjects);
+						if (typeof(tagobj)=="undefined") {
+							console.log('Couldn\'t get tag object ' + QueryString.name)
+							displayNOPARAM();
+						} else {
+							component_viewer_tags_display(tagobj);
+						};
+					};
 				} else {
 					displayNOPARAM();
 				};
@@ -220,6 +262,7 @@
 		component_viewer_res_schedule_board_INIT();
 		component_viewer_res_schedule_ui_INIT();
 		component_viewer_res_project_INIT();
+		component_viewer_tags_INIT();
 		component_viewer_res_data_computeRequiredEstimates();
 	};
 	

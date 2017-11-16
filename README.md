@@ -14,6 +14,14 @@ I use python to do this, change to the docs directory and type
 python -m http.server 8000
 ````
 
+## Seeing the data
+
+Load the page and open the console. Type the following:
+````
+dataObjects
+````
+You should see the data structures that have been loaded.
+
 ## Component Types
 
 |Short Name|Full Name|Description|
@@ -51,6 +59,14 @@ http://localhost:8000/component_viewer.html?mode=SYSTEM&name=Ebiz
 ````
 
 name param is name of System to view
+
+
+### TAG Mode
+
+Example:
+````
+http://localhost:8000/component_viewer.html?mode=TAG&name=SIMP-StuJourney
+````
 
 
 ## Confluence Link

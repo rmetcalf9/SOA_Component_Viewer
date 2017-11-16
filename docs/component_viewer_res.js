@@ -32,16 +32,6 @@ function component_viewer_res_updateMenuText() {
 
 function component_viewer_res_getRESHtml(page) {
 	var ret = "";
-	ret += '<table>';
-	ret += '<tr>';
-	ret += '<td>';
-
-	ret += '</td>';
-	ret += '</tr>';
-	ret += '<tr class="main">';
-	ret += '<td valign="top">';
-	
-	ret += GetMenu();
 
 	if (page=="Unestimated") {
 		ret += component_viewer_res_unestimated_getHtml();
@@ -55,10 +45,7 @@ function component_viewer_res_getRESHtml(page) {
 		ret += "<h1>ERROR - Unknown Page</H1>";
 		//alert("Error - unknown page " + page);
 	}
-	ret += '</td>';
-	ret += '</tr>';
-	ret += '</table>';	
-	return ret;
+	return globalFunctions.GetPageContentWithMenu(ret);
 };
 
 function component_viewer_res_displayRES(page) {
