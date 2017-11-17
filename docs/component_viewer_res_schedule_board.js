@@ -104,10 +104,10 @@ function component_viewer_res_schedule_board_INIT() {
 				}, //Default Ok
 				{uid:$(this).data("uid"),orig_comp_status:comp_status}, //passback
 				function (result_obj, pb) { //Ok Callback
-					component_viewer_res_schedule_board_edit_return(false, result_obj, pb);
+				component_viewer_res_schedule_ui_addedit_commonpost(false, result_obj, pb, postEditPressedScheduleNotifyFN)
 				},
 				function (result_obj, pb) { //Complete Callback
-					component_viewer_res_schedule_board_edit_return(true, result_obj, pb);
+				component_viewer_res_schedule_ui_addedit_commonpost(true, result_obj, pb, postEditPressedScheduleNotifyFN)
 				},
 				comp_status
 			);
@@ -193,10 +193,6 @@ function component_viewer_res_schedule_board_create_return(result_obj) {
 	component_viewer_res_displayRES("ScheduleBoard");
 
 }
-
-function component_viewer_res_schedule_board_edit_return(complete_pressed, result_obj, pb) {
-	component_viewer_res_schedule_ui_addedit_commonpost(complete_pressed, result_obj, pb, postEditPressedScheduleNotifyFN)
-};
 
 function postEditPressedScheduleNotifyFN() {
 	component_viewer_res_displayRES("ScheduleBoard");

@@ -116,15 +116,13 @@ function component_viewer_tags_editResourseAllocation(tableRowClicked) {
 		}, //Default Ok
 		{uid:tableRowClicked.data("uid"),orig_comp_status:comp_status}, //passback
 		function (result_obj, pb) { //Ok Callback
-			component_viewer_res_schedule_board_edit_return(false, result_obj, pb);
+			component_viewer_res_schedule_ui_addedit_commonpost(false, result_obj, pb, component_viewer_tags_secheduledResoursesUpdated)
 		},
 		function (result_obj, pb) { //Complete Callback
-			component_viewer_res_schedule_board_edit_return(true, result_obj, pb);
+			component_viewer_res_schedule_ui_addedit_commonpost(true, result_obj, pb, component_viewer_tags_secheduledResoursesUpdated)
 		},
 		comp_status
 	);
-
-	console.log(resAlloc_obj);
 };
 
 function component_viewer_tags_INIT() {
