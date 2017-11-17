@@ -98,6 +98,48 @@ function component_viewer_tags_getResourseAllocationHtml(tagobj) {
 	return ret;
 }
 
+function component_viewer_tags_gomSample_getHtml(tagobj) {
+	var ret = "";
+	ret += "<h2>Sample ROM</h2>";
+	ret += "Developer days are the remaining days, completed items not shown."
+	ret += "<table id=\"component_viewer_res_sample_rom\">";
+	ret += "<tr>";
+	ret += "<th>Owner</th>";
+	ret += "<th>Task</th>";
+	ret += "<th>ROM<BR>(Developer Days)</th>";
+	ret += "<th>Notes";
+	ret += " <a href=\"#component_viewer_res_project_sel\">Select for Copy</a>";
+	ret += "</th>";
+	ret += "</tr>";
+	var developmentTotal = 0;
+	tagobj.getResourseAllocations().filter( function (raobj) {
+		return (raobj.status != "Completed");
+	}).map( function (res_alloc_obj) {
+		developmentTotal += res_alloc_obj.remainingdays;
+		ret += "<tr class=\"" + component_viewer_res_data_getresourseallocobjCSSTag(res_alloc_obj) + "\">";
+		if (component_viewer_res_data_getresourseallocobjCSSTag(res_alloc_obj) == "unknown") {
+			ret += "<td></td>"; // Owner
+		} else {
+			ret += "<td>SOA Development</td>"; // Owner
+		}
+		ret += "<td>" + res_alloc_obj.text + "</td>"; //Task
+		ret += "<td class=\"est_cell\">" + res_alloc_obj.remainingdays + " days" + "</td>"; //ROM
+		ret += "<td>" + rjmlib_blankStringInsteadOfUndefined(res_alloc_obj.description) + "</td>"; //Notes
+		ret += "</tr>";
+	});
+	var uatTotal = Math.round(developmentTotal * 0.15);
+	var earlyLifeTotal = Math.round(developmentTotal * 0.05);
+	var workstreamLeadTotal = Math.round(developmentTotal * 0.2);
+	var ROMTotal = developmentTotal + uatTotal + earlyLifeTotal + workstreamLeadTotal;
+	ret += "<tr><th></th><th>Development Total</th><th class=\"est_cell\">" + developmentTotal + " days</th><th></th></tr>";
+	ret += "<tr><td></td><td>+ UAT Support (15%)</td><td class=\"est_cell\">" + uatTotal + " days</td><td> Historically development estimates have not added a % overhead for this</td></tr>";
+	ret += "<tr><td></td><td>+ Early Life Support (5%)</td><td class=\"est_cell\">" + earlyLifeTotal + " days</td><td> Historically development estimates have not added a % overhead for this</td></tr>";
+	ret += "<tr><td></td><td>+ Technical Workstream Lead / SOA Enterprise Lead (20%)</td><td class=\"est_cell\">" + workstreamLeadTotal + " days</td><td> Historically development estimates have not added a % overhead for this</td></tr>";
+	ret += "<tr><th></th><th>ROM Total</th><th class=\"est_cell\">" + ROMTotal + " days</th><th></th></tr>";
+	ret += "</table>";
+	return ret;
+}
+
 function component_viewer_tags_getHtml(tagobj) {
 	
 	var ret = ""
@@ -110,8 +152,7 @@ function component_viewer_tags_getHtml(tagobj) {
 	ret += component_viewer_tags_getResourseAllocationHtml(tagobj);
 	ret += "</td></tr>";
 	ret += "</table>";
-	ret += "<h2>Sample ROM</h2>";
-	ret += "TODO";
+	ret += component_viewer_tags_gomSample_getHtml(tagobj);
 
 	return globalFunctions.GetPageContentWithMenu(ret);
 };
