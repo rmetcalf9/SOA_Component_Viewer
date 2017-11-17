@@ -207,7 +207,7 @@ function component_viewer_tags_createNewRsourseAllocation() {
 			}, //Default Ok
 			undefined, //passback
 			function (result_obj, passback) { //Ok Callback
-				component_viewer_res_schedule_ui_new_commonpost(result_obj, component_viewer_tags_secheduledResoursesUpdated)
+				component_viewer_res_schedule_ui_new_commonpost(undefined, result_obj, component_viewer_tags_secheduledResoursesUpdated)
 			},
 			function (result_obj, passback) { //Complete Callback
 				console.log("ERROR - supposadaly unreachable code");

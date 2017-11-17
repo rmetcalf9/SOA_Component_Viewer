@@ -151,7 +151,7 @@ function component_viewer_res_schedule_board_INIT() {
 
 //used in create new resourse allocaiton link
 function component_viewer_res_schedule_board_create_return(result_obj) {
-	component_viewer_res_schedule_ui_new_commonpost(result_obj, function () {
+	component_viewer_res_schedule_ui_new_commonpost(undefined, result_obj, function () {
 		component_viewer_res_displayRES("ScheduleBoard");
 	})
 }

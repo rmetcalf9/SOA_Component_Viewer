@@ -231,7 +231,7 @@ function component_viewer_res_schedule_ui_addedit_commonpost(complete_pressed, r
 	component_viewer_res_process_ScheduleResourses(postScheduleNotifyFN);
 }
 
-function component_viewer_res_schedule_ui_new_commonpost(result_obj, postScheduleNotifyFN) {
+function component_viewer_res_schedule_ui_new_commonpost(component_uid, result_obj, postScheduleNotifyFN) {
 	result_obj = component_viewer_res_schedule_ui_common_validation(result_obj);
 	if (typeof(result_obj)=="undefined") return;
 
@@ -241,7 +241,7 @@ function component_viewer_res_schedule_ui_new_commonpost(result_obj, postSchedul
 		return undefined;
 	}
 	
-	component_viewer_res_data_create_estimate(undefined, result_obj);
+	component_viewer_res_data_create_estimate(component_uid, result_obj);
 	
 	component_viewer_res_process_ScheduleResourses(postScheduleNotifyFN);
 }

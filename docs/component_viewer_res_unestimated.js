@@ -102,21 +102,11 @@ function component_viewer_res_unestimated_click_table_row(link_clicked,postSched
 		}, //Default Obk
 		component_obj, //passback
 		function (result_obj, component_obj) { //Ok Callback
-			if (result_obj.remain==0) {
-				rjmlib_ui_questionbox("Number of days for estimate must be greater than 0");
-			} else {
-				component_viewer_res_data_create_estimate(component_obj.uid, result_obj);
-
-				//RECALC UNESTIMATED list
-				component_viewer_res_data_computeRequiredEstimates();
-
-				//Automaticall re-schedule
-				component_viewer_res_process_ScheduleResourses(function () {
-					//REMOVE FROM unestimated table
-					$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_obj.uid + "']").remove()
-					postScheduleNotifyFN();
-				});
-			};
+			component_viewer_res_schedule_ui_new_commonpost(component_obj.uid, result_obj, function () {
+				//REMOVE FROM unestimated table
+				$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_obj.uid + "']").remove()
+				postScheduleNotifyFN();
+			});
 		},
 		function (component_obj, passback) { //Complete Callback
 			console.log("ERROR - supposadaly unreachable code");
