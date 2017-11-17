@@ -88,9 +88,11 @@ function component_viewer_res_schedule_board_INIT() {
 		if (accessLevel=="READWRITE") {
 			var resAlloc_obj = dataObjects.RESOURCEALLOCATIONs[$(this).data("uid")];
 			var comp_status = undefined;
+			var comp_tag_array = [];
 			if (typeof(resAlloc_obj.itemuid)!="undefined") {
 				var component = ic_soa_data_getComponentFromUID(resAlloc_obj.itemuid);
 				comp_status = component.status;
+				comp_tag_array = component.tags.split(",").map(function (v) {return v.trim(" ","")})
 			}
 			component_viewer_res_schedule_ui_addedit(
 				true, //Edit Mode
@@ -109,7 +111,9 @@ function component_viewer_res_schedule_board_INIT() {
 				function (result_obj, pb) { //Complete Callback
 				component_viewer_res_schedule_ui_addedit_commonpost(true, result_obj, pb, postEditPressedScheduleNotifyFN)
 				},
-				comp_status
+				comp_status,
+				comp_tag_array, //comp_tag_array,
+				resAlloc_obj.tags.split(",").map(function (v) {return v.trim(" ","")}) //def_tag_array
 			);
 			event.preventDefault();
 		};
@@ -134,7 +138,9 @@ function component_viewer_res_schedule_board_INIT() {
 				function (result_obj, passback) { //Complete Callback
 					console.log("ERROR - supposadaly unreachable code");
 				},
-				undefined //comp_status
+				undefined, //comp_status
+				[], //comp_tag_array, - creating a RA without component so no array here
+				[] //newly created item so no array here
 			);		
 		};
 		event.preventDefault();

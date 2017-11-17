@@ -161,9 +161,11 @@ function component_viewer_tags_editResourseAllocation(tableRowClicked) {
 	if (accessLevel!="READWRITE") return;
 	var resAlloc_obj = dataObjects.RESOURCEALLOCATIONs[tableRowClicked.data("uid")];
 	var comp_status = undefined;
+	var component_tag_array = [];
 	if (typeof(resAlloc_obj.itemuid)!="undefined") {
 		var component = ic_soa_data_getComponentFromUID(resAlloc_obj.itemuid);
 		comp_status = component.status;
+		component_tag_array = component.tags.split(",").map(function (v) {return v.trim(" ","")})
 	}
 	component_viewer_res_schedule_ui_addedit(
 		true, //Edit Mode
@@ -182,7 +184,9 @@ function component_viewer_tags_editResourseAllocation(tableRowClicked) {
 		function (result_obj, pb) { //Complete Callback
 			component_viewer_res_schedule_ui_addedit_commonpost(true, result_obj, pb, component_viewer_tags_secheduledResoursesUpdated)
 		},
-		comp_status
+		comp_status,
+		component_tag_array,
+		resAlloc_obj.tags.split(",").map(function (v) {return v.trim(" ","")}) //res_tag_array
 	);
 };
 

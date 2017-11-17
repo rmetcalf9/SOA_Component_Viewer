@@ -42,6 +42,9 @@ function component_viewer_res_schedule_ui_INIT() {
 	};
 	formHTML += "</select>";
 	formHTML += "</td></tr>";
+	formHTML += "<tr><th>Effective Tags:</th><td>";
+	formHTML += "<div class=\"efftags\"></div><td>Tags assigned to the component, or the task associated with that component.</td>";
+	formHTML += "</td></tr>";
 	formHTML += "</table>";
 	formHTML += "</div>"
 	
@@ -59,7 +62,19 @@ function component_viewer_res_schedule_ui_addedit_isopen() {
 	if ($("#component_viewer_res_schedule_ui_add_edit_work").dialog( "isOpen" )==true) return true;
 	return false;
 }
-	
+
+var component_viewer_res_schedule_ui_component_tagarray = []; //Will never change
+var component_viewer_res_schedule_ui_resource_tagarray = [];
+
+function component_viewer_res_schedule_ui_geteffectivetagarray() {
+	var ret = component_viewer_res_schedule_ui_component_tagarray.concat(component_viewer_res_schedule_ui_resource_tagarray);
+	ret = ret.filter(function (item, pos) {
+		if (item.length == 0) return false;
+		return ret.indexOf(item) == pos;
+	});
+	return ret;
+}
+
 function component_viewer_res_schedule_ui_addedit(
 	edit_mode, //true for edit, false for add new workitem
 	default_value_obj, //Object of default values:
@@ -67,8 +82,15 @@ function component_viewer_res_schedule_ui_addedit(
 	passback,
 	ok_fn_callback,
 	complete_fn_callback,
-	comp_status_val //Pass undefined if this item dosen't have a component
+	comp_status_val, //Pass undefined if this item dosen't have a component
+	component_tag_array, //Array of components parent tags
+	default_tag_array //Array of default tags for this resourse object
 ) {
+	if (typeof(component_tag_array) == "undefined") console.log('CODE ERROR component_viewer_res_schedule_ui_addedit needs component array param');
+	if (typeof(default_tag_array) == "undefined") console.log('CODE ERROR component_viewer_res_schedule_ui_addedit needs resource array param');
+	component_viewer_res_schedule_ui_component_tagarray = component_tag_array;
+	component_viewer_res_schedule_ui_resource_tagarray = default_tag_array;
+	
 	if (component_viewer_res_schedule_ui_addedit_isopen()==true) {
 		alert("ERROR in component_viewer_res_schedule_ui_addedit SECOND DIALOG LAUNCHED - " + str);
 		return;
@@ -86,6 +108,12 @@ function component_viewer_res_schedule_ui_addedit(
 	$("#component_viewer_res_schedule_ui_add_edit_work input.rate").val(default_value_obj.rate);
 	$("#component_viewer_res_schedule_ui_add_edit_work input.remain").val(default_value_obj.remain);
 	$("#component_viewer_res_schedule_ui_add_edit_work input.binpack").val(default_value_obj.binpack);
+	$("#component_viewer_res_schedule_ui_add_edit_work div.efftags").text(
+		component_viewer_res_schedule_ui_geteffectivetagarray().reduce(function (sofar,val) {
+			if (sofar.length == 0) return val; 
+			return sofar + ", " +  val
+		}, "")
+	);
 	
 	if (typeof(comp_status_val)=="undefined") {
 		component_viewer_res_schedule_ui_globs.comp_status_shown = false;
@@ -135,6 +163,7 @@ function component_viewer_res_schedule_ui_addedit_readresult() {
 		rate: $("#component_viewer_res_schedule_ui_add_edit_work input.rate").val(),
 		remain: $("#component_viewer_res_schedule_ui_add_edit_work input.remain").val(),
 		binpack: $("#component_viewer_res_schedule_ui_add_edit_work input.binpack").val(),
+		restagarray: component_viewer_res_schedule_ui_resource_tagarray, //component tag array can't be changed so no point in including it
 	};
 	
 	if (component_viewer_res_schedule_ui_globs.comp_status_shown) {

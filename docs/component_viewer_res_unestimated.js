@@ -117,7 +117,9 @@ function component_viewer_res_unestimated_click_table_row(link_clicked,postSched
 		function (component_obj, passback) { //Complete Callback
 			console.log("ERROR - supposadaly unreachable code");
 		},
-		undefined //comp_status
+		undefined, //comp_status
+		component_obj.tags.split(",").map(function (v) {return v.trim(" ","")}),
+		[] //default_tag_array empty as this is new and it is taken from the components
 	);		
 
 };
