@@ -184,20 +184,9 @@ function component_viewer_res_schedule_board_common_validation(result_obj) {
 
 //used in create new resourse allocaiton link
 function component_viewer_res_schedule_board_create_return(result_obj) {
-	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
-	if (typeof(result_obj)=="undefined") return;
-
-	//remain must be gt 0
-	if (result_obj.remain<1) {
-		rjmlib_ui_questionbox("You must enter a number of days for this new item");
-		return undefined;
-	}
-	
-	component_viewer_res_data_create_unlinked_estimate(result_obj);
-	
-	component_viewer_res_process_ScheduleResourses();
-	component_viewer_res_displayRES("ScheduleBoard");
-
+	component_viewer_res_schedule_ui_new_commonpost(result_obj, function () {
+		component_viewer_res_displayRES("ScheduleBoard");
+	})
 }
 
 function postEditPressedScheduleNotifyFN() {

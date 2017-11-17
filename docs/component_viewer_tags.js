@@ -69,6 +69,9 @@ function component_viewer_tags_getResourseAllocationHtml(tagobj) {
 	var ret = "";
 	ret += "<h2>Resourse Allocations</h2>";
 	// Write table head an only include action header if accesslevel is readwrite
+	if (accessLevel=="READWRITE") {
+		ret += " <a href=\"#component_viewer_tags_new_resourse_allocation\">Create new Resourse Allocation</a>";
+	};
 	ret += component_viewer_res_project_getTableStart("component_viewer_tags_res_alloc_main", (accessLevel=="READWRITE"));
 	tagobj.getTasks().map(function (task_obj) {
 		ret += component_viewer_tags_click_getResAllocTableRow(task_obj);
@@ -98,7 +101,7 @@ function component_viewer_tags_getResourseAllocationHtml(tagobj) {
 	return ret;
 }
 
-function component_viewer_tags_gomSample_getHtml(tagobj) {
+function component_viewer_tags_RomSample_getHtml(tagobj) {
 	var ret = "";
 	ret += "<h2>Sample ROM</h2>";
 	ret += "Developer days are the remaining days, completed items not shown."
@@ -152,7 +155,7 @@ function component_viewer_tags_getHtml(tagobj) {
 	ret += component_viewer_tags_getResourseAllocationHtml(tagobj);
 	ret += "</td></tr>";
 	ret += "</table>";
-	ret += component_viewer_tags_gomSample_getHtml(tagobj);
+	ret += component_viewer_tags_RomSample_getHtml(tagobj);
 
 	return globalFunctions.GetPageContentWithMenu(ret);
 };
@@ -190,6 +193,32 @@ function component_viewer_tags_editResourseAllocation(tableRowClicked) {
 	);
 };
 
+function component_viewer_tags_createNewRsourseAllocation() {
+	if (accessLevel=="READWRITE") {
+		component_viewer_res_schedule_ui_addedit(
+			false, //Edit Mode
+			{
+				text: "", 
+				description: "",
+				lane: "",
+				rate: "",
+				remain: "",
+				binpack: "99999",
+			}, //Default Ok
+			undefined, //passback
+			function (result_obj, passback) { //Ok Callback
+				component_viewer_res_schedule_ui_new_commonpost(result_obj, component_viewer_tags_secheduledResoursesUpdated)
+			},
+			function (result_obj, passback) { //Complete Callback
+				console.log("ERROR - supposadaly unreachable code");
+			},
+			undefined, //comp_status
+			[], //comp_tag_array, - creating a RA without component so no array here
+			[component_viewer_tags_tabobj.name] //newly created item start with this TAG
+		);		
+	};
+}
+
 function component_viewer_tags_INIT() {
 	$(document).off('click.component_viewer_tags_click_unestimated').on('click.component_viewer_tags_click_unestimated', "a[href$='#component_viewer_tags_click_unestimated']", function (event) {
 		component_viewer_tags_click_unestimated_table_row($(this).closest("tr"));
@@ -197,6 +226,10 @@ function component_viewer_tags_INIT() {
 	});
 	$(document).off('click.component_viewer_tags_click_editRA').on('click.component_viewer_tags_click_editRA', "a[href$='#component_viewer_tags_click_editRA']", function (event) {
 		component_viewer_tags_editResourseAllocation($(this).closest("tr"))
+		event.preventDefault();
+	});
+	$(document).off('click.component_viewer_tags_new_resourse_allocation').on('click.component_viewer_tags_new_resourse_allocation', "a[href$='#component_viewer_tags_new_resourse_allocation']", function (event) {
+		component_viewer_tags_createNewRsourseAllocation();
 		event.preventDefault();
 	});
 

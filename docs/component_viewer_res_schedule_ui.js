@@ -195,8 +195,21 @@ function component_viewer_res_schedule_ui_addedit_commonpost(complete_pressed, r
 
 	component_viewer_res_data_edit_estimate(pb.uid, result_obj, change_comp_status);
 	
-	component_viewer_res_process_ScheduleResourses();
-	postScheduleNotifyFN();
+	component_viewer_res_process_ScheduleResourses(postScheduleNotifyFN);
+}
 
+function component_viewer_res_schedule_ui_new_commonpost(result_obj, postScheduleNotifyFN) {
+	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
+	if (typeof(result_obj)=="undefined") return;
+
+	//remain must be gt 0
+	if (result_obj.remain<1) {
+		rjmlib_ui_questionbox("You must enter a number of days for this new item");
+		return undefined;
+	}
+	
+	component_viewer_res_data_create_unlinked_estimate(result_obj);
+	
+	component_viewer_res_process_ScheduleResourses(postScheduleNotifyFN);
 }
 

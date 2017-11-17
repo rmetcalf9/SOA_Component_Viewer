@@ -270,7 +270,7 @@ function component_viewer_res_data_create_estimate_INTERNAL(edited_value_obj, co
 		lastupdate: d.toString(),
 		status: "Allocated",
 		binpackpriority: edited_value_obj.binpack,
-		tags: undefined,
+		tags: edited_value_obj.restagarray.reduce(function (sum, val) {if (sum.length==0) return val; return sum + ", " + val}, ""),
 		datecreate: d.toString(),
 	}
 	dataObjects.RESOURCEALLOCATIONs[new_row_uid].getCombinedTagList = getResourseAllocationObjectCombinedTagListFN(dataObjects.RESOURCEALLOCATIONs[new_row_uid]);
