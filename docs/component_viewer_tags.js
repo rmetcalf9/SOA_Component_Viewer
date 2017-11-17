@@ -32,11 +32,7 @@ function component_viewer_tags_getUnestimatedHtml(tagobj) {
 }
 
 function component_viewer_tags_click_unestimated_table_row(link_clicked) {
-	component_viewer_res_unestimated_click_table_row(link_clicked);
-	
-	//Re-do resourse caculations
-	component_viewer_res_process_ScheduleResourses();
-	//We will recieve a notification which will update the screen
+	component_viewer_res_unestimated_click_table_row(link_clicked, component_viewer_tags_secheduledResoursesUpdated);
 }
 
 function component_viewer_tags_secheduledResoursesUpdated() {
@@ -46,7 +42,7 @@ function component_viewer_tags_secheduledResoursesUpdated() {
 
 function component_viewer_tags_click_getResAllocTableRow(task_obj) {
 	var ret = "";
-	ret += "<tr class=\"" + component_viewer_res_data_getresourseallocobjCSSTag(task_obj.res_alloc_obj) + "\">";
+	ret += "<tr class=\"" + component_viewer_res_data_getresourseallocobjCSSTag(task_obj.res_alloc_obj) + "\" data-uid=\"" + task_obj.res_alloc_obj.uid + "\">";
 	ret += "<td>" + task_obj.res_alloc_obj.text + "</td>";
 	ret += "<td>" + component_viewer_res_data_getresourseallocobjUserType(task_obj.res_alloc_obj) + "</td>";
 	ret += "<td>" + task_obj.resourseLane.uid + "</td>";
@@ -59,6 +55,11 @@ function component_viewer_tags_click_getResAllocTableRow(task_obj) {
 	ret += "<td>" + rjmlib_blankStringInsteadOfUndefined(task_obj.res_alloc_obj.description) + "</td>";
 	ret += "<td>" + component_viewer_res_data_getcombinedtagString(task_obj.res_alloc_obj);
 	ret +=	"</td>";
+	if (accessLevel=="READWRITE") {
+		ret += "<td>"; // action cell
+		ret += "<a href=\"#component_viewer_tags_click_editRA\"\">Edit</a>";
+		ret += "</td>";
+	}
 	
 	ret += "</tr>";
 	return ret;
@@ -67,11 +68,13 @@ function component_viewer_tags_click_getResAllocTableRow(task_obj) {
 function component_viewer_tags_getResourseAllocationHtml(tagobj) {
 	var ret = "";
 	ret += "<h2>Resourse Allocations</h2>";
-	ret += component_viewer_res_project_getTableStart("component_viewer_tags_res_alloc_main");
+	// Write table head an only include action header if accesslevel is readwrite
+	ret += component_viewer_res_project_getTableStart("component_viewer_tags_res_alloc_main", (accessLevel=="READWRITE"));
 	tagobj.getTasks().map(function (task_obj) {
 		ret += component_viewer_tags_click_getResAllocTableRow(task_obj);
 	})
 	ret += component_viewer_res_project_getTableEnd();
+	ret += "To delete Allocations use google sheets";
 	return ret;
 }
 
@@ -87,18 +90,52 @@ function component_viewer_tags_getHtml(tagobj) {
 	ret += component_viewer_tags_getResourseAllocationHtml(tagobj);
 	ret += "</td></tr>";
 	ret += "</table>";
+	ret += "<h2>Sample ROM</h2>";
 	ret += "TODO";
 
 	return globalFunctions.GetPageContentWithMenu(ret);
 };
 
+function component_viewer_tags_editResourseAllocation(tableRowClicked) {
+	if (accessLevel!="READWRITE") return;
+	var resAlloc_obj = dataObjects.RESOURCEALLOCATIONs[tableRowClicked.data("uid")];
+	var comp_status = undefined;
+	if (typeof(resAlloc_obj.itemuid)!="undefined") {
+		var component = ic_soa_data_getComponentFromUID(resAlloc_obj.itemuid);
+		comp_status = component.status;
+	}
+	component_viewer_res_schedule_ui_addedit(
+		true, //Edit Mode
+		{
+			text: resAlloc_obj.text, 
+			description: resAlloc_obj.description,
+			lane: resAlloc_obj.resourcelaneassignment,
+			rate: resAlloc_obj.assignmentrate,
+			remain: resAlloc_obj.remainingdays,
+			binpack: resAlloc_obj.binpackpriority,
+		}, //Default Ok
+		{uid:tableRowClicked.data("uid"),orig_comp_status:comp_status}, //passback
+		function (result_obj, pb) { //Ok Callback
+			component_viewer_res_schedule_board_edit_return(false, result_obj, pb);
+		},
+		function (result_obj, pb) { //Complete Callback
+			component_viewer_res_schedule_board_edit_return(true, result_obj, pb);
+		},
+		comp_status
+	);
+
+	console.log(resAlloc_obj);
+};
 
 function component_viewer_tags_INIT() {
 	$(document).off('click.component_viewer_tags_click_unestimated').on('click.component_viewer_tags_click_unestimated', "a[href$='#component_viewer_tags_click_unestimated']", function (event) {
 		component_viewer_tags_click_unestimated_table_row($(this).closest("tr"));
 		event.preventDefault();
 	});
-	component_viewer_res_process_registerNotificationForScheduleResoursesRecalc(component_viewer_tags_secheduledResoursesUpdated);
+	$(document).off('click.component_viewer_tags_click_editRA').on('click.component_viewer_tags_click_editRA', "a[href$='#component_viewer_tags_click_editRA']", function (event) {
+		component_viewer_tags_editResourseAllocation($(this).closest("tr"))
+		event.preventDefault();
+	});
 
 };
 

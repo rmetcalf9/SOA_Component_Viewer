@@ -43,8 +43,9 @@ function component_viewer_res_project_postHtmlInDom() {
 	rjmlib_ui_table_make_tables_sortable("table[id='component_viewer_res_project_main']");
 };
 
-function component_viewer_res_project_getTableStart(tblid) {
+function component_viewer_res_project_getTableStart(tblid, includeAction) {
 	if (typeof(tblid) == "undefined") tblid = "component_viewer_res_project_main";
+	if (typeof(includeAction) == "undefined") includeAction = false;
 	var ret = "";
 	ret += "<table id=\"" + tblid + "\">";
 	ret += "<tr><th>Text</th><th>Type</th><th>Resource</th><th>Start Day</th><th>Rate</th><th>Remaining Days</th><th>End Day</th>";
@@ -53,6 +54,7 @@ function component_viewer_res_project_getTableStart(tblid) {
 	ret += "<th>Tags ";
 	ret += " <a href=\"#component_viewer_res_project_sel\">Select for Copy</a>";
 	ret += "</th>";
+	if (includeAction) ret += "<th>Action</th>";
 	ret += "</tr>";
 	return ret;
 }

@@ -85,7 +85,7 @@ function component_viewer_res_unestimated_INIT() {
 	});
 };
 
-function component_viewer_res_unestimated_click_table_row(link_clicked) {
+function component_viewer_res_unestimated_click_table_row(link_clicked,postScheduleNotifyFN) {
 	var component_uid = link_clicked.data("uid");
 	var component_obj = ic_soa_data_getComponentFromUID(component_uid);
 	
@@ -111,7 +111,7 @@ function component_viewer_res_unestimated_click_table_row(link_clicked) {
 				$("#component_viewer_res_unestimated_main > tbody > tr[data-uid='" + component_obj.uid + "']").remove()
 
 				//Automaticall re-schedule
-				component_viewer_res_process_ScheduleResourses();
+				component_viewer_res_process_ScheduleResourses(postScheduleNotifyFN);
 			};
 		},
 		function (component_obj, passback) { //Complete Callback
