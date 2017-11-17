@@ -173,13 +173,46 @@ function component_viewer_res_schedule_ui_addedit_readresult() {
 	return ret_obj;
 };
 
+//Function will return a cleaned up object
+function component_viewer_res_schedule_ui_common_validation(result_obj) {
+	//Check inputs are valid
+	//Text length > 2
+	if (result_obj.text.length < 3) {rjmlib_ui_questionbox("You must enter more than 2 chars for text");return undefined;}
+	
+	//if it is set then rate is number
+	if (typeof(result_obj.rate)!="undefined") {
+		if (result_obj.rate != "") {
+			if (isNaN(parseInt(result_obj.rate))) {rjmlib_ui_questionbox("You must enter a number for rate");return undefined;}
+			if (result_obj.rate=="") result_obj.rate=0;
+			result_obj.rate = parseInt(result_obj.rate);
+		};
+	};
+	
+	//remain is always number
+	if (isNaN(parseFloat(result_obj.remain))) {
+		rjmlib_ui_questionbox("You must enter a number for remaining days");
+		return undefined;
+	}
+	result_obj.remain = parseFloat(result_obj.remain);
+
+	//if it is set then binpack is number
+	if (typeof(result_obj.binpack)!="undefined") {
+		if (result_obj.binpack != "") {
+			if (isNaN(parseInt(result_obj.binpack))) {rjmlib_ui_questionbox("You must enter a number for Bin Pack");return undefined;}
+			result_obj.binpack = parseInt(result_obj.binpack);
+		};
+	};
+	
+	return result_obj;
+};
+
 // Helper function for code that is called after edit complets
 function component_viewer_res_schedule_ui_addedit_commonpost(complete_pressed, result_obj, pb, postScheduleNotifyFN) {
 	if (complete_pressed) result_obj.remain = 0;
 	
 	//Lane will be returned as null for ANY lane
 	
-	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
+	result_obj = component_viewer_res_schedule_ui_common_validation(result_obj);
 	if (typeof(result_obj)=="undefined") return;
 
 	var change_comp_status = undefined;
@@ -199,16 +232,16 @@ function component_viewer_res_schedule_ui_addedit_commonpost(complete_pressed, r
 }
 
 function component_viewer_res_schedule_ui_new_commonpost(result_obj, postScheduleNotifyFN) {
-	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
+	result_obj = component_viewer_res_schedule_ui_common_validation(result_obj);
 	if (typeof(result_obj)=="undefined") return;
 
 	//remain must be gt 0
 	if (result_obj.remain<1) {
-		rjmlib_ui_questionbox("You must enter a number of days for this new item");
+		rjmlib_ui_questionbox("You must enter a number of days (more than 0) for this new item");
 		return undefined;
 	}
 	
-	component_viewer_res_data_create_unlinked_estimate(result_obj);
+	component_viewer_res_data_create_estimate(undefined, result_obj);
 	
 	component_viewer_res_process_ScheduleResourses(postScheduleNotifyFN);
 }

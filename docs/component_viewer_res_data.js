@@ -239,14 +239,22 @@ function component_viewer_res_data_save_resourse_allocation_into_batch(resourseA
 	};
 };
 
-//Create an unlinked estimate without a compnent
-function component_viewer_res_data_create_unlinked_estimate(edited_value_obj) {
+//Create an LINKED estimate for an unestimated component
+function component_viewer_res_data_create_estimate(component_uid, edited_value_obj) {
 	component_viewer_res_data_create_estimate_INTERNAL(
 		edited_value_obj, 
-		undefined, //No component
+		component_uid, //No component
 		edited_value_obj.remain //Origional days same as remain
 	);
-}
+	if (typeof(component_uid)=="undefined"){
+		//REMOVE FROM estimate missing list
+		component_viewer_res_data_ensure_component_not_in_missing_estimate_list(component_uid);
+		
+		//Refresh Number in menu
+		component_viewer_res_updateMenuText();
+	}
+};
+
 	
 function component_viewer_res_data_create_estimate_INTERNAL(edited_value_obj, component_uid, origional_days) {
 	if (typeof(component_viewer_res_data_glob.next_avail)=="undefined") {
@@ -280,22 +288,6 @@ function component_viewer_res_data_create_estimate_INTERNAL(edited_value_obj, co
 	component_viewer_res_data_save_resourse_allocation_into_batch(new_row_uid, true);
 	board_execute_saveBatch(spreadsheetId);
 	component_viewer_res_data_glob.next_avail.next_row = component_viewer_res_data_glob.next_avail.next_row + 1;	
-	
-};
-
-//Create an estimate for an unestimated component
-function component_viewer_res_data_create_estimate(component_uid, edited_value_obj) {
-	component_viewer_res_data_create_estimate_INTERNAL(
-		edited_value_obj, 
-		component_uid, //No component
-		edited_value_obj.remain //Origional days same as remain
-	);
-
-	//REMOVE FROM estimate missing list
-	component_viewer_res_data_ensure_component_not_in_missing_estimate_list(component_uid);
-	
-	//Refresh Number in menu
-	component_viewer_res_updateMenuText();
 	
 };
 

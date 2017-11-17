@@ -149,39 +149,6 @@ function component_viewer_res_schedule_board_INIT() {
 	
 };
 
-//Function will return a cleaned up object
-function component_viewer_res_schedule_board_common_validation(result_obj) {
-	//Check inputs are valid
-	//Text length > 2
-	if (result_obj.text.length < 3) {rjmlib_ui_questionbox("You must enter more than 2 chars for text");return undefined;}
-	
-	//if it is set then rate is number
-	if (typeof(result_obj.rate)!="undefined") {
-		if (result_obj.rate != "") {
-			if (isNaN(parseInt(result_obj.rate))) {rjmlib_ui_questionbox("You must enter a number for rate");return undefined;}
-			if (result_obj.rate=="") result_obj.rate=0;
-			result_obj.rate = parseInt(result_obj.rate);
-		};
-	};
-	
-	//remain is always number
-	if (isNaN(parseFloat(result_obj.remain))) {
-		rjmlib_ui_questionbox("You must enter a number for remaining days");
-		return undefined;
-	}
-	result_obj.remain = parseFloat(result_obj.remain);
-
-	//if it is set then binpack is number
-	if (typeof(result_obj.binpack)!="undefined") {
-		if (result_obj.binpack != "") {
-			if (isNaN(parseInt(result_obj.binpack))) {rjmlib_ui_questionbox("You must enter a number for Bin Pack");return undefined;}
-			result_obj.binpack = parseInt(result_obj.binpack);
-		};
-	};
-	
-	return result_obj;
-};
-
 //used in create new resourse allocaiton link
 function component_viewer_res_schedule_board_create_return(result_obj) {
 	component_viewer_res_schedule_ui_new_commonpost(result_obj, function () {
