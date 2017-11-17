@@ -35,10 +35,14 @@ function component_viewer_tags_click_unestimated_table_row(link_clicked) {
 	component_viewer_res_unestimated_click_table_row(link_clicked);
 	console.log('TODO extra hook to add row to resourse allocations');
 	
-	//TODO Re-do resourse caculations
-	//TODO get task_obj for new task
-	//TODO use component_viewer_tags_click_getResAllocTableRow for new table row
-	$("#component_viewer_tags_res_alloc_main > tbody").append("<tr><td>aa</td></tr>")
+	//Re-do resourse caculations
+	component_viewer_res_process_ScheduleResourses();
+	//We will recieve a notification which will update the screen
+}
+
+function component_viewer_tags_secheduledResoursesUpdated() {
+	if (typeof(component_viewer_tags_tabobj)=="undefined") return;
+	$("#MAIN").html(component_viewer_tags_getHtml(component_viewer_tags_tabobj));
 }
 
 function component_viewer_tags_click_getResAllocTableRow(task_obj) {
@@ -97,13 +101,15 @@ function component_viewer_tags_INIT() {
 		component_viewer_tags_click_unestimated_table_row($(this).closest("tr"));
 		event.preventDefault();
 	});
+	component_viewer_res_process_registerNotificationForScheduleResoursesRecalc(component_viewer_tags_secheduledResoursesUpdated);
 
 };
 
+var component_viewer_tags_tabobj;
 function component_viewer_tags_display(tagname) {
 	if (!component_viewer_res_process_ScheduleProcessDone()) component_viewer_res_process_ScheduleResourses();
-	var tagobj = ic_soa_data_tags_getObject(tagname, dataObjects);
-	$("#MAIN").html(component_viewer_tags_getHtml(tagobj));
+	component_viewer_tags_tabobj = ic_soa_data_tags_getObject(tagname, dataObjects);
+	$("#MAIN").html(component_viewer_tags_getHtml(component_viewer_tags_tabobj));
 	$("#MAIN").css("display","inline");
 };
 

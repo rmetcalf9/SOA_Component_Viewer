@@ -8,6 +8,12 @@ function component_viewer_res_process_ScheduleProcessDone() {
 	return (typeof(component_viewer_res_process_resourse_schedules.Lanes)!="undefined")
 };
 
+// Array of functions to call when scheduled resourses are changed
+var component_viewer_res_process_notifyScheduleResourses = [];
+function component_viewer_res_process_registerNotificationForScheduleResoursesRecalc(notifyFN) {
+	component_viewer_res_process_notifyScheduleResourses.push(notifyFN);
+}
+
 function component_viewer_res_process_ScheduleResourses() {
 
 	//console.log("Sort resourse allocaitons by priority asc");
@@ -95,6 +101,9 @@ function component_viewer_res_process_ScheduleResourses() {
 	
 	//DEBUG output the results so I can inspect
 	//console.log(component_viewer_res_process_resourse_schedules);
+	component_viewer_res_process_notifyScheduleResourses.map(function (notifyFN) {
+		notifyFN();
+	})
 };
 
 //Returns the scheduled lane object for a given lane
