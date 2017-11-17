@@ -418,6 +418,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 					datecreate: row[cur_sheet_metrics.datecreatecol],
 					description: row[cur_sheet_metrics.descriptioncol],
 				}
+				//NOTE This code is repeated in component_viewer_res_data - funcsiont must be added there as well
 				RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]].getCombinedTagList = getResourseAllocationObjectCombinedTagListFN(RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]]);
 			}
 		} else {

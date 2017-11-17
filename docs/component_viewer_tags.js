@@ -77,7 +77,24 @@ function component_viewer_tags_getResourseAllocationHtml(tagobj) {
 	ret += "To delete Allocations use google sheets";
 	
 	ret += "<h3>Completed resourse allocations</h3>";
-	
+	ret += "<table id=\"component_viewer_res_completedresourseallocations_main\">";
+	ret += "<tr>";
+	ret += "<th>Text</th>";
+	ret += "<th>Type</th>";
+	ret += "<th>Description</th>";
+	ret += "<th>Tags</th>";
+	ret += "</tr>";
+	tagobj.getResourseAllocations().filter( function (raobj) {
+		return (raobj.status == "Completed");
+	}).map( function (res_alloc_obj) {
+		ret += "<tr class=\"" + component_viewer_res_data_getresourseallocobjCSSTag(res_alloc_obj) + "\">";
+		ret += "<td>" + res_alloc_obj.text + "</td>";
+		ret += "<td>" + component_viewer_res_data_getresourseallocobjUserType(res_alloc_obj) + "</td>";
+		ret += "<td>" + rjmlib_blankStringInsteadOfUndefined(res_alloc_obj.description) + "</td>";
+		ret += "<td>" + component_viewer_res_data_getcombinedtagString(res_alloc_obj);
+		ret += "</tr>";
+	});
+	ret += "</table>";
 	return ret;
 }
 

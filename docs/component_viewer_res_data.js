@@ -273,6 +273,7 @@ function component_viewer_res_data_create_estimate_INTERNAL(edited_value_obj, co
 		tags: undefined,
 		datecreate: d.toString(),
 	}
+	dataObjects.RESOURCEALLOCATIONs[new_row_uid].getCombinedTagList = getResourseAllocationObjectCombinedTagListFN(dataObjects.RESOURCEALLOCATIONs[new_row_uid]);
 	
 	//Write data to spreadsheet
 	board_prepare_saveBatch();

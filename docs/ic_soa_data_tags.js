@@ -33,6 +33,18 @@ function ic_soa_data_tags_getTasksForTagFN(tagobj) {
 	}
 }
 
+function ic_soa_data_tags_getResourseAllocationsFN(tagobj) {
+	return function () {
+		return dataObjects.RESOURCEALLOCATIONkeys.map(function (rakey) {
+			return dataObjects.RESOURCEALLOCATIONs[rakey]
+		}).filter(function (res_alloc_obj) {
+			return res_alloc_obj.getCombinedTagList().map(function (tagListItem) {
+				return tagListItem.value;
+			}).includes(tagobj.name);
+		});
+	}
+}
+
 // Create the object
 function ic_soa_data_tags_getObject(name, dataObjects) {
 	for (var property in dataObjects.TAGs) {
@@ -41,8 +53,9 @@ function ic_soa_data_tags_getObject(name, dataObjects) {
 				var ret = {
 					name: property
 				};
-				ret.getUnestimatedObjects = ic_soa_data_tags_getUnestimatedCompObjsForTagFN(ret)
-				ret.getTasks = ic_soa_data_tags_getTasksForTagFN(ret)
+				ret.getUnestimatedObjects = ic_soa_data_tags_getUnestimatedCompObjsForTagFN(ret);
+				ret.getTasks = ic_soa_data_tags_getTasksForTagFN(ret);
+				ret.getResourseAllocations = ic_soa_data_tags_getResourseAllocationsFN(ret);
 				return ret;
 			}
 		}
