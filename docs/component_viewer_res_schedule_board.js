@@ -195,30 +195,12 @@ function component_viewer_res_schedule_board_create_return(result_obj) {
 }
 
 function component_viewer_res_schedule_board_edit_return(complete_pressed, result_obj, pb) {
-	if (complete_pressed) result_obj.remain = 0;
-	
-	//Lane will be returned as null for ANY lane
-	
-	result_obj = component_viewer_res_schedule_board_common_validation(result_obj);
-	if (typeof(result_obj)=="undefined") return;
-
-	var change_comp_status = undefined;
-	if (typeof(pb.orig_comp_status)!="undefined") {
-		if (typeof(result_obj.comp_status)!="undefined") {
-			if (pb.orig_comp_status!=result_obj.comp_status) {
-				change_comp_status = {
-					new_status: result_obj.comp_status,
-				};
-			};
-		};
-	};
-
-	component_viewer_res_data_edit_estimate(pb.uid, result_obj, change_comp_status);
-	
-	component_viewer_res_process_ScheduleResourses();
-	component_viewer_res_displayRES("ScheduleBoard");
-	
+	component_viewer_res_schedule_ui_addedit_commonpost(complete_pressed, result_obj, pb, postEditPressedScheduleNotifyFN)
 };
+
+function postEditPressedScheduleNotifyFN() {
+	component_viewer_res_displayRES("ScheduleBoard");
+}
 
 function component_viewer_res_schedule_board_getSVG(days) {
 	var ret = "";
