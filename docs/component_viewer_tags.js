@@ -33,7 +33,6 @@ function component_viewer_tags_getUnestimatedHtml(tagobj) {
 
 function component_viewer_tags_click_unestimated_table_row(link_clicked) {
 	component_viewer_res_unestimated_click_table_row(link_clicked);
-	console.log('TODO extra hook to add row to resourse allocations');
 	
 	//Re-do resourse caculations
 	component_viewer_res_process_ScheduleResourses();
@@ -89,8 +88,6 @@ function component_viewer_tags_getHtml(tagobj) {
 	ret += "</td></tr>";
 	ret += "</table>";
 	ret += "TODO";
-
-	console.log(tagobj);
 
 	return globalFunctions.GetPageContentWithMenu(ret);
 };
