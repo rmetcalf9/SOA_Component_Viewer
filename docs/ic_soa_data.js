@@ -18,6 +18,12 @@ function ic_soa_data_getSheetList() {
 	return ret;
 };
 
+function getResourseAllocationObjectCombinedTagListFN(raobj) {
+	return function () {
+		return component_viewer_res_data_getcombinedtagList(raobj);
+	};
+};
+
 var ic_soa_data_SheetMetrics = undefined;
 function ic_soa_data_getSheetMetrics() {
 	if (typeof(ic_soa_data_SheetMetrics)=="undefined") {
@@ -412,6 +418,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 					datecreate: row[cur_sheet_metrics.datecreatecol],
 					description: row[cur_sheet_metrics.descriptioncol],
 				}
+				RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]].getCombinedTagList = getResourseAllocationObjectCombinedTagListFN(RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]]);
 			}
 		} else {
 			console.log(response);

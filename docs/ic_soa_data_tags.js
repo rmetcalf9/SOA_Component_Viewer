@@ -22,12 +22,11 @@ function ic_soa_data_tags_getTasksForTagFN(tagobj) {
 			for (var cur_task in lane_obj.allocated_resourses) {
 				var task_obj = lane_obj.allocated_resourses[cur_task];
 				task_obj.resourseLane = res_lane_obj;
-				task_obj.combinedTagList = component_viewer_res_data_getcombinedtagList(task_obj.res_alloc_obj);
 				taskArr.push(task_obj);
 			}
 		}
 		return taskArr.filter(function (taskObj) {
-			return taskObj.combinedTagList.map(function (tagListItem) {
+			return taskObj.res_alloc_obj.getCombinedTagList().map(function (tagListItem) {
 				return tagListItem.value;
 			}).includes(tagobj.name);
 		});

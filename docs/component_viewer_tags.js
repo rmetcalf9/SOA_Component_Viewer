@@ -75,6 +75,9 @@ function component_viewer_tags_getResourseAllocationHtml(tagobj) {
 	})
 	ret += component_viewer_res_project_getTableEnd();
 	ret += "To delete Allocations use google sheets";
+	
+	ret += "<h3>Completed resourse allocations</h3>";
+	
 	return ret;
 }
 
