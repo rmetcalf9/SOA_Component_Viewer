@@ -246,8 +246,9 @@ function component_viewer_res_data_create_estimate(component_uid, edited_value_o
 		component_uid, //No component
 		edited_value_obj.remain //Origional days same as remain
 	);
-	if (typeof(component_uid)=="undefined"){
+	if (typeof(component_uid)!="undefined"){
 		//REMOVE FROM estimate missing list
+		console.log('ensure not in missing: ' + component_uid);
 		component_viewer_res_data_ensure_component_not_in_missing_estimate_list(component_uid);
 		
 		//Refresh Number in menu
