@@ -20,7 +20,11 @@ function component_viewer_tags_getUnestimatedHtml(tagobj) {
 		ret += "<td>" + component_obj.tags + "</td>";
 		if (accessLevel=="READWRITE") {
 			ret += "<td>";
-			ret += "<a href=\"#component_viewer_tags_click_unestimated\">Add Estimate</a>";
+			ret += "<a href=\"#component_viewer_tags_click_unestimated\">Add Estimate</a> ";
+			var viewfntext = component_obj.getViewFunctionText();
+			if (typeof(viewfntext) != "undefined") {
+				ret += "<a href=\"javascript:" + viewfntext + "\">View</a>";
+			};
 			ret += "</td>";
 		};
 		

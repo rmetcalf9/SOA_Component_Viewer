@@ -67,7 +67,11 @@ function component_viewer_res_unestimated_tableRowsForTAG(tag, decision_function
 			ret += "<td>" + component_obj.tags + "</td>";
 			if (accessLevel=="READWRITE") {
 				ret += "<td>";
-				ret += "<a href=\"#component_viewer_res_unestimated_click_table_row\">Add Estimate</a>";
+				ret += "<a href=\"#component_viewer_res_unestimated_click_table_row\">Add Estimate</a> ";
+				var viewfntext = component_obj.getViewFunctionText();
+				if (typeof(viewfntext) != "undefined") {
+					ret += "<a href=\"javascript:" + viewfntext + "\">View</a>";
+				};
 				ret += "</td>";
 			};
 			
@@ -88,7 +92,6 @@ function component_viewer_res_unestimated_INIT() {
 function component_viewer_res_unestimated_click_table_row(link_clicked,postScheduleNotifyFN) {
 	var component_uid = link_clicked.data("uid");
 	var component_obj = ic_soa_data_getComponentFromUID(component_uid);
-	console.log(component_obj);
 	
 	var days = ic_soa_data_getSheetMetrics()[component_obj.source_sheet].default_estimate;
 	

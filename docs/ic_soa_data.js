@@ -144,6 +144,7 @@ function ic_soa_data_loadSYSTEMSFromCommaList(commaListOfSystems, SYSTEMs, SYSTE
 			//Add known clients to SYSTEMs array
 			SYSTEMkeys.push(return_array[i]);
 			SYSTEMs[return_array[i]] = {
+				objType: 'SYSTEM',
 				uid: return_array[i],
 				name: return_array[i]
 			}
@@ -235,6 +236,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 			ic_soa_data_buildtaglist_tag(row[cur_sheet_metrics.tagscol],TAGs);
 			EDFkeys.push(row[cur_sheet_metrics.uidcol]);
 			EDFs[row[cur_sheet_metrics.uidcol]] = {
+				objType: 'EDF',
 				source_sheet: sheetList[sheetListIdx],
 				uid: row[cur_sheet_metrics.uidcol],
 				name: row[cur_sheet_metrics.namecol],
@@ -250,6 +252,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 			if (typeof(SYSTEMs[source_system])=="undefined") {
 				SYSTEMkeys.push(source_system);
 				SYSTEMs[source_system] = {
+					objType: 'SYSTEM',
 					uid: source_system,
 					name: source_system
 				}
@@ -271,6 +274,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 			ic_soa_data_buildtaglist_tag(row[cur_sheet_metrics.tagscol],TAGs);
 			INTkeys.push(row[cur_sheet_metrics.uidcol]);
 			INTs[row[cur_sheet_metrics.uidcol]] = {
+				objType: 'INT',
 				source_sheet: sheetList[sheetListIdx],
 				uid: row[cur_sheet_metrics.uidcol],
 				name: row[cur_sheet_metrics.namecol],
@@ -286,6 +290,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 			if (typeof(SYSTEMs[target_system])=="undefined") {
 				SYSTEMkeys.push(target_system);
 				SYSTEMs[target_system] = {
+					objType: 'SYSTEM',
 					uid: target_system,
 					name: target_system
 				}
@@ -311,6 +316,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 			PRESkeys.push(row[cur_sheet_metrics.uidcol]);
 			PRESs[row[cur_sheet_metrics.uidcol]] = {
+				objType: 'PRES',
 				source_sheet: sheetList[sheetListIdx],
 				uid: row[cur_sheet_metrics.uidcol],
 				name: row[cur_sheet_metrics.namecol],
@@ -325,6 +331,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 			if (typeof(SYSTEMs[provider_system])=="undefined") {
 				SYSTEMkeys.push(provider_system);
 				SYSTEMs[provider_system] = {
+					objType: 'SYSTEM',
 					uid: provider_system,
 					name: provider_system
 				}
@@ -349,6 +356,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 			POINTkeys.push(row[cur_sheet_metrics.uidcol]);
 			POINTs[row[cur_sheet_metrics.uidcol]] = {
+				objType: 'POINT',
 				source_sheet: sheetList[sheetListIdx],
 				uid: row[cur_sheet_metrics.uidcol],
 				name: row[cur_sheet_metrics.namecol],
@@ -376,6 +384,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 			RESOURCELANESkeys.push(row[cur_sheet_metrics.uidcol]);
 			RESOURCELANESs[row[cur_sheet_metrics.uidcol]] = {
+				objType: 'RESOURCELANE',
 				source_sheet: sheetList[sheetListIdx],
 				sheet_row: (cur_range+cur_sheet_metrics.toprow),
 				uid: row[cur_sheet_metrics.uidcol],
@@ -402,6 +411,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 
 				RESOURCEALLOCATIONkeys.push(row[cur_sheet_metrics.uidcol]);
 				RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]] = {
+					objType: 'RESOURCEALLOCATION',
 					source_sheet: sheetList[sheetListIdx],
 					sheet_row: (cur_range+cur_sheet_metrics.toprow),
 					uid: row[cur_sheet_metrics.uidcol],
@@ -457,15 +467,15 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 	
 	return {
 		EDFkeys: EDFkeys,
-		EDFs: EDFs,
+		EDFs: ic_soa_data_AddViewFunctions(EDFkeys, EDFs),
 		INTkeys: INTkeys,
-		INTs: INTs,
+		INTs: ic_soa_data_AddViewFunctions(INTkeys, INTs),
 		SYSTEMkeys: SYSTEMkeys,
-		SYSTEMs: SYSTEMs,
+		SYSTEMs: ic_soa_data_AddViewFunctions(SYSTEMkeys, SYSTEMs),
 		PRESkeys: PRESkeys,
-		PRESs: PRESs,
+		PRESs: ic_soa_data_AddViewFunctions(PRESkeys, PRESs),
 		POINTkeys: POINTkeys,
-		POINTs: POINTs,
+		POINTs: ic_soa_data_AddViewFunctions(POINTkeys,POINTs),
 		TAGs: TAGs,
 		RESOURCELANESkeys: RESOURCELANESkeys,
 		RESOURCELANESs: RESOURCELANESs,
@@ -473,6 +483,47 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		RESOURCEALLOCATIONs: RESOURCEALLOCATIONs,
 	};
 };
+
+function ic_soa_data_AddViewFunctions(objKeysArray, objArray) {
+	objKeysArray.map(function (objKey) {
+		if (objArray[objKey].objType == 'EDF') {
+			objArray[objKey].getViewFunctionText = function () {
+				return 'displayEDF(\'' + objArray[objKey].uid + '\')';
+			};
+			return undefined;
+		};
+		if (objArray[objKey].objType == 'INT') {
+			objArray[objKey].getViewFunctionText = function () {
+				return 'displayINT(\'' + objArray[objKey].uid + '\')';
+			};
+			return undefined;
+		};
+		if (objArray[objKey].objType == 'PRES') {
+			objArray[objKey].getViewFunctionText = function () {
+				return 'displayPRES(\'' + objArray[objKey].uid + '\')';
+			};
+			return undefined;
+		};
+		if (objArray[objKey].objType == 'POINT') {
+			objArray[objKey].getViewFunctionText = function () {
+				return 'displayPOINT(\'' + objArray[objKey].uid + '\')';
+			};
+			return undefined;
+		};
+		if (objArray[objKey].objType == 'SYSTEM') {
+			objArray[objKey].getViewFunctionText = function () {
+				return 'displaySYSTEM(\'' + objArray[objKey].uid + '\')';
+			};
+			return undefined;
+		};
+		console.log('Object type ' + objArray[objKey].objType + ' has no view function')
+		objArray[objKey].getViewFunctionText = function () {
+			return undefined;
+		};
+		return undefined;
+	});
+	return objArray
+}
 
 //Given the name of an edf return it's object from dataobjects
 function ic_soa_data_getEDFFromName(edfName, dataObjects) {
