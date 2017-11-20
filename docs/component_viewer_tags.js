@@ -1,8 +1,7 @@
 "use strict";	
 
 function component_viewer_tags_navigate(navtofn) {
-	backlinkset('Back to Tag ' + component_viewer_tags_tabobj.name,function () {component_viewer_tags_display(component_viewer_tags_tabobj.name)});
-	navtofn();
+	navigateTo(navtofn,'Back to Tag ' + component_viewer_tags_tabobj.name,function () {component_viewer_tags_display(component_viewer_tags_tabobj.name)});
 }
 
 function component_viewer_tags_getUnestimatedHtml(tagobj) {

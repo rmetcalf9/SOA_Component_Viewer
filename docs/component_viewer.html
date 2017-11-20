@@ -68,11 +68,24 @@
 		};
 		t();
 	}
-	function backlinkset(text, fn) {
-		backlink = {
-			text: text,
-			fn: fn
+	function navigateTo(navFn, backlinkText, backlinkFN) {
+		var setBacklink = false;
+		if (typeof(backlinkText != 'undefined')) {
+			if (backlinkText != '') {
+				setBacklink = true;
+				backlink = {
+					text: backlinkText,
+					fn: backlinkFN
+				};
+			};
 		};
+		if (!setBacklink) {
+			backlink = {
+				text: '',
+				fn: function () {}
+			};
+		}
+		navFn();
 	}
 
 

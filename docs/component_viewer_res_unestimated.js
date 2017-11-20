@@ -43,8 +43,7 @@ function component_viewer_res_unestimated_componentHasTag(component_obj,tag) {
 }
 
 function component_viewer_res_navigate(navtofn) {
-	backlinkset('Back to Unestimated',function () {component_viewer_res_displayRES('Unestimated')});
-	navtofn();
+	navigateTo(navtofn,'Back to Unestimated',function () {component_viewer_res_displayRES('Unestimated')});
 };
 
 //decision function is the function used to decide if a component should be in this list
