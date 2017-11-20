@@ -56,6 +56,25 @@
 	var dataObjects={};
 	var globalFunctions={}
 	var statusList=[];
+	var backlink = {
+		text: '',
+		fn: function () {console.log('BackLinkClick');}
+	};
+	function backlinkclick() {
+		var t = backlink.fn;
+		backlink = {
+			text: '',
+			fn: function () {}
+		};
+		t();
+	}
+	function backlinkset(text, fn) {
+		backlink = {
+			text: text,
+			fn: fn
+		};
+	}
+
 
 	//variable to hold access level to spradsheet
 	//will hold NONE for error, "READONLY" or "READWRITE"
@@ -118,11 +137,16 @@
 		
 		ret += "<td>" + component_viewer_res_getMenuHtml() + "</td>";
 		
-		ret += "<td>";
+		ret += "<td width=\"500\">";
 		if (accessLevel=="READWRITE") {
 			ret += " (can write)";
 		} else {
 			//ret += " Read only";
+		};
+		ret += "</td>";
+		ret += "<td align=\"right\">";
+		if (backlink.text != '') {
+			ret += "<a href=\"javascript:backlinkclick()\">" + backlink.text + "</a>";
 		};
 		ret += "</td>";
 		ret += '</tr></table>';

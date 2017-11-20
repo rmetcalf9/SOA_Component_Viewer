@@ -42,6 +42,11 @@ function component_viewer_res_unestimated_componentHasTag(component_obj,tag) {
 	return (ic_soa_data_istaginlist(tag,component_obj.tags));
 }
 
+function component_viewer_res_navigate(navtofn) {
+	backlinkset('Back to Unestimated',function () {component_viewer_res_displayRES('Unestimated')});
+	navtofn();
+};
+
 //decision function is the function used to decide if a component should be in this list
 function component_viewer_res_unestimated_tableRowsForTAG(tag, decision_function) {
 	var title = tag;
@@ -70,7 +75,7 @@ function component_viewer_res_unestimated_tableRowsForTAG(tag, decision_function
 				ret += "<a href=\"#component_viewer_res_unestimated_click_table_row\">Add Estimate</a> ";
 				var viewfntext = component_obj.getViewFunctionText();
 				if (typeof(viewfntext) != "undefined") {
-					ret += "<a href=\"javascript:" + viewfntext + "\">View</a>";
+					ret += "<a href=\"javascript:component_viewer_res_navigate(function () {" + viewfntext + "})\">View</a>";
 				};
 				ret += "</td>";
 			};

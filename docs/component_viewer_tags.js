@@ -1,5 +1,9 @@
 "use strict";	
 
+function component_viewer_tags_navigate(navtofn) {
+	backlinkset('Back to Tag ' + component_viewer_tags_tabobj.name,function () {component_viewer_tags_display(component_viewer_tags_tabobj.name)});
+	navtofn();
+}
 
 function component_viewer_tags_getUnestimatedHtml(tagobj) {
 	var ret = ""
@@ -23,7 +27,7 @@ function component_viewer_tags_getUnestimatedHtml(tagobj) {
 			ret += "<a href=\"#component_viewer_tags_click_unestimated\">Add Estimate</a> ";
 			var viewfntext = component_obj.getViewFunctionText();
 			if (typeof(viewfntext) != "undefined") {
-				ret += "<a href=\"javascript:" + viewfntext + "\">View</a>";
+				ret += "<a href=\"javascript:component_viewer_tags_navigate(function () {" + viewfntext + "})\">View</a>";
 			};
 			ret += "</td>";
 		};
