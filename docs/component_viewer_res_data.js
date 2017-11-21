@@ -147,6 +147,13 @@ function component_viewer_res_data_save_resourse_allocation_into_batch(resourseA
 	var rec = dataObjects.RESOURCEALLOCATIONs[resourseAllocaiton_uid]
 	var sheet_data_item = ic_soa_data_getSheetMetrics()["RESOURCEALLOCATION"]
 	board_append_saveBatch({
+		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.tagscol) + rec.sheet_row,
+		"majorDimension": "ROWS",
+		"values": [
+			[rec.tags]
+		],
+	});
+	board_append_saveBatch({
 		"range": sheet_data_item.sheet_name + "!" + board_columnToLetter(sheet_data_item.uidcol) + rec.sheet_row,
 		"majorDimension": "ROWS",
 		"values": [
