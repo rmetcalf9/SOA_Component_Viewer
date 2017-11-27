@@ -147,9 +147,9 @@ function component_viewer_tags_RomSample_getHtml(tagobj) {
 	var workstreamLeadTotal = Math.round(developmentTotal * 0.2);
 	var ROMTotal = developmentTotal + uatTotal + earlyLifeTotal + workstreamLeadTotal;
 	ret += "<tr><th></th><th>Development Total</th><th class=\"est_cell\">" + developmentTotal + " days</th><th></th></tr>";
-	ret += "<tr><td></td><td>+ UAT Support (15%)</td><td class=\"est_cell\">" + uatTotal + " days</td><td> Historically development estimates have not added a % overhead for this</td></tr>";
-	ret += "<tr><td></td><td>+ Early Life Support (5%)</td><td class=\"est_cell\">" + earlyLifeTotal + " days</td><td> Historically development estimates have not added a % overhead for this</td></tr>";
-	ret += "<tr><td></td><td>+ Technical Workstream Lead / SOA Enterprise Lead (20%)</td><td class=\"est_cell\">" + workstreamLeadTotal + " days</td><td> Historically development estimates have not added a % overhead for this</td></tr>";
+	ret += "<tr><td></td><td>+ UAT Support (15%)</td><td class=\"est_cell\">" + uatTotal + " days</td><td></td></tr>";
+	ret += "<tr><td></td><td>+ Early Life Support (5%)</td><td class=\"est_cell\">" + earlyLifeTotal + " days</td><td></td></tr>";
+	ret += "<tr><td></td><td>+ Technical Workstream Lead / SOA Enterprise Lead (20%)</td><td class=\"est_cell\">" + workstreamLeadTotal + " days</td><td></td></tr>";
 	ret += "<tr><th></th><th>ROM Total</th><th class=\"est_cell\">" + ROMTotal + " days</th><th></th></tr>";
 	ret += "</table>";
 	return ret;
