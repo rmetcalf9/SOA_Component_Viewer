@@ -109,8 +109,9 @@ function ic_soa_svg_drawEDF(name, cord, link, inbound_operation_text, outbound_o
 	};
 	
 	//Inbound Operation Text Box
-	if (typeof(inbound_operation_text)=="undefined") inbound_operation_text="Sync";
-	ret += ic_soa_svg_drawOPERATION("edf_operation",{x:cord.x,y:cord.y},inbound_operation_text,edf_width,edf_operation_inner_margin,edf_text_vert_offset);
+	if ((typeof(inbound_operation_text)!="undefined") && (inbound_operation_text != "")) {
+		ret += ic_soa_svg_drawOPERATION("edf_operation",{x:cord.x,y:cord.y},inbound_operation_text,edf_width,edf_operation_inner_margin,edf_text_vert_offset);
+	}
 	
 	//Outbound Operation Text Box
 	var op_center_y = (text_top_pos_y + (edf_text_vert_offset * 2));
@@ -181,8 +182,10 @@ function ic_soa_svg_drawIntegration(name, cord, link, inbound_operation_text, ou
 	
 	
 	//Inbound Operation Text Box
-	if (typeof(inbound_operation_text)=="undefined") inbound_operation_text="Sync";
-	ret += ic_soa_svg_drawOPERATION("int_operation",{x:cord.x,y:cord.y},inbound_operation_text,int_width,int_operation_inner_margin,int_text_vert_offset);
+	if ((typeof(inbound_operation_text)!="undefined") && (inbound_operation_text!="")) {
+		ret += ic_soa_svg_drawOPERATION("int_operation",{x:cord.x,y:cord.y},inbound_operation_text,int_width,int_operation_inner_margin
+,int_text_vert_offset);
+	};
 	
 	//Outbound Operation Text Box
 	var op_center_y = (text_top_pos_y + (edf_text_vert_offset * 2));
