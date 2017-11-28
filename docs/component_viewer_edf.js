@@ -34,10 +34,12 @@ function getEDFHtml(uid) {
 	ret += ic_soa_svg_getMarkers();
 	ret += ic_soa_svg_drawSystem(curEDF.source_system,source_sys_pos,"javascript:displaySYSTEM('" + source_system_object.uid + "')");
 	ret += ic_soa_svg_drawEDF(curEDF.name,edf_pos,undefined,curEDF.inbound_operation_text,curEDF.outbound_operation_text);
-	ret += ic_soa_svg_drawArrow(
-		ic_soa_svg_System_conectorPointLocation(source_sys_pos,"right"), 
-		ic_soa_svg_EDF_conectorPointLocation(edf_pos,"left")
-	);
+	if (curEDF.has_inbound_operation_text()) {
+		ret += ic_soa_svg_drawArrow(
+			ic_soa_svg_System_conectorPointLocation(source_sys_pos,"right"), 
+			ic_soa_svg_EDF_conectorPointLocation(edf_pos,"left")
+		);
+	};
 	if (typeof(curEDF.outbound_operation_text)!="undefined") {
 		ret += ic_soa_svg_drawArrow(
 			ic_soa_svg_EDF_conectorPointLocation(edf_pos,"left_inbound"),
@@ -48,19 +50,24 @@ function getEDFHtml(uid) {
 	var int_pos = {x:800, y:50};
 	for (cur_do = 0; cur_do < ints_to_draw.length; cur_do++) {
 		var target_system_object = ic_soa_data_getSystemFromName(ints_to_draw[cur_do].target_system,dataObjects);
+		var inbound_operation_text = ints_to_draw[cur_do].inbound_operation_text;
+		if (!ints_to_draw[cur_do].has_inbound_operation_text()) inbound_operation_text = undefined;
 		ret += ic_soa_svg_drawIntegrationWithTarget(
 					ints_to_draw[cur_do].name,
 					ints_to_draw[cur_do].target_system,
 					int_pos,
 					"javascript:displayINT('" + ints_to_draw[cur_do].uid + "')",
 					"javascript:displaySYSTEM('" + target_system_object.uid + "')",
-					ints_to_draw[cur_do].inbound_operation_text,
+					inbound_operation_text,
 					ints_to_draw[cur_do].outbound_operation_text
 		);
-		ret += ic_soa_svg_drawArrow( 
-			ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),
-			ic_soa_svg_Integration_conectorPointLocation(int_pos,"left")
-		);
+		//Draw link between the two if they BOTH have inbound operation
+		if ((curEDF.has_inbound_operation_text()) && (ints_to_draw[cur_do].has_inbound_operation_text())) {
+			ret += ic_soa_svg_drawArrow( 
+				ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),
+				ic_soa_svg_Integration_conectorPointLocation(int_pos,"left")
+			);
+		};
 		//SECOND ARROW
 		if (typeof(ints_to_draw[cur_do].outbound_operation_text)!="undefined") {
 			ret += ic_soa_svg_drawArrow( 

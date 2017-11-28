@@ -30,19 +30,23 @@ function getINTHtml(uid) {
 
 	var target_system_object = ic_soa_data_getSystemFromName(curINT.target_system,dataObjects);
 	
+	var inbound_operation_text = curINT.inbound_operation_text;
+	if (!curINT.has_inbound_operation_text()) inbound_operation_text = undefined;
 	ret += ic_soa_svg_drawIntegrationWithTarget(
 		curINT.name,
 		curINT.target_system,
 		int_pos,
 		undefined,
 		"javascript:displaySYSTEM('" + target_system_object.uid + "')",
-		curINT.inbound_operation_text,
+		inbound_operation_text,
 		curINT.outbound_operation_text
 	);
-	ret += ic_soa_svg_drawArrow( 
-		ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),
-		ic_soa_svg_Integration_conectorPointLocation(int_pos,"left")
-	);
+	if ((src_edf_obj.has_inbound_operation_text()) && (curINT.has_inbound_operation_text())) {
+		ret += ic_soa_svg_drawArrow( 
+			ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right"),
+			ic_soa_svg_Integration_conectorPointLocation(int_pos,"left")
+		);
+	}
 	if (typeof(curINT.outbound_operation_text)!="undefined") {
 		ret += ic_soa_svg_drawArrow( 
 			ic_soa_svg_Integration_conectorPointLocation(int_pos,"left_inbound"),

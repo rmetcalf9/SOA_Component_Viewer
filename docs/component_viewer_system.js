@@ -94,15 +94,17 @@ function getSYSTEMHtml(uid) {
 					ints_to_draw[cur_do].inbound_operation_text,
 					ints_to_draw[cur_do].outbound_operation_text
 		);
-		ret += ic_soa_svg_drawArrow(
-			ic_soa_svg_Integration_conectorPointLocation(pos,"right"),
-			ic_soa_svg_System_conectorPointLocation(system_pos,"left")
-		);
+		if (ints_to_draw[cur_do].has_inbound_operation_text()) {
+			ret += ic_soa_svg_drawArrow(
+				ic_soa_svg_Integration_conectorPointLocation(pos,"right"),
+				ic_soa_svg_System_conectorPointLocation(system_pos,"left")
+			);
+		};
 		if (typeof(ints_to_draw[cur_do].outbound_operation_text)!="undefined") {
-		ret += ic_soa_svg_drawArrow(
-			ic_soa_svg_System_conectorPointLocation(system_pos,"left"),
-			ic_soa_svg_Integration_conectorPointLocation(pos,"right_inbound")
-		);
+			ret += ic_soa_svg_drawArrow(
+				ic_soa_svg_System_conectorPointLocation(system_pos,"left"),
+				ic_soa_svg_Integration_conectorPointLocation(pos,"right_inbound")
+			);
 		}
 		
 		pos.y = pos.y + vert_pitch;
@@ -143,10 +145,12 @@ function getSYSTEMHtml(uid) {
 					edfs_to_draw[cur_do].inbound_operation_text,
 					edfs_to_draw[cur_do].outbound_operation_text
 		);
-		ret += ic_soa_svg_drawArrow(
-			ic_soa_svg_System_conectorPointLocation(system_pos,"right"),
-			ic_soa_svg_EDF_conectorPointLocation(pos,"left")
-		);
+		if (edfs_to_draw[cur_do].has_inbound_operation_text()) {
+			ret += ic_soa_svg_drawArrow(
+				ic_soa_svg_System_conectorPointLocation(system_pos,"right"),
+				ic_soa_svg_EDF_conectorPointLocation(pos,"left")
+			);
+		};
 		if (typeof(edfs_to_draw[cur_do].outbound_operation_text)!="undefined") {
 			ret += ic_soa_svg_drawArrow(
 				ic_soa_svg_EDF_conectorPointLocation(pos,"left_inbound"),

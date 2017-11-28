@@ -467,15 +467,15 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 	
 	return {
 		EDFkeys: EDFkeys,
-		EDFs: ic_soa_data_AddViewFunctions(EDFkeys, EDFs),
+		EDFs: ic_soa_data_AddObjectTypeFunctions(EDFkeys, EDFs),
 		INTkeys: INTkeys,
-		INTs: ic_soa_data_AddViewFunctions(INTkeys, INTs),
+		INTs: ic_soa_data_AddObjectTypeFunctions(INTkeys, INTs),
 		SYSTEMkeys: SYSTEMkeys,
-		SYSTEMs: ic_soa_data_AddViewFunctions(SYSTEMkeys, SYSTEMs),
+		SYSTEMs: ic_soa_data_AddObjectTypeFunctions(SYSTEMkeys, SYSTEMs),
 		PRESkeys: PRESkeys,
-		PRESs: ic_soa_data_AddViewFunctions(PRESkeys, PRESs),
+		PRESs: ic_soa_data_AddObjectTypeFunctions(PRESkeys, PRESs),
 		POINTkeys: POINTkeys,
-		POINTs: ic_soa_data_AddViewFunctions(POINTkeys,POINTs),
+		POINTs: ic_soa_data_AddObjectTypeFunctions(POINTkeys,POINTs),
 		TAGs: TAGs,
 		RESOURCELANESkeys: RESOURCELANESkeys,
 		RESOURCELANESs: RESOURCELANESs,
@@ -484,18 +484,28 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 	};
 };
 
-function ic_soa_data_AddViewFunctions(objKeysArray, objArray) {
+// Only some objects have an inbound or outbound operation text
+function ic_soa_data_AddOperationTextFunctions(obj) {
+	obj.has_inbound_operation_text = function () {
+		if (typeof(obj.inbound_operation_text) == "undefined") return false;
+		return (obj.inbound_operation_text != "")
+	};
+};
+
+function ic_soa_data_AddObjectTypeFunctions(objKeysArray, objArray) {
 	objKeysArray.map(function (objKey) {
 		if (objArray[objKey].objType == 'EDF') {
 			objArray[objKey].getViewFunctionText = function () {
 				return 'displayEDF(\'' + objArray[objKey].uid + '\')';
 			};
+			ic_soa_data_AddOperationTextFunctions(objArray[objKey]);
 			return undefined;
 		};
 		if (objArray[objKey].objType == 'INT') {
 			objArray[objKey].getViewFunctionText = function () {
 				return 'displayINT(\'' + objArray[objKey].uid + '\')';
 			};
+			ic_soa_data_AddOperationTextFunctions(objArray[objKey]);
 			return undefined;
 		};
 		if (objArray[objKey].objType == 'PRES') {
