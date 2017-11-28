@@ -63,7 +63,7 @@ function getSYSTEMHtml(uid) {
 	//console.log("target point2point:" + target_point_to_draw.length);
 
 	ret += "<h1>System: " + system_object.name + "</h1>";
-	var vert_pitch = 80; //Vertical distance between rows
+	var vert_pitch = ic_soa_svg_componentHeight; //Vertical distance between rows
 	
 	var src_side_to_draw = (edfs_to_draw.length + target_pres_to_draw.length + target_point_to_draw.length);
 	var targ_side_to_draw = (ints_to_draw.length + source_pres_to_draw.length + source_point_to_draw.length);

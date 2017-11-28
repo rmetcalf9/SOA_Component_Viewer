@@ -13,9 +13,10 @@ function getPRESHtml(uid) {
 		return;
 	}
 
+	var vert_pitch = ic_soa_svg_componentHeight; //Vertical distance between rows
 	var client_systems_to_draw = curPRES.known_clients;
-	var svg_height = client_systems_to_draw.length * 100;
-	if (svg_height<100) svg_height = 100;
+	var svg_height = client_systems_to_draw.length * vert_pitch;
+	if (svg_height<vert_pitch) svg_height = vert_pitch;
 
 
 	ret += GetMenu();
@@ -27,7 +28,7 @@ function getPRESHtml(uid) {
 	
 	ret += "<h1>Presentation Service: " + curPRES.name + " (" + curPRES.status + ")</h1>";
 
-	var provider_system_pos = {x:100, y:(svg_height/2)};
+	var provider_system_pos = {x:vert_pitch, y:(svg_height/2)};
 	var pres_pos = {x:500, y:(svg_height/2)};
 	var provider_system_object = ic_soa_data_getSystemFromName(curPRES.provider_system, dataObjects);
 
@@ -47,7 +48,7 @@ function getPRESHtml(uid) {
 			"javascript:displaySYSTEM('" + client_system_object.uid + "')"
 		);
 		ret += ic_soa_svg_drawSyncServiceCall( ic_soa_svg_PresentationService_conectorPointLocation(pres_pos,"right"),ic_soa_svg_System_conectorPointLocation(client_system_pos,"left"));
-		client_system_pos.y = client_system_pos.y + 100;
+		client_system_pos.y = client_system_pos.y + vert_pitch;
 	}
 
 

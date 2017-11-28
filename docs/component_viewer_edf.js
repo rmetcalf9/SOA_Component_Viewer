@@ -18,8 +18,9 @@ function getEDFHtml(uid) {
 	};
 	//console.log(ints_to_draw);
 
-	var svg_height = ints_to_draw.length * 100;
-	if (svg_height<100) svg_height = 100;
+	var vert_pitch = ic_soa_svg_componentHeight; //Vertical distance between rows
+	var svg_height = ints_to_draw.length * vert_pitch;
+	if (svg_height<vert_pitch) svg_height = vert_pitch;
 	var source_sys_pos = {x:80, y:(svg_height/2)};
 	var edf_pos = {x:350, y:(svg_height/2)};
 
@@ -67,7 +68,7 @@ function getEDFHtml(uid) {
 				ic_soa_svg_EDF_conectorPointLocation(edf_pos,"right_inbound")
 			);
 		}
-		int_pos.y = int_pos.y + 100;
+		int_pos.y = int_pos.y + vert_pitch;
 	}
 	
 	ret += '</svg>';

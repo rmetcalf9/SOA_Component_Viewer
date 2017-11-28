@@ -18,7 +18,7 @@ function getPOINTHtml(uid) {
 	ret += '<tr class="main">';
 	ret += '<td valign="top">';
 
-	var vert_pitch = 100; //Vertical distance between rows
+	var vert_pitch = ic_soa_svg_componentHeight; //Vertical distance between rows
 
 	var provider_systems_to_draw = curPOINT.provider_systems;
 	var client_systems_to_draw = curPOINT.client_systems;

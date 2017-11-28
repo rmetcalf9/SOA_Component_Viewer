@@ -5,6 +5,7 @@
 var cord{x:100,y:100};
 */
 var conectorPointSpacing = 4;
+var ic_soa_svg_componentHeight = 100;
 
 //Called once and put into each SVG 
 function ic_soa_svg_getMarkers() {

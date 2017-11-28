@@ -295,7 +295,7 @@ function getHTML() {
 	ret += ic_soa_svg_getMarkers();
 
 	demoFunctions.filter(function (demoFn) {return demoFn.show;}).map(function (demoFn) {
-		cur_height += 100;
+		cur_height += ic_soa_svg_componentHeight;
 		ret += '<text class="text_heading" x="' + 40 + '" y="' + (cur_height - 60) + '" onclick="javascript:toggleDisplay(\'' + demoFn.text + '\')">' + demoFn.text + '</text>';
 		ret += demoFn.fn(cur_height);
 		cur_height += 20;
