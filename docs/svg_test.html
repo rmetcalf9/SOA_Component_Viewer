@@ -209,43 +209,46 @@ function demoIntegrationWithBothOperationText(y) {
 	return ret;
 };
 
+function toggleDisplay(demoFnText) {
+	demoFunctions.filter(function (demoFn) {return demoFnText == demoFn.text;}).map(function (demoFn) {
+		demoFn.show = !demoFn.show;
+	});
+	document.getElementById('MAIN').innerHTML = getHTML();
+}
+
+var demoFunctions = [
+	{ fn: demoEDFWithOutboundOperationText, text: 'EDF with outbound operation text', show: false},
+	{ fn: demoEDFWithBothOperationText, text: 'EDF with both operation text', show: true},
+	{ fn: demoIntegrationWithOutboundOperationText, text: 'Integration with outbound operation text', show: true},
+	{ fn: demoIntegrationWithBothOperationText, text: 'Integration with both operation text', show: true},
+	{ fn: demoSystem, text: 'System', show: true},
+	{ fn: demoEDF, text: 'EDF', show: true},
+	{ fn: demoIntegration, text: 'Integration', show: true},
+	{ fn: demoPresentation, text: 'Presentation', show: true},
+	{ fn: demoPoint, text: 'Point to point', show: true},
+]
+
 function getHTML() {
 	var ret = "";
 
-
-	var svg_height = 1000;
+	var svg_height = (demoFunctions.filter(function (demoFn) {return demoFn.show;}).length*120) + 50;
 
 	var cur_height = 0;
+
+	demoFunctions.filter(function (demoFn) {return !demoFn.show;}).map(function (demoFn) {
+		ret += "<a href=\"javascript:toggleDisplay('" + demoFn.text + "')\">" + demoFn.text + "</a> "
+	});
+	ret += "<br>";
 
 	ret += "<svg class=\"ic_soa_svg\" style=\"width: 1500; height: " + svg_height + ";\">";
 	ret += ic_soa_svg_getMarkers();
 
-	cur_height += 100;
-	ret += demoEDFWithOutboundOperationText(cur_height);
-
-	cur_height += 100;
-	ret += demoEDFWithBothOperationText(cur_height);
-	
-	cur_height += 100;
-	ret += demoIntegrationWithOutboundOperationText(cur_height);
-
-	cur_height += 100;
-	ret += demoIntegrationWithBothOperationText(cur_height);
-	
-	cur_height += 100;
-	ret += demoSystem(cur_height);
-
-	cur_height += 100;
-	ret += demoEDF(cur_height);
-
-	cur_height += 100;
-	ret += demoIntegration(cur_height);
-
-	cur_height += 100;
-	ret += demoPresentation(cur_height);
-
-	cur_height += 100;
-	ret += demoPoint(cur_height);
+	demoFunctions.filter(function (demoFn) {return demoFn.show;}).map(function (demoFn) {
+		cur_height += 100;
+		ret += '<text class="text_heading" x="' + 40 + '" y="' + (cur_height - 60) + '" onclick="javascript:toggleDisplay(\'' + demoFn.text + '\')">' + demoFn.text + '</text>';
+		ret += demoFn.fn(cur_height);
+		cur_height += 20;
+	});
 
 	ret += "</svg>";
 	return ret;

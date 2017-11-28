@@ -19,6 +19,12 @@ svg.ic_soa_svg text {
 	alignment-baseline: middle;
 }
 
+svg.ic_soa_svg text.text_heading {
+	text-anchor: start;
+	font-weight: 900;
+	text-decoration: underline;
+}
+
 svg.ic_soa_svg ellipse.edf {
 	fill: pink;
 	stroke-width: 1;
