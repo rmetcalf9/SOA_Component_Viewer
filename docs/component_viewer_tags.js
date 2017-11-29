@@ -48,6 +48,7 @@ function component_viewer_tags_secheduledResoursesUpdated() {
 }
 
 function component_viewer_tags_click_getResAllocTableRow(task_obj) {
+	var componentOBJ = ic_soa_data_getComponentFromUID(task_obj.res_alloc_obj.itemuid);
 	var ret = "";
 	ret += "<tr class=\"" + component_viewer_res_data_getresourseallocobjCSSTag(task_obj.res_alloc_obj) + "\" data-uid=\"" + task_obj.res_alloc_obj.uid + "\">";
 	ret += "<td>" + task_obj.res_alloc_obj.text + "</td>";
@@ -64,7 +65,14 @@ function component_viewer_tags_click_getResAllocTableRow(task_obj) {
 	ret +=	"</td>";
 	if (accessLevel=="READWRITE") {
 		ret += "<td>"; // action cell
-		ret += "<a href=\"#component_viewer_tags_click_editRA\"\">Edit</a>";
+		ret += "<a href=\"#component_viewer_tags_click_editRA\"\">Edit</a><BR>";
+		// TODO ISDEFED
+		if (typeof(componentOBJ) != "undefined") {
+			var viewfntext = componentOBJ.getViewFunctionText();
+			if (typeof(viewfntext) != "undefined") {
+				ret += "<a href=\"javascript:component_viewer_tags_navigate(function () {" + viewfntext + "})\">View</a>";
+			};
+		};
 		ret += "</td>";
 	}
 	
