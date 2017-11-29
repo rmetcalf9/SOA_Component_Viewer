@@ -51,7 +51,7 @@ function component_viewer_tags_click_getResAllocTableRow(task_obj) {
 	var componentOBJ = ic_soa_data_getComponentFromUID(task_obj.res_alloc_obj.itemuid);
 	var ret = "";
 	ret += "<tr class=\"" + component_viewer_res_data_getresourseallocobjCSSTag(task_obj.res_alloc_obj) + "\" data-uid=\"" + task_obj.res_alloc_obj.uid + "\">";
-	ret += "<td>" + task_obj.res_alloc_obj.text + "</td>";
+	ret += "<td>" + task_obj.res_alloc_obj.getText() + "</td>";
 	ret += "<td>" + component_viewer_res_data_getresourseallocobjUserType(task_obj.res_alloc_obj) + "</td>";
 	ret += "<td>" + task_obj.resourseLane.uid + "</td>";
 	ret += "<td>" + task_obj.start_day + "</td>";
@@ -110,7 +110,7 @@ function component_viewer_tags_getResourseAllocationHtml(tagobj) {
 		ret += "</tr>";
 		completedResourseAllocations.map( function (res_alloc_obj) {
 			ret += "<tr class=\"" + component_viewer_res_data_getresourseallocobjCSSTag(res_alloc_obj) + "\">";
-			ret += "<td>" + res_alloc_obj.text + "</td>";
+			ret += "<td>" + res_alloc_obj.getText() + "</td>";
 			ret += "<td>" + component_viewer_res_data_getresourseallocobjUserType(res_alloc_obj) + "</td>";
 			ret += "<td>" + rjmlib_blankStringInsteadOfUndefined(res_alloc_obj.description) + "</td>";
 			ret += "<td>" + component_viewer_res_data_getcombinedtagString(res_alloc_obj);
@@ -145,7 +145,7 @@ function component_viewer_tags_RomSample_getHtml(tagobj) {
 		} else {
 			ret += "<td>SOA Development</td>"; // Owner
 		}
-		ret += "<td>" + res_alloc_obj.text + "</td>"; //Task
+		ret += "<td>" + res_alloc_obj.getText() + "</td>"; //Task
 		ret += "<td class=\"est_cell\">" + res_alloc_obj.remainingdays + " days" + "</td>"; //ROM
 		ret += "<td>" + rjmlib_blankStringInsteadOfUndefined(res_alloc_obj.description) + "</td>"; //Notes
 		ret += "</tr>";

@@ -105,7 +105,7 @@ function ic_soa_data_getSheetMetrics() {
 			ordercol: 3
 		};
 		ic_soa_data_SheetMetrics["RESOURCEALLOCATION"] = {
-			datarange: 'ResourceAllocation!A2:M',
+			datarange: 'ResourceAllocation!A2:N',
 			sheet_name: 'ResourceAllocation',
 			toprow: 2,
 			uidcol: 0,
@@ -121,6 +121,7 @@ function ic_soa_data_getSheetMetrics() {
 			tagscol: 10,
 			datecreatecol: 11,
 			descriptioncol: 12,
+			rmdbWPcol: 13,
 		};	
 	}; //if undefined
 	return ic_soa_data_SheetMetrics;
@@ -427,6 +428,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 					tags: row[cur_sheet_metrics.tagscol],
 					datecreate: row[cur_sheet_metrics.datecreatecol],
 					description: row[cur_sheet_metrics.descriptioncol],
+					rmdbWP: row[cur_sheet_metrics.rmdbWPcol],
 				}
 				//NOTE This code is repeated in component_viewer_res_data - funcsiont must be added there as well
 				RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]].getCombinedTagList = getResourseAllocationObjectCombinedTagListFN(RESOURCEALLOCATIONs[row[cur_sheet_metrics.uidcol]]);
@@ -480,7 +482,7 @@ function ic_soa_data_getDataObject(sheetList, sheetMetrics, googleAPIResult, num
 		RESOURCELANESkeys: RESOURCELANESkeys,
 		RESOURCELANESs: RESOURCELANESs,
 		RESOURCEALLOCATIONkeys: RESOURCEALLOCATIONkeys,
-		RESOURCEALLOCATIONs: RESOURCEALLOCATIONs,
+		RESOURCEALLOCATIONs: ic_soa_data_AddObjectTypeFunctions(RESOURCEALLOCATIONkeys,RESOURCEALLOCATIONs),
 	};
 };
 
@@ -526,7 +528,14 @@ function ic_soa_data_AddObjectTypeFunctions(objKeysArray, objArray) {
 			};
 			return undefined;
 		};
-		console.log('Object type ' + objArray[objKey].objType + ' has no view function')
+		if (objArray[objKey].objType == 'RESOURCEALLOCATION') {
+			objArray[objKey].getText = function () {
+				console.log(objArray[objKey]);
+				if ((typeof(objArray[objKey].rmdbWP)=="undefined") || (objArray[objKey].rmdbWP == "")) return objArray[objKey].text;
+				return 'WP' + objArray[objKey].rmdbWP + ' - ' + objArray[objKey].text;
+			};
+			return undefined;
+		};
 		objArray[objKey].getViewFunctionText = function () {
 			return undefined;
 		};
